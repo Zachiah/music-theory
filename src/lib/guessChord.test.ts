@@ -78,6 +78,8 @@ describe(guessChord, () => {
 		expect(GuessedChord.print('C', guessChord([4, 3, 3, 1, 3]), defaultOptions)).toEqual('C9 7 maj7');
 		expect(GuessedChord.print('C', guessChord([4, 2, 2]), defaultOptions)).toEqual('C+ add♯11');
 		expect(GuessedChord.print('C', guessChord([2, 2, 2, 2, 2]), defaultOptions)).toEqual('C+9 ♯11');
+		expect(GuessedChord.print('C', guessChord([3, 5]), defaultOptions)).toEqual('Cm add♭13');
+		expect(GuessedChord.print('C', guessChord([2, 1, 2, 3, 2]), defaultOptions)).toEqual('Cm11 ♭13');
 	})
 
 	it('should handle other flat and sharp displays', () => {

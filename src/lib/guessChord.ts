@@ -140,8 +140,8 @@ export const guessChord = (intervals: number[]): GuessedChord => {
 	const sixChordNotes: CanonicalPitchClass[] = ['C', 'E', 'Eb', 'G', 'A']
 	const isSixChord = cpc.every(n => sixChordNotes.includes(n)) && !(cpc.includes('E') && cpc.includes('Eb')) && cpc.includes('A')
 
-	const flat13 = hasEleven && cpc.includes('G') && cpc.includes('Ab')
-	const addFlat13 = !hasEleven && cpc.includes('G') && cpc.includes('Ab')
+	const flat13 = hasEleven && cpc.includes('Ab') && !augmented
+	const addFlat13 = !hasEleven && cpc.includes('Ab') && !augmented
 	const thirteen = flat13 && cpc.includes('A')
 	const add13 = !isSixNineChord && !isSixChord && !diminished && !hasEleven && cpc.includes('A');
 
