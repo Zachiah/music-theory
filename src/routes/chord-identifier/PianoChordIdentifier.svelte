@@ -2,7 +2,7 @@
 	import Piano from '$lib/Piano.svelte';
 	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 	import { guessChord, GuessedChord } from '$lib/guessChord';
-	import Toggle from '$lib/Toggle.svelte';
+	import ChordPrintingOptionsEditor from './ChordPrintingOptionsEditor.svelte';
 
 	let notes = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
 
@@ -37,7 +37,7 @@
 		...intervalsFromStart.map((i) => CanonicalPitchClass.applyOffset(firstSelected, i))
 	]);
 
-	const options = $state<GuessedChord.PrintingOptions>({
+	let options = $state<GuessedChord.PrintingOptions>({
 		six: true,
 		sixNine: true,
 		properFlats: true,
@@ -50,61 +50,12 @@
 	const chordString = $derived(GuessedChord.print(chord, options));
 </script>
 
-<div class="flex flex-wrap gap-2">
-	<Toggle
-		active={options.six}
-		onToggle={() => {
-			options.six = !options.six;
-		}}
-	>
-		6 Chords
-	</Toggle>
-
-	<Toggle
-		active={options.sixNine}
-		onToggle={() => {
-			options.sixNine = !options.sixNine;
-		}}
-	>
-		6/9 Chords
-	</Toggle>
-
-	<Toggle
-		active={options.properFlats}
-		onToggle={() => {
-			options.properFlats = !options.properFlats;
-		}}
-	>
-		Proper flats
-	</Toggle>
-
-	<Toggle
-		active={options.properSharps}
-		onToggle={() => {
-			options.properSharps = !options.properSharps;
-		}}
-	>
-		Proper sharps
-	</Toggle>
-
-	<Toggle
-		active={options.properDiminished}
-		onToggle={() => {
-			options.properDiminished = !options.properDiminished;
-		}}
-	>
-		Proper diminished
-	</Toggle>
-
-	<Toggle
-		active={options.properAugmented}
-		onToggle={() => {
-			options.properAugmented = !options.properAugmented;
-		}}
-	>
-		Proper augmented
-	</Toggle>
-</div>
+<ChordPrintingOptionsEditor
+	{options}
+	onChange={(o) => {
+		options = o;
+	}}
+/>
 
 <Piano {notes} start="C" toggle={(idx) => (notes[idx] = !notes[idx])} />
 

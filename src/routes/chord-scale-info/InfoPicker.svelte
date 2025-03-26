@@ -3,6 +3,7 @@
 	import { ScaleDescription, ScaleName } from '$lib/scale';
 	import { Chord } from '$lib/Chord';
 	import { Intervals } from '$lib/Intervals';
+	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
 
 	let typedPitchString = $state('');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -30,37 +31,19 @@
             bind:value={typedPitchString}
         />
 
-        <div class="flex items-stretch bg-gray-200 p-2">
-            <label class="group relative flex w-24 shrink-0 rounded-full bg-white">
-                <div
-                    class="absolute top-0 right-full h-full w-1/2 translate-x-full transform rounded-full bg-blue-500 duration-200 group-has-checked:right-0 group-has-checked:translate-x-0"
-                ></div>
-
-                <span
-                    class="absolute flex h-full w-1/2 items-center justify-center rounded-l-full text-center text-xs"
-                >
-                    <span>Scale</span>
-                </span>
-
-                <input
-                    type="checkbox"
-                    class="opacity-0"
-                    checked={noteCollection.tag === 'chord'}
-                    onchange={(e) => {
-                        if (e.currentTarget.checked) {
-                            noteCollection = chords[0];
-                        } else {
-                            noteCollection = scales[0];
-                        }
-                    }}
-                />
-
-                <span
-                    class="absolute left-1/2 flex h-full w-1/2 items-center justify-center rounded-r-full text-center text-xs"
-                >
-                    <span>Chord</span>
-                </span>
-            </label>
+        <div class="flex items-stretch bg-gray-200 shrink-0 p-2 w-28">
+            <TwoSidedToggle
+                onChange={(checked) => {
+                    if (checked) {
+                        noteCollection = chords[0];
+                    } else {
+                        noteCollection = scales[0];
+                    }
+                }}
+                checked={noteCollection.tag === 'chord'}
+                first="Scale"
+                second="Chord"
+            />
         </div>
 
         <select class="flex-1 rounded-r-full" bind:value={noteCollection}>

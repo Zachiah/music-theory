@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
 
-    const {children}: {children: Snippet<[]>} = $props()
+    const {children, maxW}: {children: Snippet<[]>, maxW?: boolean} = $props()
 </script>
 
-<div class="mx-auto flex max-w-2xl flex-col gap-4 py-4">
-    {@render children()}
+<div class="p-8">
+    <div class="mx-auto flex flex-col gap-4" class:max-w-2xl={maxW}>
+        {@render children()}
+    </div>
 </div>
