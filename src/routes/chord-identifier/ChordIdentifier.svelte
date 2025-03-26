@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Piano from './Piano.svelte';
+	import Piano from '$lib/Piano.svelte';
 	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 	import { guessChord, GuessedChord } from '$lib/guessChord';
-	import Toggle from './Toggle.svelte';
+	import Toggle from '$lib/Toggle.svelte';
 
 	let notes = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
 

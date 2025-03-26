@@ -1,7 +1,7 @@
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { modWithNegative } from './util';
 
-type GuessedChord = {
+export type GuessedChord = {
 	root: CanonicalPitchClass;
 	confidence: number;
 	major: boolean;
