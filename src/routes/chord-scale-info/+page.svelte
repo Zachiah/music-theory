@@ -4,7 +4,7 @@
 </script>
 
 <Container maxW>
-    <h1 class="text-4xl pb-4">Info on Scales and Chords</h1>
+	<h1 class="pb-4 text-4xl">Info on Scales and Chords</h1>
 
 	<InfoPicker />
 </Container>

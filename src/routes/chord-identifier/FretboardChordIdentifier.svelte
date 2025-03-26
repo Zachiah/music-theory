@@ -3,6 +3,8 @@
 	import Fretboard from '$lib/Fretboard.svelte';
 	import ChordPrintingOptionsEditor from './ChordPrintingOptionsEditor.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import FretboardCreator from '$lib/FretboardCreator.svelte';
+	import Toggle from '$lib/Toggle.svelte';
 
 	let stringPitches: CanonicalPitch[] = $state([
 		{ pitchClass: 'E', octave: 4 },
@@ -58,11 +60,30 @@
 	});
 
 	const chordString = $derived(GuessedChord.print(guessedChord, options));
+
+	let flip = $state(true);
 </script>
 
-<ChordPrintingOptionsEditor {options} onChange={(o) => (options = o)} />
+<div>
+	<Toggle
+		active={flip}
+		onToggle={() => {
+			flip = !flip;
+		}}>Flip fretboard</Toggle
+	>
+</div>
+
+<FretboardCreator
+	{flip}
+	strings={stringPitches}
+	onChange={(s) => {
+		stringPitches = s;
+		pluggedAt = new Array(s.length).fill(null);
+	}}
+/>
 
 <Fretboard
+	{flip}
 	onClick={(stringIndex, fretIndex) => {
 		if (pluggedAt[stringIndex] === fretIndex) {
 			pluggedAt[stringIndex] = null;
@@ -72,6 +93,8 @@
 	}}
 	{strings}
 />
+
+<ChordPrintingOptionsEditor {options} onChange={(o) => (options = o)} />
 
 {#if pluggedAt.some((p) => p !== null)}
 	<p class="text-3xl">{chordString}</p>

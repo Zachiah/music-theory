@@ -238,7 +238,9 @@ describe(guessChord, () => {
 			'Am7'
 		);
 		expect(GuessedChord.print(guessChord(['G', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual('C6');
-		expect(GuessedChord.print(guessChord(['C', 'F', 'B', 'D']), defaultOptions)).toEqual('B° add♭9');
+		expect(GuessedChord.print(guessChord(['C', 'F', 'B', 'D']), defaultOptions)).toEqual(
+			'B° add♭9'
+		);
 		expect(GuessedChord.print(guessChord(['C', 'G', 'Bb']), defaultOptions)).toEqual('C7');
 		expect(GuessedChord.print(guessChord(['C', 'Bb']), defaultOptions)).toEqual('C7');
 	});

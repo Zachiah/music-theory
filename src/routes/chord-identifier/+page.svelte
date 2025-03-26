@@ -4,19 +4,21 @@
 	import FretboardChordIdentifier from './FretboardChordIdentifier.svelte';
 	import PianoChordIdentifier from './PianoChordIdentifier.svelte';
 
-	let showFretboard = $state(false)
+	let showFretboard = $state(false);
 </script>
 
 <Container>
-	<div class="flex pb-4 ">
-		<h1 class="text-4xl mr-auto">Identify Chords</h1>
+	<div class="flex pb-4">
+		<h1 class="mr-auto text-4xl">Identify Chords</h1>
 
-		<div class="flex w-72 h-12 bg-gray-200 rounded-full">
+		<div class="flex h-12 w-72 rounded-full bg-gray-200">
 			<TwoSidedToggle
 				first="Keyboard"
 				second="Fretboard"
 				checked={showFretboard}
-				onChange={(c) => {showFretboard = c}}
+				onChange={(c) => {
+					showFretboard = c;
+				}}
 			/>
 		</div>
 	</div>

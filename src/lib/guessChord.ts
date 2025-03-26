@@ -213,10 +213,9 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		return null;
 	})();
 
-
-	let c = cpc.includes('G') || augmented || diminished || (minor && flat5) ? 2 : 0
+	let c = cpc.includes('G') || augmented || diminished || (minor && flat5) ? 2 : 0;
 	if (c) {
-		c += cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4 ? 2 : 0
+		c += cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4 ? 2 : 0;
 	}
 
 	return {

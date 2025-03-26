@@ -3,7 +3,7 @@
 </script>
 
 <Container>
-    <h1 class="text-4xl pb-4">Music Theory</h1>
+	<h1 class="pb-4 text-4xl">Music Theory</h1>
 
 	<p>I will write something here at some point. For now please enjoy using the nav menu above (:</p>
 </Container>
