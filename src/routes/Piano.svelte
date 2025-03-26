@@ -5,17 +5,21 @@
 	const {
 		notes,
 		start,
-		toggle,
+		toggle
 	}: {
 		notes: boolean[];
 		start: PitchConstituents.LetterName;
-		toggle: (idx: number) => void
+		toggle: (idx: number) => void;
 	} = $props();
 
 	type NoteData = {
 		idx: number;
 		letterName: PitchConstituents.LetterName;
-		blackKey: null | { pitch: CanonicalPitchClass.CanonicalPitchClass; selected: boolean, idx: number };
+		blackKey: null | {
+			pitch: CanonicalPitchClass.CanonicalPitchClass;
+			selected: boolean;
+			idx: number;
+		};
 		selected: boolean;
 	};
 
@@ -39,7 +43,7 @@
 					letterName: pitch as PitchConstituents.LetterName,
 					blackKey: null,
 					selected,
-					idx,
+					idx
 				}
 			];
 		}, [])
@@ -60,7 +64,7 @@
 			{#if blackKey}
 				<button
 					aria-label={`Toggle note ${blackKey.pitch}`}
-					class="absolute top-0 -right-4 h-16 w-8 border border-black z-20"
+					class="absolute top-0 -right-4 z-20 h-16 w-8 border border-black"
 					class:bg-black={!blackKey.selected}
 					class:bg-blue-500={blackKey.selected}
 					onclick={() => toggle(blackKey.idx)}
