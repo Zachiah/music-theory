@@ -249,7 +249,4 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['D', 'Gb', 'A']), defaultOptions)).toEqual('D');
 		expect(GuessedChord.print(guessChord(['F', 'Ab', 'C']), defaultOptions)).toEqual('Fm');
 	});
-
-	it.todo('should handle inversions of simple triads');
-	it.todo('should handle out of order notes');
 });

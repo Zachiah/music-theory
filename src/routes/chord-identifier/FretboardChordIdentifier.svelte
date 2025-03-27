@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { guessChord, GuessedChord } from '$lib/guessChord';
 	import Fretboard from '$lib/Fretboard.svelte';
-	import ChordPrintingOptionsEditor from './ChordPrintingOptionsEditor.svelte';
+	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import FretboardCreator from '$lib/FretboardCreator.svelte';
 	import Toggle from '$lib/Toggle.svelte';
+
+	const {
+		options,
+		onOptionsChange
+	}: {
+		options: GuessedChord.PrintingOptions;
+		onOptionsChange(o: GuessedChord.PrintingOptions): void;
+	} = $props();
 
 	let stringPitches: CanonicalPitch[] = $state([
 		{ pitchClass: 'E', octave: 4 },
@@ -50,31 +58,23 @@
 
 	const guessedChord = $derived(guessChord(pitches));
 
-	let options = $state<GuessedChord.PrintingOptions>({
-		six: true,
-		sixNine: true,
-		properFlats: true,
-		properSharps: true,
-		properDiminished: true,
-		properAugmented: true
-	});
-
 	const chordString = $derived(GuessedChord.print(guessedChord, options));
 
-	let flip = $state(true);
+	let vertical = $state(false);
 </script>
 
 <div>
 	<Toggle
-		active={flip}
+		active={vertical}
 		onToggle={() => {
-			flip = !flip;
-		}}>Flip fretboard</Toggle
+			vertical = !vertical;
+		}}
 	>
+		Vertical fretboard
+	</Toggle>
 </div>
 
 <FretboardCreator
-	{flip}
 	strings={stringPitches}
 	onChange={(s) => {
 		stringPitches = s;
@@ -82,20 +82,26 @@
 	}}
 />
 
-<Fretboard
-	{flip}
-	onClick={(stringIndex, fretIndex) => {
-		if (pluggedAt[stringIndex] === fretIndex) {
-			pluggedAt[stringIndex] = null;
-		} else {
-			pluggedAt[stringIndex] = fretIndex;
-		}
-	}}
-	{strings}
-/>
+<div>
+	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
+</div>
 
-<ChordPrintingOptionsEditor {options} onChange={(o) => (options = o)} />
+<div class="mt-8 flex gap-8" class:flex-col={!vertical}>
+	<Fretboard
+		{vertical}
+		onClick={(stringIndex, fretIndex) => {
+			if (pluggedAt[stringIndex] === fretIndex) {
+				pluggedAt[stringIndex] = null;
+			} else {
+				pluggedAt[stringIndex] = fretIndex;
+			}
+		}}
+		{strings}
+	/>
 
-{#if pluggedAt.some((p) => p !== null)}
-	<p class="text-3xl">{chordString}</p>
-{/if}
+	<div class="flex flex-col gap-8">
+		{#if pluggedAt.some((p) => p !== null)}
+			<p class="text-3xl">{chordString}</p>
+		{/if}
+	</div>
+</div>

@@ -10,17 +10,17 @@
 	const {
 		onClick,
 		strings,
-		flip
+		vertical
 	}: {
 		onClick: (string: number, fret: number) => void;
 		strings: FretboardString[];
-		flip: boolean;
+		vertical: boolean;
 	} = $props();
 
 	const usableStrings = $derived.by(() => {
 		const indexed = strings.map((s, idx) => ({ s, idx }));
 
-		if (!flip) {
+		if (vertical) {
 			return indexed;
 		}
 
@@ -31,10 +31,24 @@
 {#snippet fret(
 	note: CanonicalPitch,
 	noteActivation: 'neutral' | 'disabled' | 'active' | 'none',
-	onClick: () => void
+	onClick: () => void,
+	thick: boolean
 )}
-	<button onclick={onClick} class="relative w-10 shrink-0 border-r-2 border-black">
-		<div class="absolute top-1/2 h-1 w-full -translate-y-1/2 transform bg-black"></div>
+	<button
+		onclick={onClick}
+		class="relative shrink-0 "
+		class:border-r-2={!thick && !vertical}
+		class:border-r-8={thick && !vertical}
+		class:border-b-2={!thick && vertical}
+		class:border-b-8={thick && vertical}
+		class:border-gray-400={!thick}
+		class:border-stone-700={thick}
+		class:w-10={!vertical}
+		class:h-10={vertical}
+	>
+		<div
+			class={`absolute transform bg-black ${vertical ? 'bottom-0 left-1/2 h-full w-1 -translate-x-1/2' : 'top-1/2 h-1 w-full -translate-y-1/2'}`}
+		></div>
 
 		{#if noteActivation !== 'none'}
 			<div
@@ -50,18 +64,23 @@
 {/snippet}
 
 {#snippet string(fs: FretboardString, idx: number)}
-	<div class="flex h-8">
+	<div class="flex" class:h-8={!vertical} class:w-8={vertical} class:flex-col={vertical}>
 		{#each fs.frets as fretActivation, fretIdx}
 			{@const pitch = CanonicalPitch.applyOffset(fs.open, fretIdx)}
 
-			{@render fret(pitch, fretActivation, () => {
-				onClick(idx, fretIdx);
-			})}
+			{@render fret(
+				pitch,
+				fretActivation,
+				() => {
+					onClick(idx, fretIdx);
+				},
+				fretIdx === 0
+			)}
 		{/each}
 	</div>
 {/snippet}
 
-<div>
+<div class="flex" class:flex-col={!vertical}>
 	{#each usableStrings as { s, idx }}
 		{@render string(s, idx)}
 	{/each}

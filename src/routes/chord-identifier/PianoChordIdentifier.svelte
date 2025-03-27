@@ -2,7 +2,9 @@
 	import Piano from '$lib/Piano.svelte';
 	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 	import { guessChord, GuessedChord } from '$lib/guessChord';
-	import ChordPrintingOptionsEditor from './ChordPrintingOptionsEditor.svelte';
+	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
+
+	const {options, onOptionsChange}: {options: GuessedChord.PrintingOptions, onOptionsChange(o: GuessedChord.PrintingOptions): void} = $props()
 
 	let notes = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
 
@@ -37,25 +39,16 @@
 		...intervalsFromStart.map((i) => CanonicalPitchClass.applyOffset(firstSelected, i))
 	]);
 
-	let options = $state<GuessedChord.PrintingOptions>({
-		six: true,
-		sixNine: true,
-		properFlats: true,
-		properSharps: true,
-		properDiminished: true,
-		properAugmented: true
-	});
-
 	const chord = $derived(guessChord(canonicalPitchClasses));
 	const chordString = $derived(GuessedChord.print(chord, options));
 </script>
 
-<ChordPrintingOptionsEditor
-	{options}
-	onChange={(o) => {
-		options = o;
-	}}
-/>
+<div>
+	<ChordPrintingOptionsEditorButton
+		{options}
+		onChange={onOptionsChange}
+	/>
+</div>
 
 <Piano {notes} start="C" toggle={(idx) => (notes[idx] = !notes[idx])} />
 

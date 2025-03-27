@@ -13,7 +13,7 @@
 </script>
 
 <label
-	class="relative rounded-full px-4 py-2 text-xs duration-200"
+	class="relative rounded-md px-4 py-2 duration-200"
 	class:bg-gray-300={!active}
 	class:text-gray-600={!active}
 	class:bg-blue-500={active}

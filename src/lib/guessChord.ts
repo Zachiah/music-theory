@@ -134,8 +134,6 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 
 	const cpc = pitches.map((p) => CanonicalPitchClass.applyOffset(p, -distance));
 
-	console.log(pitches[0], distance, cpc);
-
 	const diminished =
 		cpc.includes('Eb') &&
 		cpc.includes('Gb') &&

@@ -5,7 +5,7 @@
 	const {
 		strings,
 		onChange
-	}: { strings: CanonicalPitch[]; onChange(n: CanonicalPitch[]): void; flip: boolean } = $props();
+	}: { strings: CanonicalPitch[]; onChange(n: CanonicalPitch[]): void;} = $props();
 
 	const onStringChange = (idx: number, newString: CanonicalPitch) => {
 		onChange([...strings.slice(0, idx), newString, ...strings.slice(idx + 1)]);

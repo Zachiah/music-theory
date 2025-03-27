@@ -1,10 +1,24 @@
 <script lang="ts">
+	import { GuessedChord } from '$lib/guessChord';
 	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
 	import Container from '../Container.svelte';
 	import FretboardChordIdentifier from './FretboardChordIdentifier.svelte';
 	import PianoChordIdentifier from './PianoChordIdentifier.svelte';
 
 	let showFretboard = $state(false);
+
+	let options = $state<GuessedChord.PrintingOptions>({
+		six: true,
+		sixNine: true,
+		properFlats: true,
+		properSharps: true,
+		properDiminished: true,
+		properAugmented: true
+	});
+
+	const onOptionsChange = (o: GuessedChord.PrintingOptions) => {
+		options = o;
+	};
 </script>
 
 <Container>
@@ -24,8 +38,8 @@
 	</div>
 
 	{#if showFretboard}
-		<FretboardChordIdentifier />
+		<FretboardChordIdentifier {options} {onOptionsChange} />
 	{:else}
-		<PianoChordIdentifier />
+		<PianoChordIdentifier {options} {onOptionsChange} />
 	{/if}
 </Container>
