@@ -12,13 +12,13 @@
 		onChange(o: GuessedChord.PrintingOptions): void;
 	} = $props();
 
-	let open = $state(false)
+	let open = $state(false);
 </script>
 
-<Button onClick={() => open = true}>Edit Chord Display</Button>
+<Button onClick={() => (open = true)}>Edit Chord Display</Button>
 
-<ModalDialogBase {open} onClose={() => open = false}>
-	<div class="min-h-[50vh] flex flex-col bg-white rounded-md shadow-lg p-8">
+<ModalDialogBase {open} onClose={() => (open = false)}>
+	<div class="flex min-h-[50vh] flex-col rounded-md bg-white p-8 shadow-lg">
 		<div class="flex flex-wrap gap-2">
 			<Toggle
 				active={options.six}
@@ -75,8 +75,8 @@
 			</Toggle>
 		</div>
 
-		<div class="mt-auto justify-end flex">
-			<Button onClick={() => open = false}>Close</Button>
+		<div class="mt-auto flex justify-end">
+			<Button onClick={() => (open = false)}>Close</Button>
 		</div>
 	</div>
 </ModalDialogBase>

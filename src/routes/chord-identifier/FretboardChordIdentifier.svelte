@@ -63,7 +63,7 @@
 	let vertical = $state(false);
 </script>
 
-<div>
+<div class="flex gap-4">
 	<Toggle
 		active={vertical}
 		onToggle={() => {
@@ -72,6 +72,7 @@
 	>
 		Vertical fretboard
 	</Toggle>
+	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 </div>
 
 <FretboardCreator
@@ -81,10 +82,6 @@
 		pluggedAt = new Array(s.length).fill(null);
 	}}
 />
-
-<div>
-	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
-</div>
 
 <div class="mt-8 flex gap-8" class:flex-col={!vertical}>
 	<Fretboard

@@ -36,7 +36,7 @@
 )}
 	<button
 		onclick={onClick}
-		class="relative shrink-0 "
+		class="relative shrink-0"
 		class:border-r-2={!thick && !vertical}
 		class:border-r-8={thick && !vertical}
 		class:border-b-2={!thick && vertical}

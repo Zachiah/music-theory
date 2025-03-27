@@ -22,7 +22,7 @@
 				onClose();
 			}
 		}}
-        transition:fade={{duration: 100}}
+		transition:fade={{ duration: 100 }}
 	>
 		{@render children()}
 	</div>

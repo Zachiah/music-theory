@@ -2,10 +2,8 @@
 	import { CanonicalPitch } from './CanonicalPitch';
 	import { CanonicalPitchClass } from './CanonicalPitchClass';
 
-	const {
-		strings,
-		onChange
-	}: { strings: CanonicalPitch[]; onChange(n: CanonicalPitch[]): void;} = $props();
+	const { strings, onChange }: { strings: CanonicalPitch[]; onChange(n: CanonicalPitch[]): void } =
+		$props();
 
 	const onStringChange = (idx: number, newString: CanonicalPitch) => {
 		onChange([...strings.slice(0, idx), newString, ...strings.slice(idx + 1)]);
@@ -29,25 +27,28 @@
 	}));
 </script>
 
-<div class="flex flex-wrap gap-4">
-	{#each presets as { name, strings: presetStrings }}
-		{@const current =
-			presetStrings.length === strings.length &&
-			presetStrings.every(
-				(s, i) => s.pitchClass === strings[i].pitchClass && s.octave === strings[i].octave
-			)}
-		<button
-			class="rounded-md px-4 py-2 duration-100 hover:bg-blue-500"
-			class:bg-blue-500={current}
-			class:bg-gray-200={!current}
-			onclick={() => {
-				onChange(presetStrings);
-			}}>{name}</button
-		>
-	{/each}
-</div>
+<div class="flex flex-col gap-4 py-4">
+	<h2 class="text-2xl">Fretboard</h2>
 
-<!--
+	<div class="flex flex-wrap gap-4">
+		{#each presets as { name, strings: presetStrings }}
+			{@const current =
+				presetStrings.length === strings.length &&
+				presetStrings.every(
+					(s, i) => s.pitchClass === strings[i].pitchClass && s.octave === strings[i].octave
+				)}
+			<button
+				class="rounded-md px-4 py-2 duration-100 hover:bg-blue-500"
+				class:bg-blue-500={current}
+				class:bg-gray-200={!current}
+				onclick={() => {
+					onChange(presetStrings);
+				}}>{name}</button
+			>
+		{/each}
+	</div>
+
+	<!--
 <div class="flex flex-wrap gap-2">
 	{#each strings as string, idx}
 		<div class="flex rounded-full">
@@ -92,3 +93,4 @@
 	</div>
 </div>
 -->
+</div>

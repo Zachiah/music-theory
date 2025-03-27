@@ -4,7 +4,13 @@
 	import { guessChord, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 
-	const {options, onOptionsChange}: {options: GuessedChord.PrintingOptions, onOptionsChange(o: GuessedChord.PrintingOptions): void} = $props()
+	const {
+		options,
+		onOptionsChange
+	}: {
+		options: GuessedChord.PrintingOptions;
+		onOptionsChange(o: GuessedChord.PrintingOptions): void;
+	} = $props();
 
 	let notes = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
 
@@ -44,10 +50,7 @@
 </script>
 
 <div>
-	<ChordPrintingOptionsEditorButton
-		{options}
-		onChange={onOptionsChange}
-	/>
+	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 </div>
 
 <Piano {notes} start="C" toggle={(idx) => (notes[idx] = !notes[idx])} />
