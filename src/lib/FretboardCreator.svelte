@@ -40,7 +40,9 @@
 <Button onClick={() => (open = true)}>Create Preset</Button>
 
 <ModalDialogBase {open} onClose={() => (open = false)}>
-	<div class="mx-4 flex w-full max-w-2xl flex-col gap-8 rounded-md bg-white p-8 shadow-lg">
+	<div
+		class="mx-4 flex max-h-[80vh] w-full max-w-2xl flex-col gap-8 overflow-y-auto rounded-md bg-white p-8 shadow-lg"
+	>
 		<h2 class="text-2xl">Fretboard</h2>
 
 		<FormField label="Preset Name" error={nameError}>
