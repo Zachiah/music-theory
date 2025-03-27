@@ -1,24 +1,23 @@
 <script lang="ts">
 	import { CanonicalPitch } from './CanonicalPitch';
+	import type { Fretboard } from './Fretboard';
 
-	type FretboardString = {
-		open: CanonicalPitch;
-		frets: FretActivation[];
-	};
 	type FretActivation = 'neutral' | 'disabled' | 'active' | 'none';
 
 	const {
 		onClick,
-		strings,
-		vertical
+		vertical,
+		fretboard,
+		stringDecorations
 	}: {
 		onClick: (string: number, fret: number) => void;
-		strings: FretboardString[];
 		vertical: boolean;
+		fretboard: Fretboard;
+		stringDecorations: FretActivation[][];
 	} = $props();
 
 	const usableStrings = $derived.by(() => {
-		const indexed = strings.map((s, idx) => ({ s, idx }));
+		const indexed = fretboard.strings.map((s, idx) => ({ s, idx }));
 
 		if (vertical) {
 			return indexed;
@@ -63,14 +62,15 @@
 	</button>
 {/snippet}
 
-{#snippet string(fs: FretboardString, idx: number)}
+{#snippet string(stringPitch: CanonicalPitch, idx: number)}
 	<div class="flex" class:h-8={!vertical} class:w-8={vertical} class:flex-col={vertical}>
-		{#each fs.frets as fretActivation, fretIdx}
-			{@const pitch = CanonicalPitch.applyOffset(fs.open, fretIdx)}
+		{#each new Array(fretboard.frets).fill(null) as _, fretIdx}
+			{@const pitch = CanonicalPitch.applyOffset(stringPitch, fretIdx)}
+			{@const fretDecoration = stringDecorations[idx][fretIdx]}
 
 			{@render fret(
 				pitch,
-				fretActivation,
+				fretDecoration,
 				() => {
 					onClick(idx, fretIdx);
 				},

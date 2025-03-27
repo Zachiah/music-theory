@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { guessChord, GuessedChord } from '$lib/guessChord';
-	import Fretboard from '$lib/Fretboard.svelte';
+	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import FretboardCreator from '$lib/FretboardCreator.svelte';
 	import Toggle from '$lib/Toggle.svelte';
+	import FretboardPresets from '$lib/FretboardPresets.svelte';
+	import type { Fretboard } from '$lib/Fretboard';
 
 	const {
 		options,
@@ -14,21 +16,35 @@
 		onOptionsChange(o: GuessedChord.PrintingOptions): void;
 	} = $props();
 
-	let stringPitches: CanonicalPitch[] = $state([
-		{ pitchClass: 'E', octave: 4 },
-		{ pitchClass: 'B', octave: 3 },
-		{ pitchClass: 'G', octave: 3 },
-		{ pitchClass: 'D', octave: 3 },
-		{ pitchClass: 'A', octave: 2 },
-		{ pitchClass: 'E', octave: 2 }
-	]);
+	const defaultPresets: Fretboard[] = [
+		{ name: 'Guitar', strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+		{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'] },
+		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D2'] },
+		{ name: 'Ukelele (reentrant)', strings: ['G4', 'C4', 'E4', 'A4'] },
+		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'] }
+	].map((row) => ({
+		...row,
+		strings: row.strings.map((s) => {
+			const parsed = CanonicalPitch.parse(s);
+			if (!parsed) {
+				throw new Error('Failed to parse');
+			}
+
+			return parsed;
+		}),
+		frets: 24,
+		dots: []
+	}));
+
+	let fretboardPresets: Fretboard[] = $state(defaultPresets);
+
+	let fretboard = $state(defaultPresets[0]);
 
 	let pluggedAt: (number | null)[] = $state([null, null, null, null, null, null]);
 
-	const strings = $derived(
-		stringPitches.map((sp, stringIndex) => ({
-			open: sp,
-			frets: new Array(24).fill(null).map((_, idx) => {
+	const stringDecorations = $derived(
+		fretboard.strings.map((openPitch, stringIndex) =>
+			new Array(24).fill(null).map((_, idx) => {
 				if (pluggedAt[stringIndex] === idx) {
 					return 'active';
 				}
@@ -39,12 +55,12 @@
 
 				return 'none';
 			})
-		}))
+		)
 	);
 
 	const pitches = $derived.by(() => {
 		const canonicalPitches = pluggedAt.flatMap((pa, idx) => {
-			const string = stringPitches[idx];
+			const string = fretboard.strings[idx];
 
 			if (pa === null) {
 				return [];
@@ -63,6 +79,9 @@
 	let vertical = $state(false);
 </script>
 
+<!-- svelte-ignore state_referenced_locally -->
+<!-- svelte-ignore state_referenced_locally -->
+<!-- svelte-ignore state_referenced_locally -->
 <div class="flex gap-4">
 	<Toggle
 		active={vertical}
@@ -72,19 +91,32 @@
 	>
 		Vertical fretboard
 	</Toggle>
+
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
+
+	<FretboardCreator
+		activeFretboard={fretboard}
+		onCreate={(f) => {
+			fretboardPresets = [...fretboardPresets, f];
+			fretboard = f;
+			pluggedAt = new Array(fretboard.strings.length).fill(null);
+		}}
+	/>
 </div>
 
-<FretboardCreator
-	strings={stringPitches}
-	onChange={(s) => {
-		stringPitches = s;
-		pluggedAt = new Array(s.length).fill(null);
+<FretboardPresets
+	presets={fretboardPresets}
+	activeFretboard={fretboard}
+	onSelect={(f) => {
+		fretboard = f;
+		pluggedAt = new Array(f.strings.length).fill(null);
 	}}
 />
 
 <div class="mt-8 flex gap-8" class:flex-col={!vertical}>
-	<Fretboard
+	<FretboardDisplay
+		{fretboard}
+		{stringDecorations}
 		{vertical}
 		onClick={(stringIndex, fretIndex) => {
 			if (pluggedAt[stringIndex] === fretIndex) {
@@ -93,7 +125,6 @@
 				pluggedAt[stringIndex] = fretIndex;
 			}
 		}}
-		{strings}
 	/>
 
 	<div class="flex flex-col gap-8">
