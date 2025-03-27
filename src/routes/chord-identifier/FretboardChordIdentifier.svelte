@@ -95,7 +95,6 @@
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 
 	<FretboardCreator
-		activeFretboard={fretboard}
 		onCreate={(f) => {
 			fretboardPresets = [...fretboardPresets, f];
 			fretboard = f;

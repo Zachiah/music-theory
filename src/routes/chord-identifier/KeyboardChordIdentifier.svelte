@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Piano from '$lib/Piano.svelte';
+	import Keyboard from '$lib/Keyboard.svelte';
 	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 	import { guessChord, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
@@ -53,7 +53,7 @@
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 </div>
 
-<Piano {notes} start="C" toggle={(idx) => (notes[idx] = !notes[idx])} />
+<Keyboard {notes} start="C" toggle={(idx) => (notes[idx] = !notes[idx])} />
 
 {#if notes.some((n) => n)}
 	<p class="text-3xl">{chordString}</p>

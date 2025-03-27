@@ -3,7 +3,7 @@
 	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
 	import Container from '../Container.svelte';
 	import FretboardChordIdentifier from './FretboardChordIdentifier.svelte';
-	import PianoChordIdentifier from './PianoChordIdentifier.svelte';
+	import KeyboardChordIdentifier from './KeyboardChordIdentifier.svelte';
 
 	let showFretboard = $state(false);
 
@@ -40,6 +40,6 @@
 	{#if showFretboard}
 		<FretboardChordIdentifier {options} {onOptionsChange} />
 	{:else}
-		<PianoChordIdentifier {options} {onOptionsChange} />
+		<KeyboardChordIdentifier {options} {onOptionsChange} />
 	{/if}
 </Container>
