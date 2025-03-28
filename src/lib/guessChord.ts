@@ -3,7 +3,6 @@ import { modWithNegative } from './util';
 
 export type GuessedChord = {
 	root: CanonicalPitchClass;
-	confidence: number;
 	major: boolean;
 	minor: boolean;
 	diminished: boolean;
@@ -29,6 +28,11 @@ export type GuessedChord = {
 	addFlat13: boolean;
 	six: boolean;
 	sixNine: boolean;
+	hasThreeish: boolean;
+	hasFivish: boolean;
+	hasMiddlish: boolean;
+	hasFive: boolean;
+	hasSevenish: boolean;
 	highestDegree: null | number;
 };
 
@@ -90,12 +94,20 @@ export namespace GuessedChord {
 		return `${baseModifiers.join('')}${additionalModifiers.length ? ' ' : ''}${additionalModifiers.join(' ')}`;
 	};
 
+	export const getBigConf = (chord: GuessedChord) => {
+		if (chord.hasThreeish || chord.hasFivish) {
+			return 1
+		}
+		return 0
+	}
+
 	export const getComplexity = (chord: GuessedChord) => {
 		return [
 			chord.major,
-			chord.minor,
-			chord.diminished,
-			chord.augmented,
+			// Chords are implicitly major so we can't count
+			// chord.minor,
+			// chord.diminished,
+			// chord.augmented,
 			chord.sus4,
 			chord.sus2,
 			chord.flat5,
@@ -115,7 +127,7 @@ export namespace GuessedChord {
 			chord.add13,
 			chord.flat13,
 			chord.addFlat13,
-			chord.six,
+			//chord.six,
 			chord.sixNine
 		]
 			.map<number>((b) => (b ? 1 : 0))
@@ -211,14 +223,13 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		return null;
 	})();
 
-	let c = cpc.includes('G') || augmented || diminished || (minor && flat5) ? 2 : 0;
-	if (c) {
-		c += cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4 ? 2 : 0;
-	}
+	const hasFivish = cpc.includes('G') || augmented || diminished || (minor && flat5)
+	const hasThreeish = cpc.includes('E') || cpc.includes('Eb')
+	const hasMiddlish = cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4
+	const hasSevenish = seven || maj7 || ((highestDegree || 0) >= 7)
 
 	return {
 		root: pitches[0],
-		confidence: c,
 		major,
 		minor,
 		diminished,
@@ -244,7 +255,12 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		addFlat13,
 		thirteen,
 		sixNine: isSixNineChord,
-		six: isSixChord
+		six: isSixChord,
+		hasFive: cpc.includes('G'),
+		hasFivish,
+		hasThreeish,
+		hasMiddlish,
+		hasSevenish,
 	};
 };
 
@@ -261,19 +277,23 @@ export const guessChord = (pitches: CanonicalPitchClass[]): GuessedChord => {
 		.map((_, idx) => rotate(idx, pitches))
 		.map((p) => guessChordNoInversions(p));
 
-	// const firstConf = allPossible[0].confidence
-	const firstConf = allPossible[0].confidence * 1001 - GuessedChord.getComplexity(allPossible[0]);
-	const bestRes = allPossible.reduce<{ c: GuessedChord; conf: number }>(
+	console.log()
+	const bestRes = allPossible.reduce<{ c: GuessedChord; conf: number, done: boolean }>(
 		(best, curr) => {
-			// const currConf = curr.confidence
-			const currConf = curr.confidence * 1000 - GuessedChord.getComplexity(curr);
+			if (best.done) {
+				return best
+			}
+
+			const currConf = GuessedChord.getBigConf(curr) * 1000 - GuessedChord.getComplexity(curr);
+
+			console.log(GuessedChord.print(curr, { six: true, sixNine: true, properFlats: true, properSharps: true, properAugmented: true, properDiminished: true }), currConf)
 
 			if (currConf > best.conf) {
-				return { c: curr, conf: currConf };
+				return { c: curr, conf: currConf, done: curr.hasMiddlish && curr.hasSevenish };
 			}
 			return best;
 		},
-		{ c: allPossible[0], conf: firstConf + 1 }
+		{ c: allPossible[0], conf: 0, done: false }
 	);
 
 	return bestRes.c;

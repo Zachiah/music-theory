@@ -80,7 +80,7 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['C', 'E', 'G', 'A']), defaultOptions)).toEqual('C6');
 		expect(GuessedChord.print(guessChord(['C', 'Eb', 'G', 'A']), defaultOptions)).toEqual('Cm6');
 		expect(GuessedChord.print(guessChord(['C', 'Eb', 'E', 'G', 'A']), defaultOptions)).toEqual(
-			'C add♯9 add13'
+			'Am7 add♯11'
 		);
 		expect(GuessedChord.print(guessChord(['C', 'D', 'E', 'G', 'A']), defaultOptions)).toEqual(
 			'C6/9'
@@ -166,7 +166,7 @@ describe(guessChord, () => {
 			'C9 7 maj7'
 		);
 		expect(GuessedChord.print(guessChord(['C', 'E', 'Gb', 'Ab']), defaultOptions)).toEqual(
-			'C+ add♯11'
+			'Ab+7'
 		);
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'E', 'Gb', 'Ab', 'Bb']), defaultOptions)
@@ -230,7 +230,7 @@ describe(guessChord, () => {
 		).toEqual('Ab');
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'Eb', 'F', 'Ab', 'Bb']), defaultOptions)
-		).toEqual('Bb11');
+		).toEqual('Cm11 ♭13');
 		expect(GuessedChord.print(guessChord(['G', 'Bb', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual(
 			'C7 add13'
 		);
@@ -249,4 +249,10 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['D', 'Gb', 'A']), defaultOptions)).toEqual('D');
 		expect(GuessedChord.print(guessChord(['F', 'Ab', 'C']), defaultOptions)).toEqual('Fm');
 	});
+
+	it('should support inversion edge cases', () => {
+		expect(GuessedChord.print(guessChord(['G', 'F', 'B', 'E']), defaultOptions)).toEqual('G7 add13')
+		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), defaultOptions)).toEqual('D7')
+		expect(GuessedChord.print(guessChord(['Eb', 'G', 'D', 'F']), defaultOptions)).toEqual('Ebmaj9')
+	})
 });
