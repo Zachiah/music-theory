@@ -27,6 +27,7 @@ export type GuessedChord = {
 	flat13: boolean;
 	addFlat13: boolean;
 	six: boolean;
+	flatSix: boolean;
 	sixNine: boolean;
 	hasThreeish: boolean;
 	hasFivish: boolean;
@@ -54,6 +55,7 @@ export namespace GuessedChord {
 		const upperFlat = options.properFlats ? '♭' : 'B';
 		const sharp = options.properSharps ? '♯' : '#';
 		const six = options.six ? '6' : ' add13';
+		const flatSix = options.six ? `${lowerFlat}6` : ' add13';
 		const sixNine = options.sixNine ? '6/9' : ' add9 add13';
 		const dim = options.properDiminished ? '°' : 'dim';
 		const aug = options.properAugmented ? '+' : 'aug';
@@ -64,6 +66,7 @@ export namespace GuessedChord {
 			c.diminished ? dim : '',
 			c.minor ? 'm' : '',
 			c.six ? six : '',
+			c.flatSix ? flatSix : '',
 			c.sixNine ? sixNine : '',
 			major,
 			c.highestDegree === null ? '' : c.highestDegree
@@ -96,10 +99,10 @@ export namespace GuessedChord {
 
 	export const getBigConf = (chord: GuessedChord) => {
 		if (chord.hasThreeish || chord.hasFivish) {
-			return 1
+			return 1;
 		}
-		return 0
-	}
+		return 0;
+	};
 
 	export const getComplexity = (chord: GuessedChord) => {
 		return [
@@ -128,6 +131,7 @@ export namespace GuessedChord {
 			chord.flat13,
 			chord.addFlat13,
 			//chord.six,
+			chord.flatSix,
 			chord.sixNine
 		]
 			.map<number>((b) => (b ? 1 : 0))
@@ -195,8 +199,15 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		!(cpc.includes('E') && cpc.includes('Eb')) &&
 		cpc.includes('A');
 
+	const flatSixChordNotes: CanonicalPitchClass[] = ['C', 'E', 'Eb', 'G', 'Ab'];
+	const isFlatSixChord =
+		!augmented &&
+		cpc.every((n) => flatSixChordNotes.includes(n)) &&
+		!(cpc.includes('E') && cpc.includes('Eb')) &&
+		cpc.includes('Ab');
+
 	const flat13 = hasEleven && cpc.includes('Ab') && !augmented;
-	const addFlat13 = !hasEleven && cpc.includes('Ab') && !augmented;
+	const addFlat13 = !isFlatSixChord && !hasEleven && cpc.includes('Ab') && !augmented;
 	const thirteen = flat13 && cpc.includes('A');
 	const add13 = !isSixNineChord && !isSixChord && !diminished && !hasEleven && cpc.includes('A');
 
@@ -223,10 +234,10 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		return null;
 	})();
 
-	const hasFivish = cpc.includes('G') || augmented || diminished || (minor && flat5)
-	const hasThreeish = cpc.includes('E') || cpc.includes('Eb')
-	const hasMiddlish = cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4
-	const hasSevenish = seven || maj7 || ((highestDegree || 0) >= 7)
+	const hasFivish = cpc.includes('G') || augmented || diminished || (minor && flat5);
+	const hasThreeish = cpc.includes('E') || cpc.includes('Eb');
+	const hasMiddlish = cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4;
+	const hasSevenish = seven || maj7 || (highestDegree || 0) >= 7;
 
 	return {
 		root: pitches[0],
@@ -256,11 +267,12 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		thirteen,
 		sixNine: isSixNineChord,
 		six: isSixChord,
+		flatSix: isFlatSixChord,
 		hasFive: cpc.includes('G'),
 		hasFivish,
 		hasThreeish,
 		hasMiddlish,
-		hasSevenish,
+		hasSevenish
 	};
 };
 
@@ -277,19 +289,32 @@ export const guessChord = (pitches: CanonicalPitchClass[]): GuessedChord => {
 		.map((_, idx) => rotate(idx, pitches))
 		.map((p) => guessChordNoInversions(p));
 
-	console.log()
-	const bestRes = allPossible.reduce<{ c: GuessedChord; conf: number, done: boolean }>(
+	console.log();
+	const bestRes = allPossible.reduce<{ c: GuessedChord; conf: number; done: boolean }>(
 		(best, curr) => {
 			if (best.done) {
-				return best
+				return best;
 			}
 
 			const currConf = GuessedChord.getBigConf(curr) * 1000 - GuessedChord.getComplexity(curr);
 
-			console.log(GuessedChord.print(curr, { six: true, sixNine: true, properFlats: true, properSharps: true, properAugmented: true, properDiminished: true }), currConf)
+			const wouldBeDone = curr.hasMiddlish && curr.hasSevenish;
+
+			console.log(
+				GuessedChord.print(curr, {
+					six: true,
+					sixNine: true,
+					properFlats: true,
+					properSharps: true,
+					properAugmented: true,
+					properDiminished: true
+				}),
+				currConf,
+				wouldBeDone
+			);
 
 			if (currConf > best.conf) {
-				return { c: curr, conf: currConf, done: curr.hasMiddlish && curr.hasSevenish };
+				return { c: curr, conf: currConf, done: wouldBeDone };
 			}
 			return best;
 		},
