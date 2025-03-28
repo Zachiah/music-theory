@@ -27,6 +27,7 @@ export type GuessedChord = {
 	flat13: boolean;
 	addFlat13: boolean;
 	six: boolean;
+	flatSix: boolean;
 	sixNine: boolean;
 	hasThreeish: boolean;
 	hasFivish: boolean;
@@ -54,6 +55,7 @@ export namespace GuessedChord {
 		const upperFlat = options.properFlats ? '♭' : 'B';
 		const sharp = options.properSharps ? '♯' : '#';
 		const six = options.six ? '6' : ' add13';
+		const flatSix = options.six ? `${lowerFlat}6` : ' add13';
 		const sixNine = options.sixNine ? '6/9' : ' add9 add13';
 		const dim = options.properDiminished ? '°' : 'dim';
 		const aug = options.properAugmented ? '+' : 'aug';
@@ -64,6 +66,7 @@ export namespace GuessedChord {
 			c.diminished ? dim : '',
 			c.minor ? 'm' : '',
 			c.six ? six : '',
+			c.flatSix ? flatSix : '',
 			c.sixNine ? sixNine : '',
 			major,
 			c.highestDegree === null ? '' : c.highestDegree
@@ -102,6 +105,8 @@ export namespace GuessedChord {
 	}
 
 	export const getComplexity = (chord: GuessedChord) => {
+		const highestDegreePenalty = chord.highestDegree === 7 ? 1 : chord.highestDegree === 9 ? 2 : chord.highestDegree === 11 ? 3 : chord.highestDegree === 13 ? 4 : 0
+		console.log({ highestDegreePenalty })
 		return [
 			chord.major,
 			// Chords are implicitly major so we can't count
@@ -127,11 +132,12 @@ export namespace GuessedChord {
 			chord.add13,
 			chord.flat13,
 			chord.addFlat13,
-			//chord.six,
+			chord.six,
+			chord.flatSix,
 			chord.sixNine
 		]
 			.map<number>((b) => (b ? 1 : 0))
-			.reduce((a, b) => a + b, 0);
+			.reduce((a, b) => a + b, 0) + highestDegreePenalty;
 	};
 }
 
@@ -195,8 +201,15 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		!(cpc.includes('E') && cpc.includes('Eb')) &&
 		cpc.includes('A');
 
+	const flatSixChordNotes: CanonicalPitchClass[] = ['C', 'E', 'Eb', 'G', 'Ab'];
+	const isFlatSixChord =
+		!augmented &&
+		cpc.every((n) => flatSixChordNotes.includes(n)) &&
+		!(cpc.includes('E') && cpc.includes('Eb')) &&
+		cpc.includes('Ab');
+
 	const flat13 = hasEleven && cpc.includes('Ab') && !augmented;
-	const addFlat13 = !hasEleven && cpc.includes('Ab') && !augmented;
+	const addFlat13 = !isFlatSixChord && !hasEleven && cpc.includes('Ab') && !augmented;
 	const thirteen = flat13 && cpc.includes('A');
 	const add13 = !isSixNineChord && !isSixChord && !diminished && !hasEleven && cpc.includes('A');
 
@@ -256,6 +269,7 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 		thirteen,
 		sixNine: isSixNineChord,
 		six: isSixChord,
+		flatSix: isFlatSixChord,
 		hasFive: cpc.includes('G'),
 		hasFivish,
 		hasThreeish,
@@ -286,10 +300,12 @@ export const guessChord = (pitches: CanonicalPitchClass[]): GuessedChord => {
 
 			const currConf = GuessedChord.getBigConf(curr) * 1000 - GuessedChord.getComplexity(curr);
 
-			console.log(GuessedChord.print(curr, { six: true, sixNine: true, properFlats: true, properSharps: true, properAugmented: true, properDiminished: true }), currConf)
+			const wouldBeDone = curr.hasMiddlish && curr.hasSevenish
+
+			console.log(GuessedChord.print(curr, { six: true, sixNine: true, properFlats: true, properSharps: true, properAugmented: true, properDiminished: true }), currConf, wouldBeDone)
 
 			if (currConf > best.conf) {
-				return { c: curr, conf: currConf, done: curr.hasMiddlish && curr.hasSevenish };
+				return { c: curr, conf: currConf, done: wouldBeDone };
 			}
 			return best;
 		},

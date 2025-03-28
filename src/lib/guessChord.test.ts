@@ -179,7 +179,13 @@ describe(guessChord, () => {
 				...defaultOptions,
 				properFlats: false
 			})
-		).toEqual('C addB13');
+		).toEqual('Cb6');
+		expect(
+			GuessedChord.print(guessChord(['C', 'E', 'G', 'Bb', 'Ab']), {
+				...defaultOptions,
+				properFlats: false
+			})
+		).toEqual('C7 addB13');
 		expect(
 			GuessedChord.print(guessChord(['C', 'E', 'Gb', 'G']), {
 				...defaultOptions,
