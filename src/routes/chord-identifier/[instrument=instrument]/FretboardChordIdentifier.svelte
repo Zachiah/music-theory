@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { guessChord, GuessedChord } from '$lib/guessChord';
+	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
@@ -72,20 +72,19 @@
 		return CanonicalPitch.sort(canonicalPitches).map((p) => p.pitchClass);
 	});
 
+	let allowInversions = $state(true);
+
 	const chordString = $derived.by(() => {
 		if (pitches.length === 0) {
 			return '';
 		}
-		const guessedChord = guessChord(pitches);
+		const guessedChord = allowInversions ? guessChord(pitches) : guessChordNoInversions(pitches);
 		return GuessedChord.print(guessedChord, options);
 	});
 
 	let vertical = $state(false);
 </script>
 
-<!-- svelte-ignore state_referenced_locally -->
-<!-- svelte-ignore state_referenced_locally -->
-<!-- svelte-ignore state_referenced_locally -->
 <div class="flex gap-4">
 	<Toggle
 		active={vertical}
@@ -105,6 +104,10 @@
 			pluggedAt = new Array(fretboard.strings.length).fill(null);
 		}}
 	/>
+
+	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
+		>Allow Inversions</Toggle
+	>
 </div>
 
 <FretboardPresets

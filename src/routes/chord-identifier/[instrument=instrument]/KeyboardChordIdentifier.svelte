@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Keyboard from '$lib/Keyboard.svelte';
 	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
-	import { guessChord, GuessedChord } from '$lib/guessChord';
+	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
+	import Toggle from '$lib/Toggle.svelte';
+	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
 
 	const {
 		options,
@@ -24,17 +26,22 @@
 		})
 	);
 
+	let allowInversions = $state(true);
+
 	const chordString = $derived.by(() => {
 		if (pitches.length === 0) {
 			return '';
 		}
-		const guessedChord = guessChord(pitches);
+		const guessedChord = allowInversions ? guessChord(pitches) : guessChordNoInversions(pitches);
 		return GuessedChord.print(guessedChord, options);
 	});
 </script>
 
 <div>
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
+	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
+		>Allow Inversions</Toggle
+	>
 </div>
 
 <Keyboard
