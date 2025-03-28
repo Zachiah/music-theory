@@ -26,3 +26,4 @@
   - [ ] Info about the project
 - [ ] F# A C D should be D7
 - [ ] CI testing
+- [ ] Proportional fret size

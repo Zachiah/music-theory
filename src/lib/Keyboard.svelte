@@ -50,12 +50,12 @@
 	);
 </script>
 
-<div class="flex">
+<div class="flex" style="--w: 20px; --h: 15px;">
 	{#each noteData as { letterName, blackKey, selected, idx }}
-		<div class="relative h-24 w-10">
+		<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
 			<button
 				aria-label={`Toggle note ${letterName}`}
-				class="h-24 w-10 border border-black"
+				class="h-full w-full rounded-b-md border border-black"
 				class:bg-blue-500={selected}
 				onclick={() => toggle(idx)}
 			>
@@ -64,7 +64,7 @@
 			{#if blackKey}
 				<button
 					aria-label={`Toggle note ${blackKey.pitch}`}
-					class="absolute top-0 -right-4 z-20 h-16 w-8 border border-black"
+					class="absolute top-0 transform -translate-x-1/2 z-20 h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] border-2 border-black rounded-b-md"
 					class:bg-black={!blackKey.selected}
 					class:bg-blue-500={blackKey.selected}
 					onclick={() => toggle(blackKey.idx)}
