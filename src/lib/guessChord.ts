@@ -66,13 +66,13 @@ export namespace GuessedChord {
 			c.diminished ? dim : '',
 			c.minor ? 'm' : '',
 			c.six ? six : '',
-			c.flatSix ? flatSix : '',
 			c.sixNine ? sixNine : '',
 			major,
 			c.highestDegree === null ? '' : c.highestDegree
 		].filter((m) => m);
 
 		const additionalModifiers = [
+			c.flatSix ? flatSix : '',
 			c.seven ? '7' : '',
 			c.maj7 ? 'maj7' : '',
 			c.flat5 ? `${lowerFlat}5` : '',

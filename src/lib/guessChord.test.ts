@@ -177,7 +177,7 @@ describe(guessChord, () => {
 				...defaultOptions,
 				properFlats: false
 			})
-		).toEqual('Cb6');
+		).toEqual('C b6');
 		expect(
 			GuessedChord.print(guessChord(['C', 'E', 'G', 'Bb', 'Ab']), {
 				...defaultOptions,
