@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { GuessedChord } from '$lib/guessChord';
-	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
-	import Container from '../Container.svelte';
+	import Container from '$lib/Container.svelte';
 	import FretboardChordIdentifier from './FretboardChordIdentifier.svelte';
 	import KeyboardChordIdentifier from './KeyboardChordIdentifier.svelte';
 
-	let showFretboard = $state(false);
+	import { page } from '$app/state';
+	import TwoSidedToggleLink from '$lib/TwoSidedToggleLink.svelte';
 
 	let options = $state<GuessedChord.PrintingOptions>({
 		six: true,
@@ -19,6 +19,8 @@
 	const onOptionsChange = (o: GuessedChord.PrintingOptions) => {
 		options = o;
 	};
+
+	const showFretboard = $derived(page.params.instrument === 'fretboard');
 </script>
 
 <Container>
@@ -26,13 +28,12 @@
 		<h1 class="mr-auto text-4xl">Identify Chords</h1>
 
 		<div class="flex h-12 w-72 rounded-full bg-gray-200">
-			<TwoSidedToggle
+			<TwoSidedToggleLink
 				first="Keyboard"
 				second="Fretboard"
 				checked={showFretboard}
-				onChange={(c) => {
-					showFretboard = c;
-				}}
+				firstHref="/chord-identifier/keyboard"
+				secondHref="/chord-identifier/fretboard"
 			/>
 		</div>
 	</div>

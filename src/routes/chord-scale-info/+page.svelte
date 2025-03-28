@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Container from '../Container.svelte';
+	import Container from '$lib/Container.svelte';
 	import InfoPicker from './InfoPicker.svelte';
 </script>
 

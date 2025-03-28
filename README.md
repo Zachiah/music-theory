@@ -13,15 +13,16 @@
   - [ ] Actually render them in `FretboardDisplay.svelte`
   - [ ] Add them for the built in presets
   - [ ] Allow users to create them in the preset editor
-- [ ] Make fretboard/keyboard be in the url
 - [ ] Allow showing of `CanonicalPitch` on the keyboard like it is on the fretboard
 - [ ] Allow optionally picking a scale for chord identification to be based on
   - [ ] Should show labels based on the scale (as in enharmonic and such)
   - [ ] There could be an option to show all notes in the scale in the neutral tone on the keyboard/fretboard
   - [ ] At some point we may be able to actually factor in the scale into the heuristic of guessing the chord
-  - [ ] Make the whole site responsive (mainly just need to handle smaller screens a bit better)
-  - [ ] Add links to Github and my main site
-  - [ ] Custom favicon
-  - [ ] Update readme to have more than a todo list
-    - [ ] Contributing
-    - [ ] Info about the project
+- [ ] Make the whole site responsive (mainly just need to handle smaller screens a bit better)
+- [ ] Add links to Github and my main site
+- [ ] Custom favicon
+- [ ] Update readme to have more than a todo list
+  - [ ] Contributing
+  - [ ] Info about the project
+- [ ] F# A C D should be D7
+- [ ] CI testing

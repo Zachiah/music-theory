@@ -72,9 +72,13 @@
 		return CanonicalPitch.sort(canonicalPitches).map((p) => p.pitchClass);
 	});
 
-	const guessedChord = $derived(guessChord(pitches));
-
-	const chordString = $derived(GuessedChord.print(guessedChord, options));
+	const chordString = $derived.by(() => {
+		if (pitches.length === 0) {
+			return '';
+		}
+		const guessedChord = guessChord(pitches);
+		return GuessedChord.print(guessedChord, options);
+	});
 
 	let vertical = $state(false);
 </script>
