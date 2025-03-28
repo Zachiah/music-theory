@@ -19,7 +19,7 @@
 	const defaultPresets: Fretboard[] = [
 		{ name: 'Guitar', strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
 		{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'] },
-		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D2'] },
+		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
 		{ name: 'Ukelele (reentrant)', strings: ['G4', 'C4', 'E4', 'A4'] },
 		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'] }
 	].map((row) => ({
