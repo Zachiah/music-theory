@@ -51,4 +51,4 @@
 	toggle={(idx) => (noteSelections[idx] = !noteSelections[idx])}
 />
 
-<p class="text-3xl">{chordString}</p>
+<p class="text-3xl">&nbsp;{chordString}</p>

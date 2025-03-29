@@ -139,8 +139,6 @@
 	/>
 
 	<div class="flex flex-col gap-8">
-		{#if fretboardData.pluggedAt.some((p) => p !== null)}
-			<p class="text-3xl">{chordString}</p>
-		{/if}
+		<p class="text-3xl">&nbsp;{chordString}</p>
 	</div>
 </div>

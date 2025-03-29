@@ -56,8 +56,9 @@
 			<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
 				<button
 					aria-label={`Toggle note ${letterName}`}
-					class="h-full w-full rounded-b-md border border-gray-600 bg-white"
+					class="h-full w-full rounded-b-md border border-gray-600"
 					class:bg-blue-500={selected}
+					class:bg-white={!selected}
 					onclick={() => toggle(idx)}
 				>
 				</button>
