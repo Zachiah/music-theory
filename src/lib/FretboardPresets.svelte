@@ -28,7 +28,7 @@
 	{#each presets as preset}
 		{@const current = activeFretboard.name === preset.name}
 		{#if editing}
-			<div class="flex items-center gap-2 rounded-md bg-gray-200 px-4 py-2 duration-100">
+			<div class="flex items-center gap-2 rounded-md bg-gray-200 dark:bg-slate-600 px-4 py-2 duration-100">
 				<span>{preset.name}</span>
 				<button
 					aria-label="Edit"

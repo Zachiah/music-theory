@@ -53,11 +53,12 @@
 		<h2 class="text-2xl">Fretboard</h2>
 
 		<FormField label="Preset Name" error={nameError}>
-			<input bind:value={currentFretboard.name} />
+			<input class="dark:bg-slate-600" bind:value={currentFretboard.name} />
 		</FormField>
 
 		<FormField label="Frets" error={fretsError}>
 			<input
+				class="dark:bg-slate-600"
 				type="number"
 				value={currentFretboard.frets}
 				oninput={(e) => {
@@ -73,7 +74,7 @@
 				<label class="flex gap-4 rounded-md p-4 shadow-md">
 					<div>Fret {dotIdx + 1}</div>
 					<input
-						class="w-12 border-0 border-b p-0 text-right"
+						class="w-12 border-0 border-b p-0 text-right dark:bg-slate-600"
 						type="number"
 						value={dot}
 						oninput={(e) => {
@@ -89,7 +90,7 @@
 				{#each currentFretboard.strings as string, idx}
 					<div class="flex rounded-full">
 						<select
-							class="w-16 rounded-l-full px-4 py-2 text-xs"
+							class="w-16 rounded-l-full px-4 py-2 text-xs dark:bg-slate-600"
 							value={string.pitchClass}
 							oninput={(e) => {
 								const p = e.currentTarget.value as CanonicalPitchClass;
@@ -105,7 +106,7 @@
 						</select>
 
 						<select
-							class="w-10 bg-[right_.5rem] px-2 py-2 text-xs"
+							class="w-10 bg-[right_.5rem] px-2 py-2 text-xs dark:bg-slate-600"
 							value={string.octave}
 							oninput={(e) => {
 								onStringChange(idx, { ...string, octave: +e.currentTarget.value });
