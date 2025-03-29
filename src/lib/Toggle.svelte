@@ -2,10 +2,12 @@
 	import type { Snippet } from 'svelte';
 
 	const {
+		title = '',
 		active,
 		onToggle,
 		children
 	}: {
+		title?: string;
 		active: boolean;
 		onToggle: () => void;
 		children: Snippet<[]>;
@@ -18,12 +20,14 @@
 	class:text-gray-600={!active}
 	class:bg-blue-500={active}
 	class:text-black={active}
+	aria-label={title}
+	{title}
 >
 	<input
 		type="checkbox"
 		checked={active}
 		oninput={onToggle}
-		class="absolute h-full w-full opacity-0"
+		class="absolute top-1/2 left-1/2 h-0 w-0 opacity-0"
 	/>
 
 	{@render children()}

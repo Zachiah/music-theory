@@ -9,17 +9,19 @@
 	}: {
 		children: Snippet<[]>;
 		onClick(): void;
-		style?: 'danger' | 'primary';
+		style?: 'danger' | 'primary' | 'neutral';
 		disabled?: boolean;
 	} = $props();
 
 	const classStyles = {
 		primary: 'cursor-pointer bg-blue-500',
-		danger: 'cursor-pointer bg-red-500'
+		danger: 'cursor-pointer bg-red-500',
+		neutral: 'cursor-pointer bg-gray-200'
 	};
 	const disabledClassStyles = {
 		primary: 'bg-blue-500/80 cursor-not-allowed text-gray-800',
-		danger: 'bg-red-500/80 cursor-not-allowed text-gray-800'
+		danger: 'bg-red-500/80 cursor-not-allowed text-gray-800',
+		neutral: 'bg-gray-200/80 cursor-not-allowed text-gray-800'
 	};
 </script>
 

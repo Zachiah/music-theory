@@ -3,11 +3,11 @@
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
-	import FretboardCreator from '$lib/FretboardCreator.svelte';
 	import Toggle from '$lib/Toggle.svelte';
-	import FretboardPresets from '$lib/FretboardPresets.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
 	import { createLocalStorageState } from '$lib/localStorageState.svelte';
+	import FretboardSelector from '$lib/FretboardSelector.svelte';
+	import { generateId } from '$lib/generateId';
 
 	const {
 		options,
@@ -59,6 +59,7 @@
 		},
 		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'], frets: 18, dots: ukeleleDots }
 	].map((row) => ({
+		id: generateId(),
 		frets: 24,
 		...row,
 		strings: row.strings.map((s) => {
@@ -73,18 +74,35 @@
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
-		1,
+		2,
 		defaultPresets
 	);
 
-	let fretboard = $state(defaultPresets[0]);
+	let fretboardId = createLocalStorageState<string>('fretboardId', 1, fretboardPresets.data[0].id);
 
-	let pluggedAt: (number | null)[] = $state([null, null, null, null, null, null]);
+	const fretboardData = $derived.by(() => {
+		const f = fretboardPresets.data.find((f) => fretboardId.data === f.id);
+		if (!f) {
+			throw new Error(`Unable to find fretboard with id: ${fretboardId.data}`);
+		}
+
+		let pluggedAt: (number | null)[] = $state([null, null, null, null, null, null]);
+
+		return {
+			fretboard: f,
+			get pluggedAt() {
+				return pluggedAt;
+			},
+			set pluggedAt(n: (number | null)[]) {
+				pluggedAt = n;
+			}
+		};
+	});
 
 	const stringDecorations = $derived(
-		fretboard.strings.map((openPitch, stringIndex) =>
-			new Array(fretboard.frets + 1).fill(null).map((_, idx) => {
-				if (pluggedAt[stringIndex] === idx) {
+		fretboardData.fretboard.strings.map((openPitch, stringIndex) =>
+			new Array(fretboardData.fretboard.frets + 1).fill(null).map((_, idx) => {
+				if (fretboardData.pluggedAt[stringIndex] === idx) {
 					return 'active';
 				}
 
@@ -98,8 +116,8 @@
 	);
 
 	const pitches = $derived.by(() => {
-		const canonicalPitches = pluggedAt.flatMap((pa, idx) => {
-			const string = fretboard.strings[idx];
+		const canonicalPitches = fretboardData.pluggedAt.flatMap((pa, idx) => {
+			const string = fretboardData.fretboard.strings[idx];
 
 			if (pa === null) {
 				return [];
@@ -126,60 +144,55 @@
 </script>
 
 <div class="flex gap-4">
-	<Toggle
-		active={vertical}
-		onToggle={() => {
-			vertical = !vertical;
-		}}
-	>
-		Vertical fretboard
-	</Toggle>
-
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
-
-	<FretboardCreator
-		onCreate={(f) => {
-			fretboardPresets.data = [...fretboardPresets.data, f];
-			fretboard = f;
-			pluggedAt = new Array(fretboard.strings.length).fill(null);
-		}}
-	/>
 
 	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
 		>Allow Inversions</Toggle
 	>
 
-	<Toggle active={variableFretSize} onToggle={() => (variableFretSize = !variableFretSize)}>
-		Variable Fret Size
-	</Toggle>
+	<FretboardSelector
+		verticalFretboard={vertical}
+		onToggleVerticalFretboard={() => (vertical = !vertical)}
+		{variableFretSize}
+		onToggleVariableFretSize={() => (variableFretSize = !variableFretSize)}
+		activeFretboard={fretboardData.fretboard}
+		onSelect={(id) => {
+			fretboardId.data = id;
+		}}
+		presets={fretboardPresets.data}
+		onCreate={(f) => {
+			fretboardPresets.data = [...fretboardPresets.data, f];
+			fretboardId.data = f.id;
+		}}
+		onDelete={(id) => {
+			fretboardPresets.data = fretboardPresets.data.filter((f) => f.id !== id);
+			if (fretboardId.data === id) {
+				fretboardId.data = fretboardPresets.data[0].id;
+			}
+		}}
+		onUpdate={(id, n) => {
+			fretboardPresets.data = fretboardPresets.data.map((fb) => (fb.id === id ? n : fb));
+		}}
+	/>
 </div>
-
-<FretboardPresets
-	presets={fretboardPresets.data}
-	activeFretboard={fretboard}
-	onSelect={(f) => {
-		fretboard = f;
-		pluggedAt = new Array(f.strings.length).fill(null);
-	}}
-/>
 
 <div class="mt-8 flex gap-8" class:flex-col={!vertical}>
 	<FretboardDisplay
-		{fretboard}
+		fretboard={fretboardData.fretboard}
 		{stringDecorations}
 		{vertical}
 		{variableFretSize}
 		onClick={(stringIndex, fretIndex) => {
-			if (pluggedAt[stringIndex] === fretIndex) {
-				pluggedAt[stringIndex] = null;
+			if (fretboardData.pluggedAt[stringIndex] === fretIndex) {
+				fretboardData.pluggedAt[stringIndex] = null;
 			} else {
-				pluggedAt[stringIndex] = fretIndex;
+				fretboardData.pluggedAt[stringIndex] = fretIndex;
 			}
 		}}
 	/>
 
 	<div class="flex flex-col gap-8">
-		{#if pluggedAt.some((p) => p !== null)}
+		{#if fretboardData.pluggedAt.some((p) => p !== null)}
 			<p class="text-3xl">{chordString}</p>
 		{/if}
 	</div>

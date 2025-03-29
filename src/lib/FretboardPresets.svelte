@@ -1,31 +1,77 @@
 <script lang="ts">
+	import Button from './Button.svelte';
 	import type { Fretboard } from './Fretboard';
+	import FretboardEditor from './FretboardEditor.svelte';
 
 	const {
 		activeFretboard,
 		onSelect,
-		presets
+		presets,
+		editing,
+		onDelete,
+		onUpdate
 	}: {
 		activeFretboard: Fretboard;
-		onSelect(f: Fretboard): void;
+		onSelect(id: string): void;
 		presets: Fretboard[];
+		editing: boolean;
+		onDelete(id: string): void;
+		onUpdate(id: string, n: Fretboard): void;
 	} = $props();
+
+	let confirmingDelete = $state<string | undefined>(undefined);
+
+	let editingOpen = $state<string | undefined>(undefined);
 </script>
 
-<div class="flex flex-col gap-4 py-4">
-	<h2 class="text-2xl">Fretboard</h2>
-
-	<div class="flex flex-wrap gap-4">
-		{#each presets as preset}
-			{@const current = activeFretboard.name === preset.name}
-			<button
-				class="rounded-md px-4 py-2 duration-100 hover:bg-blue-500"
-				class:bg-blue-500={current}
-				class:bg-gray-200={!current}
-				onclick={() => {
-					onSelect(preset);
-				}}>{preset.name}</button
+<div class="flex flex-wrap gap-4">
+	{#each presets as preset}
+		{@const current = activeFretboard.name === preset.name}
+		{#if editing}
+			<div class="flex items-center gap-2 rounded-md bg-gray-200 px-4 py-2 duration-100">
+				<span>{preset.name}</span>
+				<button
+					aria-label="Edit"
+					title="Edit"
+					class="cursor-pointer rounded-md border p-1 px-2"
+					onclick={() => (editingOpen = preset.id)}
+				>
+					<span class="icon-[heroicons--pencil]"></span>
+				</button>
+				<button
+					aria-label={presets.length === 1 ? "You can't delete the last preset" : 'Delete'}
+					title={presets.length === 1 ? "You can't delete the last preset" : 'Delete'}
+					disabled={presets.length === 1}
+					class="cursor-pointer rounded-md border p-1 px-2 disabled:cursor-not-allowed disabled:text-gray-400"
+					onclick={() => {
+						if (confirmingDelete === preset.id) {
+							onDelete(preset.id);
+						} else {
+							confirmingDelete = preset.id;
+						}
+					}}
+				>
+					{#if confirmingDelete === preset.id}
+						<span class="icon-[heroicons--check]"></span>
+					{:else}
+						<span class="icon-[heroicons--trash]"></span>
+					{/if}
+				</button>
+			</div>
+		{:else}
+			<Button
+				style={current ? 'primary' : 'neutral'}
+				onClick={() => {
+					onSelect(preset.id);
+				}}>{preset.name}</Button
 			>
-		{/each}
-	</div>
+		{/if}
+	{/each}
+
+	<FretboardEditor
+		open={!!editingOpen}
+		baseFretboard={presets.find((f) => f.id === editingOpen) || presets[0]}
+		onClose={() => (editingOpen = undefined)}
+		onSave={(f) => onUpdate(editingOpen!, f)}
+	/>
 </div>
