@@ -7,6 +7,7 @@
 	import Toggle from '$lib/Toggle.svelte';
 	import FretboardPresets from '$lib/FretboardPresets.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
+	import { createLocalStorageState } from '$lib/localStorageState.svelte';
 
 	const {
 		options,
@@ -70,7 +71,7 @@
 		})
 	}));
 
-	let fretboardPresets: Fretboard[] = $state(defaultPresets);
+	let fretboardPresets = createLocalStorageState<Fretboard[]>('fretboardPresets', 1, defaultPresets);
 
 	let fretboard = $state(defaultPresets[0]);
 
@@ -134,7 +135,7 @@
 
 	<FretboardCreator
 		onCreate={(f) => {
-			fretboardPresets = [...fretboardPresets, f];
+			fretboardPresets.data = [...fretboardPresets.data, f];
 			fretboard = f;
 			pluggedAt = new Array(fretboard.strings.length).fill(null);
 		}}
@@ -150,7 +151,7 @@
 </div>
 
 <FretboardPresets
-	presets={fretboardPresets}
+	presets={fretboardPresets.data}
 	activeFretboard={fretboard}
 	onSelect={(f) => {
 		fretboard = f;

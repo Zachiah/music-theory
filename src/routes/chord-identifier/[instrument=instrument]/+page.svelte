@@ -6,8 +6,9 @@
 
 	import { page } from '$app/state';
 	import TwoSidedToggleLink from '$lib/TwoSidedToggleLink.svelte';
+	import { createLocalStorageState } from '$lib/localStorageState.svelte';
 
-	let options = $state<GuessedChord.PrintingOptions>({
+	let options = createLocalStorageState<GuessedChord.PrintingOptions>('printingOptions', 1, {
 		six: true,
 		sixNine: true,
 		properFlats: true,
@@ -17,7 +18,7 @@
 	});
 
 	const onOptionsChange = (o: GuessedChord.PrintingOptions) => {
-		options = o;
+		options.data = o;
 	};
 
 	const showFretboard = $derived(page.params.instrument === 'fretboard');
@@ -39,8 +40,8 @@
 	</div>
 
 	{#if showFretboard}
-		<FretboardChordIdentifier {options} {onOptionsChange} />
+		<FretboardChordIdentifier options={options.data} {onOptionsChange} />
 	{:else}
-		<KeyboardChordIdentifier {options} {onOptionsChange} />
+		<KeyboardChordIdentifier options={options.data} {onOptionsChange} />
 	{/if}
 </Container>
