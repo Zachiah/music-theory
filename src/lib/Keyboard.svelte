@@ -64,7 +64,7 @@
 			{#if blackKey}
 				<button
 					aria-label={`Toggle note ${blackKey.pitch}`}
-					class="absolute top-0 transform -translate-x-1/2 z-20 h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] border-2 border-black rounded-b-md"
+					class="absolute top-0 z-20 h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] -translate-x-1/2 transform rounded-b-md border-2 border-black"
 					class:bg-black={!blackKey.selected}
 					class:bg-blue-500={blackKey.selected}
 					onclick={() => toggle(blackKey.idx)}

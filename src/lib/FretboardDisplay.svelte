@@ -8,12 +8,14 @@
 		onClick,
 		vertical,
 		fretboard,
-		stringDecorations
+		stringDecorations,
+		variableFretSize
 	}: {
 		onClick: (string: number, fret: number) => void;
 		vertical: boolean;
 		fretboard: Fretboard;
 		stringDecorations: FretActivation[][];
+		variableFretSize: boolean;
 	} = $props();
 
 	const usableStrings = $derived.by(() => {
@@ -25,33 +27,44 @@
 
 		return indexed.reverse();
 	});
+
+	const getFretSizeMultiplier = (n: number) => {
+		const s = 1 / 2 ** (1 / 12);
+		return s ** n;
+	};
 </script>
 
 {#snippet fret(
+	idx: number,
 	note: CanonicalPitch,
 	noteActivation: 'neutral' | 'disabled' | 'active' | 'none',
 	onClick: () => void,
 	thick: boolean
 )}
+	{@const fretSizeMultiplier =
+		idx === 0 ? 1 / 3 : variableFretSize ? getFretSizeMultiplier(idx - 1) : 1}
 	<button
+		style={`
+			--base-size: 80px;
+			--multiplier: ${fretSizeMultiplier};
+		`}
 		onclick={onClick}
 		class="relative shrink-0"
-		class:border-r-2={!thick && !vertical}
-		class:border-r-8={thick && !vertical}
-		class:border-b-2={!thick && vertical}
-		class:border-b-8={thick && vertical}
-		class:border-gray-400={!thick}
-		class:border-stone-700={thick}
-		class:w-10={!vertical}
-		class:h-10={vertical}
+		class:w-[calc(var(--base-size)_*_var(--multiplier))]={!vertical}
+		class:h-[calc(var(--base-size)_*_var(--multiplier))]={vertical}
 	>
 		<div
-			class={`absolute transform bg-black ${vertical ? 'bottom-0 left-1/2 h-full w-1 -translate-x-1/2' : 'top-1/2 h-1 w-full -translate-y-1/2'}`}
+			class={`fret absolute ${thick ? 'z-20' : ''} ${vertical ? `bottom-0 ${thick ? 'h-full' : 'h-2'} w-full` : `top-0 right-0 ${thick ? 'w-full' : 'w-2'} h-full`}`}
+			style={`--angle: ${vertical ? 0 : 90}deg; background: ${thick ? 'var(--bridge)' : 'var(--gradient)'}`}
+		></div>
+		<div
+			class={`string absolute transform ${vertical ? 'bottom-0 left-1/2 h-full w-1 -translate-x-1/2' : 'top-1/2 h-1 w-full -translate-y-1/2'}`}
+			style={`--angle: ${vertical ? 90 : 0}deg; background: ${thick ? 'black' : `var(--gradient)`}`}
 		></div>
 
 		{#if noteActivation !== 'none'}
 			<div
-				class="absolute top-1/2 left-1/2 flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full text-xs"
+				class={`absolute top-1/2 left-1/2 z-30 flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 ${thick ? 'scale-70' : ''} transform items-center justify-center rounded-full text-xs`}
 				class:bg-gray-200={noteActivation === 'neutral' || noteActivation === 'disabled'}
 				class:text-gray-600={noteActivation === 'disabled'}
 				class:bg-blue-500={noteActivation === 'active'}
@@ -69,6 +82,7 @@
 			{@const fretDecoration = stringDecorations[idx][fretIdx]}
 
 			{@render fret(
+				fretIdx,
 				pitch,
 				fretDecoration,
 				() => {
@@ -80,8 +94,29 @@
 	</div>
 {/snippet}
 
-<div class="flex" class:flex-col={!vertical}>
-	{#each usableStrings as { s, idx }}
-		{@render string(s, idx)}
-	{/each}
+<div class="overflow-auto rounded-md bg-gray-200 p-4">
+	<div
+		class="w-min bg-[brown]"
+		style={`
+			--angle: ${vertical ? 90 : 45}deg; 
+			background: linear-gradient(var(--angle), oklab(72.1% 0.029 0.075), oklab(43.5% 0.054 0.063))
+		`}
+	>
+		<div class="flex" class:flex-col={!vertical}>
+			{#each usableStrings as { s, idx }}
+				{@render string(s, idx)}
+			{/each}
+		</div>
+	</div>
 </div>
+
+<style>
+	.string {
+		--gradient: linear-gradient(var(--angle), black, white, black);
+	}
+
+	.fret {
+		--gradient: linear-gradient(var(--angle), black, white, black);
+		--bridge: linear-gradient(var(--angle), gray, white 10%, white 50%, white 90%, gray);
+	}
+</style>

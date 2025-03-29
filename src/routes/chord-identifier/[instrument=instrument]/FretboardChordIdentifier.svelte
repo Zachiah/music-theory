@@ -17,12 +17,39 @@
 	} = $props();
 
 	const defaultPresets: Fretboard[] = [
-		{ name: 'Guitar', strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+		{
+			name: 'Guitar',
+			strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+			dots: [
+				null,
+				null,
+				1,
+				null,
+				1,
+				null,
+				1,
+				null,
+				1,
+				null,
+				null,
+				2,
+				null,
+				null,
+				1,
+				null,
+				1,
+				null,
+				1,
+				null,
+				1
+			]
+		},
 		{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'] },
 		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
 		{ name: 'Ukelele (reentrant)', strings: ['G4', 'C4', 'E4', 'A4'] },
 		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'] }
 	].map((row) => ({
+		dots: [],
 		...row,
 		strings: row.strings.map((s) => {
 			const parsed = CanonicalPitch.parse(s);
@@ -32,8 +59,7 @@
 
 			return parsed;
 		}),
-		frets: 24,
-		dots: []
+		frets: 24
 	}));
 
 	let fretboardPresets: Fretboard[] = $state(defaultPresets);
@@ -73,6 +99,7 @@
 	});
 
 	let allowInversions = $state(true);
+	let variableFretSize = $state(true);
 
 	const chordString = $derived.by(() => {
 		if (pitches.length === 0) {
@@ -108,6 +135,10 @@
 	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
 		>Allow Inversions</Toggle
 	>
+
+	<Toggle active={variableFretSize} onToggle={() => (variableFretSize = !variableFretSize)}>
+		Variable Fret Size
+	</Toggle>
 </div>
 
 <FretboardPresets
@@ -124,6 +155,7 @@
 		{fretboard}
 		{stringDecorations}
 		{vertical}
+		{variableFretSize}
 		onClick={(stringIndex, fretIndex) => {
 			if (pluggedAt[stringIndex] === fretIndex) {
 				pluggedAt[stringIndex] = null;
