@@ -24,7 +24,7 @@
 </script>
 
 <div>
-	<form class="flex">
+	<form class="flex flex-col gap-2 md:flex-row md:gap-0">
 		<input
 			class="flex-1 rounded-l-full dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
 			placeholder="Type a note. (Ex. C)"

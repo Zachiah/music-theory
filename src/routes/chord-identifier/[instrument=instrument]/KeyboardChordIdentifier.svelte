@@ -4,7 +4,6 @@
 	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
 	import Toggle from '$lib/Toggle.svelte';
-	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
 
 	const {
 		options,
@@ -37,7 +36,7 @@
 	});
 </script>
 
-<div class="flex gap-4">
+<div class="flex gap-4 flex-wrap">
 	<h2 class="mr-auto text-2xl">Keyboard</h2>
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}

@@ -12,10 +12,12 @@
   - [ ] Should show labels based on the scale (as in enharmonic and such)
   - [ ] There could be an option to show all notes in the scale in the neutral tone on the keyboard/fretboard
   - [ ] At some point we may be able to actually factor in the scale into the heuristic of guessing the chord
-- [ ] Make the whole site responsive (mainly just need to handle smaller screens a bit better)
 - [ ] Add links to Github and my main site
 - [ ] Custom favicon
 - [ ] Update readme to have more than a todo list
   - [ ] Contributing
   - [ ] Info about the project
 - [ ] CI testing
+- [ ] Audio button that plays the currently selected notes as a chord
+- [ ] Audio button on info page that will play scales (up and down) and chords (all at once)
+- [ ] Make lower strings a bit thicker

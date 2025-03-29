@@ -88,7 +88,7 @@
 	let vertical = $state(false);
 </script>
 
-<div class="flex gap-4">
+<div class="flex gap-4 flex-wrap">
 	<h2 class="mr-auto text-2xl">{fretboardData.fretboard.name}</h2>
 
 	<FretboardSelector
@@ -123,7 +123,7 @@
 	>
 </div>
 
-<div class="flex gap-8" class:flex-col={!vertical}>
+<div class="flex gap-8" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
 	<FretboardDisplay
 		fretboard={fretboardData.fretboard}
 		{stringDecorations}
