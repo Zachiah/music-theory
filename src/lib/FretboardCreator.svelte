@@ -10,6 +10,7 @@
 
 	let name = $state('');
 	let frets = $state(24);
+	let dots: (number | null)[] = $state(new Array(24).fill(0));
 
 	const {
 		onCreate
@@ -26,6 +27,7 @@
 		strings = [];
 		name = '';
 		frets = 24;
+		dots = new Array(24).fill(0);
 	};
 
 	const nameError = $derived(!name.trim() ? 'Please enter a name' : '');
@@ -50,8 +52,32 @@
 		</FormField>
 
 		<FormField label="Frets" error={fretsError}>
-			<input type="number" bind:value={frets} />
+			<input
+				type="number"
+				value={frets}
+				oninput={(e) => {
+					frets = +e.currentTarget.value;
+					dots = new Array(frets).fill(0);
+				}}
+			/>
 		</FormField>
+
+		<h3 class="text-2xl">Dots</h3>
+		<div class="flex flex-wrap gap-4">
+			{#each dots as dot, dotIdx}
+				<label class="flex gap-4 rounded-md p-4 shadow-md">
+					<div>Fret {dotIdx + 1}</div>
+					<input
+						class="w-12 border-0 border-b p-0 text-right"
+						type="number"
+						value={dot}
+						oninput={(e) => {
+							dots[dotIdx] = +e.currentTarget.value;
+						}}
+					/>
+				</label>
+			{/each}
+		</div>
 
 		<FormField el="div" label="Strings" error={stringsError}>
 			<div class="flex flex-col flex-wrap gap-2">
@@ -111,7 +137,7 @@
 						name,
 						strings,
 						frets,
-						dots: []
+						dots
 					});
 					resetData();
 				}}>Save</Button

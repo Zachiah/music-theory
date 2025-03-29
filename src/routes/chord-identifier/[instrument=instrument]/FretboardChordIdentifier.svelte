@@ -71,7 +71,11 @@
 		})
 	}));
 
-	let fretboardPresets = createLocalStorageState<Fretboard[]>('fretboardPresets', 1, defaultPresets);
+	let fretboardPresets = createLocalStorageState<Fretboard[]>(
+		'fretboardPresets',
+		1,
+		defaultPresets
+	);
 
 	let fretboard = $state(defaultPresets[0]);
 
