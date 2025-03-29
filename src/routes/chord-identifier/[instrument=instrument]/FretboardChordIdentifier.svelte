@@ -16,40 +16,49 @@
 		onOptionsChange(o: GuessedChord.PrintingOptions): void;
 	} = $props();
 
+	const guitarDots = [
+		null,
+		null,
+		1,
+		null,
+		1,
+		null,
+		1,
+		null,
+		1,
+		null,
+		null,
+		2,
+		null,
+		null,
+		1,
+		null,
+		1,
+		null,
+		1,
+		null,
+		1
+	];
+
+	const ukeleleDots = [null, null, 1, null, 1, null, 1, null, null, 1, null, 1];
+
 	const defaultPresets: Fretboard[] = [
 		{
 			name: 'Guitar',
 			strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
-			dots: [
-				null,
-				null,
-				1,
-				null,
-				1,
-				null,
-				1,
-				null,
-				1,
-				null,
-				null,
-				2,
-				null,
-				null,
-				1,
-				null,
-				1,
-				null,
-				1,
-				null,
-				1
-			]
+			dots: guitarDots
 		},
-		{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'] },
-		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
-		{ name: 'Ukelele (reentrant)', strings: ['G4', 'C4', 'E4', 'A4'] },
-		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'] }
+		{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'], dots: guitarDots },
+		{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'], dots: guitarDots },
+		{
+			name: 'Ukelele (reentrant)',
+			strings: ['G4', 'C4', 'E4', 'A4'],
+			frets: 18,
+			dots: ukeleleDots
+		},
+		{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'], frets: 18, dots: ukeleleDots }
 	].map((row) => ({
-		dots: [],
+		frets: 24,
 		...row,
 		strings: row.strings.map((s) => {
 			const parsed = CanonicalPitch.parse(s);
@@ -58,8 +67,7 @@
 			}
 
 			return parsed;
-		}),
-		frets: 24
+		})
 	}));
 
 	let fretboardPresets: Fretboard[] = $state(defaultPresets);
@@ -70,7 +78,7 @@
 
 	const stringDecorations = $derived(
 		fretboard.strings.map((openPitch, stringIndex) =>
-			new Array(24).fill(null).map((_, idx) => {
+			new Array(fretboard.frets + 1).fill(null).map((_, idx) => {
 				if (pluggedAt[stringIndex] === idx) {
 					return 'active';
 				}
