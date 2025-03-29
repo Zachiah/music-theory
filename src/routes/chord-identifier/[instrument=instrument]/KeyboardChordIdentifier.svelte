@@ -37,7 +37,8 @@
 	});
 </script>
 
-<div>
+<div class="flex gap-4">
+	<h2 class="mr-auto text-2xl">Keyboard</h2>
 	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
 	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
 		>Allow Inversions</Toggle

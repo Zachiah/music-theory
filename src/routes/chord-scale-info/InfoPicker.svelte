@@ -26,12 +26,12 @@
 <div>
 	<form class="flex">
 		<input
-			class="flex-1 rounded-l-full"
+			class="flex-1 rounded-l-full dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
 			placeholder="Type a note. (Ex. C)"
 			bind:value={typedPitchString}
 		/>
 
-		<div class="flex w-28 shrink-0 items-stretch bg-gray-200 p-2">
+		<div class="flex w-28 shrink-0 items-stretch bg-gray-200 p-2 dark:bg-slate-600">
 			<TwoSidedToggle
 				onChange={(checked) => {
 					if (checked) {
@@ -46,7 +46,10 @@
 			/>
 		</div>
 
-		<select class="flex-1 rounded-r-full" bind:value={noteCollection}>
+		<select
+			class="flex-1 rounded-r-full dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
+			bind:value={noteCollection}
+		>
 			{#if noteCollection.tag === 'scale'}
 				{#each scales as aScale}
 					<option value={aScale}>{ScaleName.print(aScale.scale.names[0])}</option>
@@ -62,7 +65,7 @@
 
 {#if noteCollection.tag === 'scale'}
 	{@const scale = noteCollection.scale}
-	<article class="rounded-md bg-gray-200 px-4 py-2">
+	<article class="rounded-md bg-gray-200 px-4 py-2 dark:bg-slate-600">
 		<div class="flex items-center gap-2">
 			<h2 class="mb-2 text-2xl">
 				{PitchClass.print(pitch)}
@@ -74,7 +77,7 @@
 					.map((n) => ScaleName.print(n))
 					.join(', ')})
 			{/if}
-			<span class="ml-auto rounded-full bg-white px-4 py-2">Scale</span>
+			<span class="ml-auto rounded-full bg-white px-4 py-2 dark:bg-slate-800">Scale</span>
 		</div>
 
 		<p class="mb-2">
@@ -87,7 +90,7 @@
 {:else}
 	{@const chord = noteCollection.chord}
 
-	<article class="rounded-md bg-gray-200 px-4 py-2">
+	<article class="rounded-md bg-gray-200 px-4 py-2 dark:bg-slate-600">
 		<div class="flex items-center gap-2">
 			<h2 class="mb-2 text-2xl">
 				{PitchClass.print(pitch)}
@@ -97,7 +100,7 @@
 				({chord.names.slice(1).join(', ')})
 			{/if}
 
-			<span class="ml-auto rounded-full bg-white px-4 py-2">Chord</span>
+			<span class="ml-auto rounded-full bg-white px-4 py-2 dark:bg-slate-800">Chord</span>
 		</div>
 
 		<p class="mb-2">

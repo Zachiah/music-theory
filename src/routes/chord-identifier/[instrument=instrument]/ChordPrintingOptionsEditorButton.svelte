@@ -2,6 +2,7 @@
 	import Button from '$lib/Button.svelte';
 	import type { GuessedChord } from '$lib/guessChord';
 	import ModalDialogBase from '$lib/ModalDialogBase.svelte';
+	import ModalDialogCard from '$lib/ModalDialogCard.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 
 	const {
@@ -18,7 +19,7 @@
 <Button onClick={() => (open = true)}>Edit Chord Display</Button>
 
 <ModalDialogBase {open} onClose={() => (open = false)}>
-	<div class="flex min-h-[50vh] flex-col rounded-md bg-white p-8 shadow-lg">
+	<ModalDialogCard>
 		<div class="flex flex-wrap gap-2">
 			<Toggle
 				active={options.six}
@@ -78,5 +79,5 @@
 		<div class="mt-auto flex justify-end">
 			<Button onClick={() => (open = false)}>Close</Button>
 		</div>
-	</div>
+	</ModalDialogCard>
 </ModalDialogBase>

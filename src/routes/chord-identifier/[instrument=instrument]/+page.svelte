@@ -28,7 +28,7 @@
 	<div class="flex pb-4">
 		<h1 class="mr-auto text-4xl">Identify Chords</h1>
 
-		<div class="flex h-12 w-72 rounded-full bg-gray-200">
+		<div class="flex h-12 w-72 rounded-full bg-gray-200 dark:bg-slate-600">
 			<TwoSidedToggleLink
 				first="Keyboard"
 				second="Fretboard"

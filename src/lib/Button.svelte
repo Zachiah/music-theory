@@ -16,7 +16,7 @@
 	const classStyles = {
 		primary: 'cursor-pointer bg-blue-500',
 		danger: 'cursor-pointer bg-red-500',
-		neutral: 'cursor-pointer bg-gray-200'
+		neutral: 'cursor-pointer bg-gray-200 text-slate-800 dark:bg-slate-600 dark:text-white'
 	};
 	const disabledClassStyles = {
 		primary: 'bg-blue-500/80 cursor-not-allowed text-gray-800',

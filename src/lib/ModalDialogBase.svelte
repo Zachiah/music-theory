@@ -16,7 +16,7 @@
 {#if open}
 	<div
 		role="presentation"
-		class="fixed top-0 right-0 bottom-0 left-0 z-50 flex h-full w-full items-center justify-center bg-gray-800/80"
+		class="fixed top-0 right-0 bottom-0 left-0 z-50 flex h-full w-full items-center justify-center bg-gray-800/80 dark:bg-slate-600/80"
 		onclick={(e) => {
 			if (e.currentTarget === e.target) {
 				onClose();

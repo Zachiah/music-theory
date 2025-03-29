@@ -5,6 +5,7 @@
 	import FormField from './FormField.svelte';
 	import type { Fretboard } from './Fretboard';
 	import ModalDialogBase from './ModalDialogBase.svelte';
+	import ModalDialogCard from './ModalDialogCard.svelte';
 
 	const {
 		onSave,
@@ -48,9 +49,7 @@
 </script>
 
 <ModalDialogBase {open} {onClose}>
-	<div
-		class="mx-4 flex max-h-[80vh] w-full max-w-2xl flex-col gap-8 overflow-y-auto rounded-md bg-white p-8 shadow-lg"
-	>
+	<ModalDialogCard>
 		<h2 class="text-2xl">Fretboard</h2>
 
 		<FormField label="Preset Name" error={nameError}>
@@ -158,5 +157,5 @@
 				}}>Cancel</Button
 			>
 		</div>
-	</div>
+	</ModalDialogCard>
 </ModalDialogBase>

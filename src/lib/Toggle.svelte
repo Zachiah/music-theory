@@ -15,9 +15,10 @@
 </script>
 
 <label
-	class="relative rounded-md px-4 py-2 duration-200"
+	class="relative rounded-md px-4 py-2 duration-200 dark:text-white"
 	class:bg-gray-300={!active}
 	class:text-gray-600={!active}
+	class:dark:bg-slate-600={!active}
 	class:bg-blue-500={active}
 	class:text-black={active}
 	aria-label={title}

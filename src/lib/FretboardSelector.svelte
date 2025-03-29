@@ -58,10 +58,10 @@
 				onToggle={onToggleVariableFretSize}
 			>
 				<div class="flex h-full">
-					<div class="mr-2 w-0.5 bg-black"></div>
-					<div class="mr-1.5 w-0.5 bg-black"></div>
-					<div class="mr-1 w-0.5 bg-black"></div>
-					<div class="w-0.5 bg-black"></div>
+					<div class="mr-2 w-[2px] bg-current"></div>
+					<div class="mr-1.5 w-[2px] bg-current"></div>
+					<div class="mr-1 w-[2px] bg-current"></div>
+					<div class="w-[2px] bg-current"></div>
 				</div>
 			</Toggle>
 

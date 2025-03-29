@@ -89,11 +89,7 @@
 </script>
 
 <div class="flex gap-4">
-	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
-
-	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
-		>Allow Inversions</Toggle
-	>
+	<h2 class="mr-auto text-2xl">{fretboardData.fretboard.name}</h2>
 
 	<FretboardSelector
 		verticalFretboard={vertical}
@@ -119,9 +115,15 @@
 			fretboardPresets.data = fretboardPresets.data.map((fb) => (fb.id === id ? n : fb));
 		}}
 	/>
+
+	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
+
+	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
+		>Allow Inversions</Toggle
+	>
 </div>
 
-<div class="mt-8 flex gap-8" class:flex-col={!vertical}>
+<div class="flex gap-8" class:flex-col={!vertical}>
 	<FretboardDisplay
 		fretboard={fretboardData.fretboard}
 		{stringDecorations}

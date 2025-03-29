@@ -50,26 +50,28 @@
 	);
 </script>
 
-<div class="flex" style="--w: 20px; --h: 15px;">
-	{#each noteData as { letterName, blackKey, selected, idx }}
-		<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
-			<button
-				aria-label={`Toggle note ${letterName}`}
-				class="h-full w-full rounded-b-md border border-black"
-				class:bg-blue-500={selected}
-				onclick={() => toggle(idx)}
-			>
-			</button>
-
-			{#if blackKey}
+<div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
+	<div class="flex w-min" style="--w: 20px; --h: 15px;">
+		{#each noteData as { letterName, blackKey, selected, idx }}
+			<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
 				<button
-					aria-label={`Toggle note ${blackKey.pitch}`}
-					class="absolute top-0 z-20 h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] -translate-x-1/2 transform rounded-b-md border-2 border-black"
-					class:bg-black={!blackKey.selected}
-					class:bg-blue-500={blackKey.selected}
-					onclick={() => toggle(blackKey.idx)}
-				></button>
-			{/if}
-		</div>
-	{/each}
+					aria-label={`Toggle note ${letterName}`}
+					class="h-full w-full rounded-b-md border border-gray-600 bg-white"
+					class:bg-blue-500={selected}
+					onclick={() => toggle(idx)}
+				>
+				</button>
+
+				{#if blackKey}
+					<button
+						aria-label={`Toggle note ${blackKey.pitch}`}
+						class="absolute top-0 z-20 h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] -translate-x-1/2 transform rounded-b-md border-2 border-gray-600"
+						class:bg-black={!blackKey.selected}
+						class:bg-blue-500={blackKey.selected}
+						onclick={() => toggle(blackKey.idx)}
+					></button>
+				{/if}
+			</div>
+		{/each}
+	</div>
 </div>

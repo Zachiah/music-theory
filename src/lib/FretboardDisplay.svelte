@@ -34,7 +34,7 @@
 	};
 </script>
 
-<div class="overflow-auto rounded-md bg-gray-200 p-4">
+<div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
 	<div
 		class="w-min bg-[brown]"
 		style={`
