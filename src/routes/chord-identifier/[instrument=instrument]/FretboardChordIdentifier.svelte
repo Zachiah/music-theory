@@ -8,6 +8,8 @@
 	import { createLocalStorageState } from '$lib/localStorageState.svelte';
 	import FretboardSelector from '$lib/FretboardSelector.svelte';
 	import { defaultPresets } from '$lib/fretboardPresets';
+	import Button from '$lib/Button.svelte';
+	import { demoChord } from '$lib/toneState.svelte';
 
 	const {
 		options,
@@ -71,7 +73,7 @@
 			return CanonicalPitch.applyOffset(string, pa);
 		});
 
-		return CanonicalPitch.sort(canonicalPitches).map((p) => p.pitchClass);
+		return CanonicalPitch.sort(canonicalPitches);
 	});
 
 	let allowInversions = $state(true);
@@ -81,15 +83,32 @@
 		if (pitches.length === 0) {
 			return '';
 		}
-		const guessedChord = allowInversions ? guessChord(pitches) : guessChordNoInversions(pitches);
+
+		const pitchClasses = pitches.map((pitch) => pitch.pitchClass);
+
+		const guessedChord = allowInversions
+			? guessChord(pitchClasses)
+			: guessChordNoInversions(pitchClasses);
+
 		return GuessedChord.print(guessedChord, options);
 	});
 
 	let vertical = $state(false);
 </script>
 
-<div class="flex gap-4 flex-wrap">
-	<h2 class="mr-auto text-2xl">{fretboardData.fretboard.name}</h2>
+<div class="flex flex-wrap gap-4">
+	<h2 class="text-2xl">{fretboardData.fretboard.name}</h2>
+
+	<Button
+		disabled={pitches.length === 0}
+		onClick={() => {
+			demoChord(pitches);
+		}}
+	>
+		<span class="icon-[heroicons--speaker-wave]"></span>
+	</Button>
+
+	<span class="grow"></span>
 
 	<FretboardSelector
 		verticalFretboard={vertical}

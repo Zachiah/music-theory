@@ -43,7 +43,7 @@
 
 <ModalDialogBase {open} onClose={closeIt}>
 	<ModalDialogCard>
-		<div class="flex gap-4 flex-wrap">
+		<div class="flex flex-wrap gap-4">
 			<h2 class="mr-auto text-2xl">Choose fretboard</h2>
 			<Toggle
 				title="Toggle vertical fretboard"

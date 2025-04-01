@@ -25,7 +25,7 @@
 </script>
 
 <Container>
-	<div class="flex pb-4 flex-wrap gap-4">
+	<div class="flex flex-wrap gap-4 pb-4">
 		<h1 class="mr-auto text-4xl">Identify Chords</h1>
 
 		<div class="flex h-12 w-72 rounded-full bg-gray-200 dark:bg-slate-600">

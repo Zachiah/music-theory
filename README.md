@@ -18,6 +18,5 @@
   - [ ] Contributing
   - [ ] Info about the project
 - [ ] CI testing
-- [ ] Audio button that plays the currently selected notes as a chord
 - [ ] Audio button on info page that will play scales (up and down) and chords (all at once)
 - [ ] Make lower strings a bit thicker
