@@ -1,7 +1,10 @@
 <script lang="ts">
+	import Container from '$lib/Container.svelte';
+	import { printingOptions } from '$lib/printingOptionsState.svelte';
+	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
-	import ChordPrintingOptionsEditorButton from './ChordPrintingOptionsEditorButton.svelte';
+	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import Toggle from '$lib/Toggle.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
@@ -10,14 +13,6 @@
 	import { defaultPresets } from '$lib/fretboardPresets';
 	import Button from '$lib/Button.svelte';
 	import { demoChord } from '$lib/toneState.svelte';
-
-	const {
-		options,
-		onOptionsChange
-	}: {
-		options: GuessedChord.PrintingOptions;
-		onOptionsChange(o: GuessedChord.PrintingOptions): void;
-	} = $props();
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -90,74 +85,81 @@
 			? guessChord(pitchClasses)
 			: guessChordNoInversions(pitchClasses);
 
-		return GuessedChord.print(guessedChord, options);
+		return GuessedChord.print(guessedChord, printingOptions.data);
 	});
 
 	let vertical = $state(false);
 </script>
 
-<div class="flex flex-wrap gap-4">
-	<h2 class="text-2xl">{fretboardData.fretboard.name}</h2>
+<Container>
+	<ChordIdentifierHeader showFretboard={true} />
 
-	<Button
-		disabled={pitches.length === 0}
-		onClick={() => {
-			demoChord(pitches);
-		}}
-	>
-		<span class="icon-[heroicons--speaker-wave]"></span>
-	</Button>
+	<div class="flex flex-wrap gap-4">
+		<h2 class="text-2xl">{fretboardData.fretboard.name}</h2>
 
-	<span class="grow"></span>
+		<Button
+			disabled={pitches.length === 0}
+			onClick={() => {
+				demoChord(pitches);
+			}}
+		>
+			<span class="icon-[heroicons--speaker-wave]"></span>
+		</Button>
 
-	<FretboardSelector
-		verticalFretboard={vertical}
-		onToggleVerticalFretboard={() => (vertical = !vertical)}
-		{variableFretSize}
-		onToggleVariableFretSize={() => (variableFretSize = !variableFretSize)}
-		activeFretboard={fretboardData.fretboard}
-		onSelect={(id) => {
-			fretboardId.data = id;
-		}}
-		presets={fretboardPresets.data}
-		onCreate={(f) => {
-			fretboardPresets.data = [...fretboardPresets.data, f];
-			fretboardId.data = f.id;
-		}}
-		onDelete={(id) => {
-			fretboardPresets.data = fretboardPresets.data.filter((f) => f.id !== id);
-			if (fretboardId.data === id) {
-				fretboardId.data = fretboardPresets.data[0].id;
-			}
-		}}
-		onUpdate={(id, n) => {
-			fretboardPresets.data = fretboardPresets.data.map((fb) => (fb.id === id ? n : fb));
-		}}
-	/>
+		<span class="grow"></span>
 
-	<ChordPrintingOptionsEditorButton {options} onChange={onOptionsChange} />
+		<FretboardSelector
+			verticalFretboard={vertical}
+			onToggleVerticalFretboard={() => (vertical = !vertical)}
+			{variableFretSize}
+			onToggleVariableFretSize={() => (variableFretSize = !variableFretSize)}
+			activeFretboard={fretboardData.fretboard}
+			onSelect={(id) => {
+				fretboardId.data = id;
+			}}
+			presets={fretboardPresets.data}
+			onCreate={(f) => {
+				fretboardPresets.data = [...fretboardPresets.data, f];
+				fretboardId.data = f.id;
+			}}
+			onDelete={(id) => {
+				fretboardPresets.data = fretboardPresets.data.filter((f) => f.id !== id);
+				if (fretboardId.data === id) {
+					fretboardId.data = fretboardPresets.data[0].id;
+				}
+			}}
+			onUpdate={(id, n) => {
+				fretboardPresets.data = fretboardPresets.data.map((fb) => (fb.id === id ? n : fb));
+			}}
+		/>
 
-	<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
-		>Allow Inversions</Toggle
-	>
-</div>
+		<ChordPrintingOptionsEditorButton
+			options={printingOptions.data}
+			onChange={(v) => (printingOptions.data = v)}
+		/>
 
-<div class="flex gap-8" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
-	<FretboardDisplay
-		fretboard={fretboardData.fretboard}
-		{stringDecorations}
-		{vertical}
-		{variableFretSize}
-		onClick={(stringIndex, fretIndex) => {
-			if (fretboardData.pluggedAt[stringIndex] === fretIndex) {
-				fretboardData.pluggedAt[stringIndex] = null;
-			} else {
-				fretboardData.pluggedAt[stringIndex] = fretIndex;
-			}
-		}}
-	/>
-
-	<div class="flex flex-col gap-8">
-		<p class="text-3xl">&nbsp;{chordString}</p>
+		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
+			>Allow Inversions</Toggle
+		>
 	</div>
-</div>
+
+	<div class="flex gap-8" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
+		<FretboardDisplay
+			fretboard={fretboardData.fretboard}
+			{stringDecorations}
+			{vertical}
+			{variableFretSize}
+			onClick={(stringIndex, fretIndex) => {
+				if (fretboardData.pluggedAt[stringIndex] === fretIndex) {
+					fretboardData.pluggedAt[stringIndex] = null;
+				} else {
+					fretboardData.pluggedAt[stringIndex] = fretIndex;
+				}
+			}}
+		/>
+
+		<div class="flex flex-col gap-8">
+			<p class="text-3xl">&nbsp;{chordString}</p>
+		</div>
+	</div>
+</Container>
