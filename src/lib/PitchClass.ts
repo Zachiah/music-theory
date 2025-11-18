@@ -44,7 +44,11 @@ export namespace PitchClass {
 	};
 
 	export const create = (s: string): PitchClass | null => {
-		const sanitized = s.replaceAll(/\s/g, '').toUpperCase().replaceAll('FLAT', 'B').replaceAll('SHARP', '#');
+		const sanitized = s
+			.replaceAll(/\s/g, '')
+			.toUpperCase()
+			.replaceAll('FLAT', 'B')
+			.replaceAll('SHARP', '#');
 
 		const letter = PitchConstituents.validateLetterName(sanitized[0]);
 		const modifier = PitchConstituents.parseModifierString(sanitized.slice(1));
