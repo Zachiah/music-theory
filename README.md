@@ -12,7 +12,6 @@
   - [ ] Should show labels based on the scale (as in enharmonic and such)
   - [ ] There could be an option to show all notes in the scale in the neutral tone on the keyboard/fretboard
   - [ ] At some point we may be able to actually factor in the scale into the heuristic of guessing the chord
-- [ ] Add links to Github and my main site
 - [ ] Custom favicon
 - [ ] Update readme to have more than a todo list
   - [ ] Contributing
