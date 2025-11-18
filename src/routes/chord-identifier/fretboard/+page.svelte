@@ -13,6 +13,7 @@
 	import { defaultPresets } from '$lib/fretboardPresets';
 	import Button from '$lib/Button.svelte';
 	import { demoChord } from '$lib/toneState.svelte';
+	import * as Tone from 'tone';
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -100,7 +101,7 @@
 		<Button
 			disabled={pitches.length === 0}
 			onClick={() => {
-				demoChord(pitches);
+				demoChord(pitches, Tone.now());
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>

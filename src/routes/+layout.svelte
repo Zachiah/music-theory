@@ -14,8 +14,12 @@
 		<span class="flex-grow"></span>
 
 		<li class="contants">
-			<a class="flex h-full items-center justify-center p-4 hover:text-blue-500" href="https://github.com/Zachiah/music-theory" aria-label="GitHub">
-				<span class="size-6 icon-[octicon--mark-github-16]"></span>
+			<a
+				class="flex h-full items-center justify-center p-4 hover:text-blue-500"
+				href="https://github.com/Zachiah/music-theory"
+				aria-label="GitHub"
+			>
+				<span class="icon-[octicon--mark-github-16] size-6"></span>
 			</a>
 		</li>
 	</ul>

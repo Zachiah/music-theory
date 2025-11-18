@@ -1,3 +1,4 @@
+import { CanonicalPitch } from './CanonicalPitch';
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { PitchClass } from './PitchClass';
 import { PitchConstituents } from './PitchConstituents';
@@ -45,6 +46,18 @@ export namespace Intervals {
 		);
 
 		return [startingPitch].concat(getPitches(scale.slice(1), secondPitchProper));
+	};
+
+	export const getCanonicalPitches = (
+		scale: Intervals,
+		startingPitch: CanonicalPitch
+	): CanonicalPitch[] => {
+		return scale.reduce(
+			(acc, interval) => {
+				return [...acc, CanonicalPitch.applyOffset(acc[acc.length - 1], interval.semitones)];
+			},
+			[startingPitch]
+		);
 	};
 
 	export const createWithSemitones = (letters: number, semitonesArray: number[]) => {
