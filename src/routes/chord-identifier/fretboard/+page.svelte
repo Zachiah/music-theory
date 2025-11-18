@@ -5,7 +5,7 @@
 	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
 	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
-	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import Toggle from '$lib/Toggle.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
 	import { createLocalStorageState } from '$lib/localStorageState.svelte';
@@ -69,7 +69,7 @@
 			return CanonicalPitch.applyOffset(string, pa);
 		});
 
-		return CanonicalPitch.sort(canonicalPitches);
+		return CanonicalPitchArray.sort(canonicalPitches);
 	});
 
 	let allowInversions = $state(true);

@@ -7,6 +7,8 @@
 	import Button from '$lib/Button.svelte';
 	import * as Tone from 'tone';
 	import { demoChord, demoScale } from '$lib/toneState.svelte';
+	import { CanonicalPitchArray } from '$lib/CanonicalPitch';
+	import ScaleChordsOfPattern from '$lib/ScaleChordsOfPattern.svelte';
 
 	let typedPitchString = $state('');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -24,6 +26,14 @@
 				tag: 'chord';
 				chord: Chord.ChordDescription;
 		  } = $state(scales[0]);
+
+	const chordPatterns = {
+		Triads: [0, 2, 4],
+		'7ths': [0, 2, 4, 6],
+		'9ths': [0, 2, 4, 6, 8],
+		'11ths': [0, 2, 4, 6, 8, 10],
+		'13ths': [0, 2, 4, 6, 8, 10, 12]
+	};
 </script>
 
 <div>
@@ -68,9 +78,9 @@
 
 {#if noteCollection.tag === 'scale'}
 	{@const scale = noteCollection.scale}
-	<article class="rounded-md bg-gray-200 px-4 py-2 dark:bg-slate-600">
+	<article class="flex flex-col gap-2 rounded-md bg-gray-200 px-4 py-2 dark:bg-slate-600">
 		<div class="flex items-center gap-2">
-			<h2 class="mb-2 text-2xl">
+			<h2 class="text-2xl">
 				{PitchClass.print(pitch)}
 				{ScaleName.print(scale.names[0])}
 			</h2>
@@ -83,17 +93,22 @@
 			<span class="ml-auto rounded-full bg-white px-4 py-2 dark:bg-slate-800">Scale</span>
 		</div>
 
-		<p class="mb-2">
+		<p>{scale.description}</p>
+
+		<h3 class="text-xl">Notes</h3>
+		<div>
 			<Button
 				onClick={() => {
 					demoScale(
 						[
-							...Intervals.getCanonicalPitches(scale.intervals, {
-								pitchClass: PitchClass.toCanonical(pitch),
-								octave: 4
-							}),
+							...CanonicalPitchArray.fromCanonicalPitchClasses(
+								Intervals.getPitches(scale.intervals, pitch).map((p) =>
+									PitchClass.toCanonicalPitchClass(p)
+								),
+								4
+							),
 							{
-								pitchClass: PitchClass.toCanonical(pitch),
+								pitchClass: PitchClass.toCanonicalPitchClass(pitch),
 								octave: 5
 							}
 						],
@@ -104,11 +119,19 @@
 				<span class="icon-[heroicons--speaker-wave]"></span>
 			</Button>
 
-			{Intervals.getPitches(scale.intervals, pitch)
-				.map((n) => PitchClass.print(n))
-				.join(', ')}
-		</p>
-		<p>{scale.description}</p>
+			<span
+				>{Intervals.getPitches(scale.intervals, pitch)
+					.map((n) => PitchClass.print(n))
+					.join(', ')}</span
+			>
+		</div>
+
+		{#if scale.intervals.length === 6}
+			{#each Object.entries(chordPatterns) as [name, pattern] (name)}
+				<h3 class="text-xl">Diatonic {name}</h3>
+				<ScaleChordsOfPattern {pattern} pitchClass={pitch} intervals={scale.intervals} />
+			{/each}
+		{/if}
 	</article>
 {:else}
 	{@const chord = noteCollection.chord}
@@ -130,10 +153,12 @@
 			<Button
 				onClick={() => {
 					demoChord(
-						Intervals.getCanonicalPitches(chord.intervals, {
-							pitchClass: PitchClass.toCanonical(pitch),
-							octave: 4
-						}),
+						CanonicalPitchArray.fromCanonicalPitchClasses(
+							Intervals.getPitches(chord.intervals, pitch).map((p) =>
+								PitchClass.toCanonicalPitchClass(p)
+							),
+							4
+						),
 						Tone.now()
 					);
 				}}

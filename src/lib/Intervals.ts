@@ -1,7 +1,7 @@
-import { CanonicalPitch } from './CanonicalPitch';
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { PitchClass } from './PitchClass';
 import { PitchConstituents } from './PitchConstituents';
+import { rotateArray } from './util';
 
 export type Intervals = { semitones: number; letters: number }[];
 export namespace Intervals {
@@ -48,16 +48,15 @@ export namespace Intervals {
 		return [startingPitch].concat(getPitches(scale.slice(1), secondPitchProper));
 	};
 
-	export const getCanonicalPitches = (
+	export const getAllOfChordPattern = (
 		scale: Intervals,
-		startingPitch: CanonicalPitch
-	): CanonicalPitch[] => {
-		return scale.reduce(
-			(acc, interval) => {
-				return [...acc, CanonicalPitch.applyOffset(acc[acc.length - 1], interval.semitones)];
-			},
-			[startingPitch]
-		);
+		startingPitch: PitchClass,
+		pattern: number[]
+	): PitchClass[][] => {
+		const pitches = getPitches(scale, startingPitch);
+		return pitches
+			.map((_, idx) => rotateArray(pitches, idx))
+			.map((pitches) => pattern.map((p) => pitches[p % pitches.length]));
 	};
 
 	export const createWithSemitones = (letters: number, semitonesArray: number[]) => {

@@ -12,6 +12,14 @@ export namespace CanonicalPitchClass {
 
 		return pitches[offsetIdx];
 	};
+
+	export const distanceFromC = (p: CanonicalPitchClass) => {
+		return modWithNegative(pitches.indexOf(p) - pitches.indexOf('C'), pitches.length);
+	};
+
+	export const crossesCBoundary = (lower: CanonicalPitchClass, higher: CanonicalPitchClass) => {
+		return distanceFromC(lower) >= distanceFromC(higher);
+	};
 }
 
 export type CanonicalPitchClass = CanonicalPitchClass.CanonicalPitchClass;

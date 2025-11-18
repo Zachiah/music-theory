@@ -165,7 +165,7 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['C', 'E', 'G', 'Bb', 'B', 'D']), defaultOptions)).toEqual(
 			'C9 7 maj7'
 		);
-		expect(GuessedChord.print(guessChord(['C', 'E', 'Gb', 'Ab']), defaultOptions)).toEqual('Ab+7');
+		expect(GuessedChord.print(guessChord(['C', 'E', 'Gb', 'Ab']), defaultOptions)).toEqual('A♭+7');
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'E', 'Gb', 'Ab', 'Bb']), defaultOptions)
 		).toEqual('C+9 ♯11');
@@ -231,7 +231,7 @@ describe(guessChord, () => {
 				...defaultOptions,
 				properAugmented: false
 			})
-		).toEqual('Ab');
+		).toEqual('A♭');
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'Eb', 'F', 'Ab', 'Bb']), defaultOptions)
 		).toEqual('Cm11 ♭13');
@@ -259,6 +259,6 @@ describe(guessChord, () => {
 			'G7 add13'
 		);
 		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), defaultOptions)).toEqual('D7');
-		expect(GuessedChord.print(guessChord(['Eb', 'G', 'D', 'F']), defaultOptions)).toEqual('Ebmaj9');
+		expect(GuessedChord.print(guessChord(['Eb', 'G', 'D', 'F']), defaultOptions)).toEqual('E♭maj9');
 	});
 });

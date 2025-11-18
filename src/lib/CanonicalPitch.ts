@@ -1,6 +1,5 @@
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { PitchClass } from './PitchClass';
-import { modWithNegative } from './util';
 
 export type CanonicalPitch = {
 	octave: number;
@@ -36,22 +35,13 @@ export namespace CanonicalPitch {
 		);
 	};
 
-	const height = (pitch: CanonicalPitch) => {
+	export const height = (pitch: CanonicalPitch) => {
 		const pitches = CanonicalPitchClass.pitches;
 
 		const fromOctave = pitch.octave * pitches.length;
-		const extra = modWithNegative(
-			pitches.indexOf(pitch.pitchClass) - pitches.indexOf('C'),
-			pitches.length
-		);
+		const extra = CanonicalPitchClass.distanceFromC(pitch.pitchClass);
 
 		return fromOctave + extra;
-	};
-
-	export const sort = (pitches: CanonicalPitch[]): CanonicalPitch[] => {
-		return pitches.sort((a, b) => {
-			return height(a) - height(b);
-		});
 	};
 
 	export const parse = (str: string): CanonicalPitch | null => {
@@ -69,11 +59,40 @@ export namespace CanonicalPitch {
 
 		return {
 			octave: +match[2],
-			pitchClass: PitchClass.toCanonical(pitchClass)
+			pitchClass: PitchClass.toCanonicalPitchClass(pitchClass)
 		};
 	};
 
 	export const print = (p: CanonicalPitch) => {
 		return `${p.pitchClass}${p.octave}`;
+	};
+}
+
+export type CanonicalPitchArray = CanonicalPitch[];
+
+export namespace CanonicalPitchArray {
+	export const sort = (pitches: CanonicalPitchArray): CanonicalPitchArray => {
+		return pitches.sort((a, b) => {
+			return CanonicalPitch.height(a) - CanonicalPitch.height(b);
+		});
+	};
+
+	export const fromCanonicalPitchClasses = (
+		canonicalPitchClasses: CanonicalPitchClass[],
+		startOctave: number
+	): CanonicalPitchArray => {
+		const [head, ...tail] = canonicalPitchClasses;
+
+		const first: CanonicalPitch = { octave: startOctave, pitchClass: head };
+
+		if (tail.length === 0) {
+			return [first];
+		}
+
+		const secondOctave = CanonicalPitchClass.crossesCBoundary(head, tail[0])
+			? startOctave + 1
+			: startOctave;
+
+		return [first, ...fromCanonicalPitchClasses(tail, secondOctave)];
 	};
 }

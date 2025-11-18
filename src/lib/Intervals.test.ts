@@ -35,4 +35,24 @@ describe('Intervals', () => {
 			)
 		).toEqual(['Abbbbbbbbbbbbbb', 'Bbbbbbbbbbbbbbbb'].map((n) => PitchClass.create(n)!));
 	});
+
+	it('should properly get triads', () => {
+		expect(
+			Intervals.getAllOfChordPattern(
+				Intervals.createWithSemitones(1, [2, 2, 1, 2, 2, 2]),
+				PitchClass.create('C')!,
+				[0, 2, 4]
+			)
+		).toEqual(
+			[
+				['C', 'E', 'G'],
+				['D', 'F', 'A'],
+				['E', 'G', 'B'],
+				['F', 'A', 'C'],
+				['G', 'B', 'D'],
+				['A', 'C', 'E'],
+				['B', 'D', 'F']
+			].map((c) => c.map((n) => PitchClass.create(n)))
+		);
+	});
 });
