@@ -64,7 +64,27 @@ export namespace PitchClass {
 		return `${n.letter}${PitchConstituents.printModifiers(n.modifier)}`;
 	};
 
-	export const toCanonical = (p: PitchClass) => {
+	export const toCanonicalPitchClass = (p: PitchClass): CanonicalPitchClass => {
+		console.log(p);
 		return CanonicalPitchClass.applyOffset(p.letter, p.modifier);
+	};
+
+	export const fromCanonicalPitchClass = (p: CanonicalPitchClass): PitchClass => {
+		const mapping: { [key in CanonicalPitchClass]: PitchClass } = {
+			Ab: { letter: 'A', modifier: -1 },
+			A: { letter: 'A', modifier: 0 },
+			Bb: { letter: 'B', modifier: -1 },
+			B: { letter: 'B', modifier: 0 },
+			C: { letter: 'C', modifier: 0 },
+			Db: { letter: 'D', modifier: -1 },
+			D: { letter: 'D', modifier: 0 },
+			Eb: { letter: 'E', modifier: -1 },
+			E: { letter: 'E', modifier: 0 },
+			F: { letter: 'F', modifier: 0 },
+			Gb: { letter: 'G', modifier: -1 },
+			G: { letter: 'G', modifier: 0 }
+		};
+
+		return mapping[p];
 	};
 }

@@ -20,10 +20,6 @@ export const demoChord = (pitches: CanonicalPitch[], now: number) => {
 	const printablePitches = pitches.map((cp) => CanonicalPitch.print(cp));
 
 	synth.data?.triggerAttackRelease(printablePitches, '4n');
-
-	if (printablePitches.length > 1) {
-		demoScale(pitches, now + 0.5);
-	}
 };
 
 export const demoScale = (pitches: CanonicalPitch[], now: number) => {

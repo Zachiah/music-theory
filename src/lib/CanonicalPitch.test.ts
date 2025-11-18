@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { CanonicalPitch as CP } from './CanonicalPitch';
+import { CanonicalPitch as CP, CanonicalPitchArray as CPA } from './CanonicalPitch';
 
 describe('CP', () => {
 	it('Can parse pitches', () => {
@@ -28,7 +28,7 @@ describe('CP', () => {
 	});
 
 	it('Can sort pitches', () => {
-		expect(CP.sort([n('A4'), n('D2'), n('B2'), n('C2'), n('B1')])).toEqual([
+		expect(CPA.sort([n('A4'), n('D2'), n('B2'), n('C2'), n('B1')])).toEqual([
 			n('B1'),
 			n('C2'),
 			n('D2'),
