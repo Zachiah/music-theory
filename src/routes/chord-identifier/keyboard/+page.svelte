@@ -10,6 +10,7 @@
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import * as Tone from 'tone';
 
 	let noteSelections = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
 
@@ -47,7 +48,7 @@
 		<Button
 			disabled={pitches.length === 0}
 			onClick={() => {
-				demoChord(pitches);
+				demoChord(pitches, Tone.now());
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>

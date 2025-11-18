@@ -14,21 +14,28 @@ export const useSynth = () => {
 	};
 };
 
-export const demoChord = (pitches: CanonicalPitch[]) => {
+export const demoChord = (pitches: CanonicalPitch[], now: number) => {
 	const synth = useSynth();
 
 	const printablePitches = pitches.map((cp) => CanonicalPitch.print(cp));
 
-	const now = Tone.now();
 	synth.data?.triggerAttackRelease(printablePitches, '4n');
 
 	if (printablePitches.length > 1) {
-		for (const [idx, pp] of [
-			...printablePitches,
-			...[...printablePitches].reverse().slice(1)
-		].entries()) {
-			synth.data?.triggerAttack(pp, now + 0.5 + idx / 4);
-			synth.data?.triggerRelease(pp, now + 1 + idx / 4);
-		}
+		demoScale(pitches, now + 0.5);
+	}
+};
+
+export const demoScale = (pitches: CanonicalPitch[], now: number) => {
+	const synth = useSynth();
+
+	const printablePitches = pitches.map((cp) => CanonicalPitch.print(cp));
+
+	for (const [idx, pp] of [
+		...printablePitches,
+		...[...printablePitches].reverse().slice(1)
+	].entries()) {
+		synth.data?.triggerAttack(pp, now + idx / 4);
+		synth.data?.triggerRelease(pp, now + 0.25 + idx / 4);
 	}
 };

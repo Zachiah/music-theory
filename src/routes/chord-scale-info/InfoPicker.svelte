@@ -4,6 +4,9 @@
 	import { Chord } from '$lib/Chord';
 	import { Intervals } from '$lib/Intervals';
 	import TwoSidedToggle from '$lib/TwoSidedToggle.svelte';
+	import Button from '$lib/Button.svelte';
+	import * as Tone from 'tone';
+	import { demoChord, demoScale } from '$lib/toneState.svelte';
 
 	let typedPitchString = $state('');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -51,11 +54,11 @@
 			bind:value={noteCollection}
 		>
 			{#if noteCollection.tag === 'scale'}
-				{#each scales as aScale}
+				{#each scales as aScale, index (index)}
 					<option value={aScale}>{ScaleName.print(aScale.scale.names[0])}</option>
 				{/each}
 			{:else}
-				{#each chords as chord}
+				{#each chords as chord, index (index)}
 					<option value={chord}>{chord.chord.names[0]}</option>
 				{/each}
 			{/if}
@@ -81,6 +84,26 @@
 		</div>
 
 		<p class="mb-2">
+			<Button
+				onClick={() => {
+					demoScale(
+						[
+							...Intervals.getCanonicalPitches(scale.intervals, {
+								pitchClass: PitchClass.toCanonical(pitch),
+								octave: 4
+							}),
+							{
+								pitchClass: PitchClass.toCanonical(pitch),
+								octave: 5
+							}
+						],
+						Tone.now()
+					);
+				}}
+			>
+				<span class="icon-[heroicons--speaker-wave]"></span>
+			</Button>
+
 			{Intervals.getPitches(scale.intervals, pitch)
 				.map((n) => PitchClass.print(n))
 				.join(', ')}
@@ -104,6 +127,20 @@
 		</div>
 
 		<p class="mb-2">
+			<Button
+				onClick={() => {
+					demoChord(
+						Intervals.getCanonicalPitches(chord.intervals, {
+							pitchClass: PitchClass.toCanonical(pitch),
+							octave: 4
+						}),
+						Tone.now()
+					);
+				}}
+			>
+				<span class="icon-[heroicons--speaker-wave]"></span>
+			</Button>
+
 			{Intervals.getPitches(chord.intervals, pitch)
 				.map((n) => PitchClass.print(n))
 				.join(', ')}
