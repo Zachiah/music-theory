@@ -4,34 +4,23 @@
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import { demoChord } from '$lib/toneState.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
-	import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
-	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import { CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import * as Tone from 'tone';
 
-	let noteSelections = $state(Array(CanonicalPitchClass.pitches.length * 3 + 1).fill(false));
-
-	const pitches = $derived(
-		noteSelections.flatMap((noteSelection, idx) => {
-			if (!noteSelection) {
-				return [];
-			}
-
-			return CanonicalPitch.applyOffset({ octave: 3, pitchClass: 'C' }, idx);
-		})
-	);
+	let selectedPitches: CanonicalPitchArray = $state([]);
 
 	let allowInversions = $state(true);
 
 	const chordString = $derived.by(() => {
-		if (pitches.length === 0) {
+		if (selectedPitches.length === 0) {
 			return '';
 		}
 
-		const pitchClasses = pitches.map((p) => p.pitchClass);
+		const pitchClasses = selectedPitches.map((p) => p.pitchClass);
 		const guessedChord = allowInversions
 			? guessChord(pitchClasses)
 			: guessChordNoInversions(pitchClasses);
@@ -46,9 +35,9 @@
 	<div class="flex flex-wrap gap-4">
 		<h2 class="mr-auto text-2xl">Keyboard</h2>
 		<Button
-			disabled={pitches.length === 0}
+			disabled={selectedPitches.length === 0}
 			onClick={() => {
-				demoChord(pitches, Tone.now());
+				demoChord(selectedPitches, Tone.now());
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>
@@ -65,9 +54,22 @@
 	</div>
 
 	<Keyboard
-		notes={noteSelections}
-		start="C"
-		toggle={(idx) => (noteSelections[idx] = !noteSelections[idx])}
+		start={{ pitchClass: 'C', octave: 3 }}
+		noteNumber={37}
+		activePitches={selectedPitches}
+		toggle={(pitch) => {
+			const foundIndex = selectedPitches.findIndex(
+				(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
+			);
+			if (foundIndex !== -1) {
+				selectedPitches.splice(foundIndex, 1);
+			} else {
+				selectedPitches.push(pitch);
+			}
+
+			CanonicalPitchArray.sort(selectedPitches);
+		}}
+		labels="selected"
 	/>
 
 	<p class="text-3xl">&nbsp;{chordString}</p>
