@@ -11,7 +11,6 @@
 	const selectedIdx = $derived(filteredOptions.findIndex((o) => o.value === value));
 
 	let activeIdx: number | null = $state(null);
-
 </script>
 
 <div
@@ -38,7 +37,7 @@
 			} else if (e.key === 'Enter') {
 				value = filteredOptions[activeIdx!].value;
 			} else if (e.key === 'Escape') {
-				activeIdx = null
+				activeIdx = null;
 			}
 		}}
 		bind:value={
@@ -52,7 +51,7 @@
 
 	{#if activeIdx !== null}
 		<div
-			class="absolute bottom-0 z-20 flex w-full translate-y-full transform flex-col shadow-md dark:bg-slate-600"
+			class="absolute bottom-0 z-20 flex max-h-72 w-full translate-y-full transform flex-col overflow-auto shadow-md dark:bg-slate-600"
 		>
 			{#each filteredOptions as option, idx (option.label)}
 				<button
@@ -67,7 +66,7 @@
 						search = '';
 					}}
 					onmousemove={() => {
-						activeIdx = idx
+						activeIdx = idx;
 					}}
 				>
 					{option.label}

@@ -30,7 +30,9 @@ export namespace ScaleDescription {
 			...modes.map<ScaleDescription>((mode, idx) => {
 				const modeNameList = typeof mode.name === 'string' ? [mode.name] : mode.name;
 				return {
-					slug: (Array.isArray(mode.name) ? mode.name[0] : mode.name).replaceAll(' ', '-').replaceAll('♭', 'b'),
+					slug: (Array.isArray(mode.name) ? mode.name[0] : mode.name)
+						.replaceAll(' ', '-')
+						.replaceAll('♭', 'b'),
 					intervals: Intervals.rotate(base.intervals, idx + 2),
 					names: [
 						...modeNameList.map<ScaleName>((n) => ({ tag: 'plain', name: n })),

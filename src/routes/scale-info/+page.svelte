@@ -18,7 +18,7 @@
 
 	let selectedScaleSlug = $state(scales[0].slug);
 
-	const scale = $derived(scales.find(scale => scale.slug === selectedScaleSlug)!)
+	const scale = $derived(scales.find((scale) => scale.slug === selectedScaleSlug)!);
 
 	const chordPatterns = {
 		Triads: [0, 2, 4],
@@ -42,7 +42,10 @@
 
 			<FancySelect
 				bind:value={selectedScaleSlug}
-				options={scales.map((scale) => ({ label: ScaleName.print(scale.names[0]), value: scale.slug }))}
+				options={scales.map((scale) => ({
+					label: ScaleName.print(scale.names[0]),
+					value: scale.slug
+				}))}
 			/>
 		</form>
 	</div>
