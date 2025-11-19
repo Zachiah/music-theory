@@ -5,7 +5,9 @@ import { CanonicalPitch as CP, CanonicalPitchArray as CPA } from './CanonicalPit
 describe('CP', () => {
 	it('Can parse pitches', () => {
 		expect(CP.parse('C5')).toEqual<CP>({ octave: 5, pitchClass: 'C' });
+		expect(CP.parse('C#5')).toEqual<CP>({ octave: 5, pitchClass: 'Db' });
 		expect(CP.parse('Bb8')).toEqual<CP>({ octave: 8, pitchClass: 'Bb' });
+		expect(CP.parse('Eb-4')).toEqual({ octave: -4, pitchClass: 'Eb' });
 		expect(CP.parse('P2')).toEqual(null);
 		expect(CP.parse('asdlfkj')).toEqual(null);
 	});

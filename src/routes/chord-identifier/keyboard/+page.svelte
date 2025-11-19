@@ -8,8 +8,10 @@
 	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
-	import { CanonicalPitchArray } from '$lib/CanonicalPitch';
+	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import * as Tone from 'tone';
+	import { onMount } from 'svelte';
+	import { decodeMIDIMessage } from '$lib/midi';
 
 	let selectedPitches: CanonicalPitchArray = $state([]);
 
@@ -26,6 +28,52 @@
 			: guessChordNoInversions(pitchClasses);
 
 		return GuessedChord.print(guessedChord, printingOptions.data);
+	});
+
+	const togglePitch = (pitch: CanonicalPitch) => {
+		const foundIndex = selectedPitches.findIndex(
+			(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
+		);
+		if (foundIndex !== -1) {
+			selectedPitches.splice(foundIndex, 1);
+		} else {
+			selectedPitches.push(pitch);
+		}
+
+		CanonicalPitchArray.sort(selectedPitches);
+	};
+
+	let midiAccess: MIDIAccess | null = null;
+	const onMIDIMessage = (event: MIDIMessageEvent) => {
+		const message = decodeMIDIMessage(event);
+
+		if (message.tag === 'note-up' || message.tag === 'note-down') {
+			togglePitch(message.pitch)
+		}
+	};
+
+	onMount(() => {
+		const setupMidi = async () => {
+			midiAccess = await navigator.requestMIDIAccess();
+
+			const listenToMIDIInput = (midiAccess: MIDIAccess) => {
+				midiAccess.inputs.forEach((entry) => {
+					entry.addEventListener('midimessage', onMIDIMessage);
+				});
+			};
+
+			listenToMIDIInput(midiAccess);
+		};
+
+		setupMidi();
+
+		return () => {
+			if (midiAccess) {
+				midiAccess.inputs.forEach((entry) => {
+					entry.removeEventListener('midimessage', onMIDIMessage);
+				});
+			}
+		};
 	});
 </script>
 
@@ -44,6 +92,7 @@
 		</Button>
 
 		<span class="grow"></span>
+
 		<ChordPrintingOptionsEditorButton
 			options={printingOptions.data}
 			onChange={(v) => (printingOptions.data = v)}
@@ -57,18 +106,7 @@
 		start={{ pitchClass: 'C', octave: 3 }}
 		noteNumber={37}
 		activePitches={selectedPitches}
-		toggle={(pitch) => {
-			const foundIndex = selectedPitches.findIndex(
-				(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
-			);
-			if (foundIndex !== -1) {
-				selectedPitches.splice(foundIndex, 1);
-			} else {
-				selectedPitches.push(pitch);
-			}
-
-			CanonicalPitchArray.sort(selectedPitches);
-		}}
+		toggle={togglePitch}
 		labels="selected"
 	/>
 
