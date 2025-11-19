@@ -19,7 +19,7 @@
 </script>
 
 <div
-	class="relative h-11 w-full rounded-r-md dark:bg-slate-600 dark:text-white"
+	class="relative h-11 w-full rounded-md dark:bg-slate-600 dark:text-white"
 	onfocusout={async (e) => {
 		if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget as Node)) {
 			return;
