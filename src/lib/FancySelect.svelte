@@ -6,7 +6,12 @@
 
 	let search: string = $state('');
 
-	const filteredOptions = $derived(options.filter((option) => option.label.includes(search)));
+	const filteredOptions = $derived(
+		options.filter((option) => {
+			const searchWords = search.toLowerCase().split(' ');
+			return searchWords.every((word) => option.label.toLowerCase().includes(word));
+		})
+	);
 
 	const selectedIdx = $derived(filteredOptions.findIndex((o) => o.value === value));
 
