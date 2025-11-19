@@ -65,7 +65,6 @@ export namespace PitchClass {
 	};
 
 	export const toCanonicalPitchClass = (p: PitchClass): CanonicalPitchClass => {
-		console.log(p);
 		return CanonicalPitchClass.applyOffset(p.letter, p.modifier);
 	};
 

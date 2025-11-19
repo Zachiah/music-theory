@@ -15,6 +15,7 @@ export namespace ScaleName {
 }
 
 export type ScaleDescription = {
+	slug: string;
 	intervals: Intervals;
 	names: ScaleName[];
 	description: string;
@@ -29,6 +30,9 @@ export namespace ScaleDescription {
 			...modes.map<ScaleDescription>((mode, idx) => {
 				const modeNameList = typeof mode.name === 'string' ? [mode.name] : mode.name;
 				return {
+					slug: (Array.isArray(mode.name) ? mode.name[0] : mode.name)
+						.replaceAll(' ', '-')
+						.replaceAll('♭', 'b'),
 					intervals: Intervals.rotate(base.intervals, idx + 2),
 					names: [
 						...modeNameList.map<ScaleName>((n) => ({ tag: 'plain', name: n })),
@@ -47,6 +51,7 @@ export namespace ScaleDescription {
 	export const scales: ScaleDescription[] = [
 		...generateModeDescriptions(
 			{
+				slug: 'major',
 				description:
 					'The major scale is the most common scale in all of western music. All of western music is built around the major scale and described in terms of it. The white keys on a piano starting from C are the C major scale.',
 				intervals: Intervals.createWithSemitones(1, [2, 2, 1, 2, 2, 2]),
@@ -66,6 +71,7 @@ export namespace ScaleDescription {
 		),
 		...generateModeDescriptions(
 			{
+				slug: 'harmonic-minor',
 				names: [{ tag: 'plain', name: 'harmonic minor' }],
 				intervals: Intervals.createWithSemitones(1, [2, 1, 2, 2, 1, 3]),
 				description: ''
@@ -81,6 +87,7 @@ export namespace ScaleDescription {
 		),
 		...generateModeDescriptions(
 			{
+				slug: 'melodic-minor',
 				names: [{ tag: 'plain', name: 'melodic minor' }],
 				intervals: Intervals.createWithSemitones(1, [2, 1, 2, 2, 2, 2]),
 				description: ''
@@ -95,6 +102,7 @@ export namespace ScaleDescription {
 			]
 		),
 		{
+			slug: 'blues',
 			names: [
 				{ tag: 'plain', name: 'blues' },
 				{ tag: 'plain', name: 'minor blues' }
@@ -109,6 +117,7 @@ export namespace ScaleDescription {
 			description: ''
 		},
 		{
+			slug: 'major-blues',
 			names: [{ tag: 'plain', name: 'major blues' }],
 			intervals: [
 				{ semitones: 2, letters: 1 },
@@ -121,6 +130,7 @@ export namespace ScaleDescription {
 		},
 		...generateModeDescriptions(
 			{
+				slug: 'pentatonic',
 				names: [
 					{ tag: 'plain', name: 'pentatonic' },
 					{ tag: 'plain', name: 'major pentatonic' }
