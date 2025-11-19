@@ -1,7 +1,8 @@
 # Music Theory
 
-## TODO List
+This site is a work in progress. It hosts music tools.
 
+## TODO List
 - [ ] Improve the fretboard preset creation process
   - [ ] Show a live fretboard somewhere on the creation screen so they get visual feedback
   - [ ] Make the live fretboard interactive and editable
