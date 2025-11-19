@@ -45,7 +45,7 @@ export namespace CanonicalPitch {
 	};
 
 	export const parse = (str: string): CanonicalPitch | null => {
-		const regex = /^(\D+)(\d+)$/;
+		const regex = /^([^-0-9]+)(-?)(\d+)$/;
 		const match = str.match(regex);
 
 		if (!match) {
@@ -57,8 +57,9 @@ export namespace CanonicalPitch {
 			return null;
 		}
 
+		const negative = match[2] === '-' ? -1 : 1
 		return {
-			octave: +match[2],
+			octave: negative * +match[3],
 			pitchClass: PitchClass.toCanonicalPitchClass(pitchClass)
 		};
 	};
