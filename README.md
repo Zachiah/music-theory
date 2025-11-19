@@ -17,5 +17,4 @@ This site is a work in progress. It hosts music tools.
   - [ ] Contributing
   - [ ] Info about the project
 - [ ] CI testing
-- [ ] Audio button on info page that will play scales (up and down) and chords (all at once)
 - [ ] Make lower strings a bit thicker
