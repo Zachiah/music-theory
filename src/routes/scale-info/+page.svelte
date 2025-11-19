@@ -33,9 +33,9 @@
 	<h1 class="pb-4 text-4xl">Scale Info</h1>
 
 	<div>
-		<form class="flex flex-col gap-2 md:flex-row md:gap-0">
+		<form class="flex flex-col gap-2 md:flex-row">
 			<input
-				class="flex-1 rounded-l-md dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
+				class="flex-1 rounded-md dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
 				placeholder="Type a note. (Ex. C)"
 				bind:value={typedPitchString}
 			/>
