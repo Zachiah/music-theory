@@ -14,12 +14,14 @@ export const decodeMIDIMessage = (event: MIDIMessageEvent): MidiMessage => {
 		return { tag: 'unknown' };
 	}
 
-	if ((event.data[0] & 0xf0) === 0x90) {
-		return { tag: 'note-down', pitch: decodeMIDIPitch(event.data[1]) };
+	const isProperNoteUp = (event.data[0] & 0xf0) === 0x80;
+	const isNoteDownWithVelocity0 = (event.data[0] & 0xf0) === 0x90 && event.data[2] === 0;
+	if (isProperNoteUp || isNoteDownWithVelocity0) {
+		return { tag: 'note-up', pitch: decodeMIDIPitch(event.data[1]) };
 	}
 
-	if ((event.data[0] & 0xf0) === 0x80) {
-		return { tag: 'note-up', pitch: decodeMIDIPitch(event.data[1]) };
+	if ((event.data[0] & 0xf0) === 0x90) {
+		return { tag: 'note-down', pitch: decodeMIDIPitch(event.data[1]) };
 	}
 
 	return { tag: 'unknown' };
