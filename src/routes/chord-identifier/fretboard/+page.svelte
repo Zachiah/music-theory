@@ -136,7 +136,9 @@
 
 		<ChordPrintingOptionsEditorButton
 			options={printingOptions.data}
-			onChange={(v) => (printingOptions.data = v)}
+			onChange={(v) => {
+				printingOptions.data = v;
+			}}
 		/>
 
 		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}

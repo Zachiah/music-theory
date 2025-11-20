@@ -48,7 +48,7 @@
 		const message = decodeMIDIMessage(event);
 
 		if (message.tag === 'note-up' || message.tag === 'note-down') {
-			togglePitch(message.pitch)
+			togglePitch(message.pitch);
 		}
 	};
 
@@ -95,7 +95,9 @@
 
 		<ChordPrintingOptionsEditorButton
 			options={printingOptions.data}
-			onChange={(v) => (printingOptions.data = v)}
+			onChange={(v) => {
+				printingOptions.data = v;
+			}}
 		/>
 		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
 			>Allow Inversions</Toggle

@@ -1,4 +1,9 @@
-export const createLocalStorageState = <T>(key: string, version: number, defaultValue: T) => {
+export const createLocalStorageState = <T>(
+	key: string,
+	version: number,
+	defaultValue: T,
+	convertOldValues: null | ((oldValue: { version: number; value: unknown }) => T) = null
+) => {
 	const initialValue = (() => {
 		if (typeof localStorage === 'undefined') {
 			return defaultValue;
@@ -12,6 +17,10 @@ export const createLocalStorageState = <T>(key: string, version: number, default
 
 		const value: { version: number; value: T } = JSON.parse(str);
 		if (value.version !== version) {
+			if (convertOldValues) {
+				return convertOldValues(value);
+			}
+
 			return defaultValue;
 		}
 

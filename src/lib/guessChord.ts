@@ -1,9 +1,11 @@
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { PitchClass } from './PitchClass';
+import { PitchConstituents } from './PitchConstituents';
 import { modWithNegative } from './util';
 
 export type GuessedChord = {
 	root: CanonicalPitchClass;
+	originalRoot: CanonicalPitchClass;
 	major: boolean;
 	minor: boolean;
 	diminished: boolean;
@@ -46,12 +48,36 @@ export namespace GuessedChord {
 		properSharps: boolean;
 		properDiminished: boolean;
 		properAugmented: boolean;
+		slashNotation: boolean;
+	};
+
+	const normalizeNoteString = (
+		pitch: CanonicalPitchClass,
+		availableNotes: PitchClass[],
+		{
+			lowerFlat,
+			sharp,
+			doubleFlat,
+			doubleSharp
+		}: { lowerFlat: string; sharp: string; doubleFlat: string; doubleSharp: string }
+	) => {
+		const found = availableNotes.find((an) => {
+			return PitchClass.toCanonicalPitchClass(an) === pitch;
+		});
+
+		const normalized = PitchClass.print(found || PitchClass.fromCanonicalPitchClass(pitch))
+			.replaceAll('♭', lowerFlat)
+			.replaceAll('♯', sharp)
+			.replaceAll('𝄫', doubleFlat)
+			.replaceAll('𝄪', doubleSharp);
+
+		return normalized;
 	};
 
 	export const print = (
 		c: GuessedChord,
 		options: PrintingOptions,
-		availableNotes: PitchClass[] = []
+		providedAvailableNotes: PitchClass[] = []
 	) => {
 		const major =
 			(c.minor || c.diminished || c.augmented) && c.major ? 'Maj' : c.major ? 'maj' : '';
@@ -67,16 +93,45 @@ export namespace GuessedChord {
 		const dim = options.properDiminished ? '°' : 'dim';
 		const aug = options.properAugmented ? '+' : 'aug';
 
-		const rootFromAvailable = availableNotes.find((an) => {
-			return PitchClass.toCanonicalPitchClass(an) === c.root;
+		const availableNotes = (() => {
+			if (providedAvailableNotes.length !== 0) {
+				return providedAvailableNotes;
+			}
+
+			const scale = c.minor ? [2, 1, 2, 2, 1, 2] : [2, 2, 1, 2, 2, 2];
+
+			return scale.reduce(
+				(notes, interval) => {
+					const last = notes[notes.length - 1];
+					const newCanonical = CanonicalPitchClass.applyOffset(
+						PitchClass.toCanonicalPitchClass(last),
+						interval
+					);
+					return [
+						...notes,
+						PitchClass.withLetterName(
+							newCanonical,
+							PitchConstituents.nextLetter(last.letter, 1),
+							'closest'
+						)
+					];
+				},
+				[PitchClass.fromCanonicalPitchClass(c.root)]
+			);
+		})();
+
+		const betterRoot = normalizeNoteString(c.root, availableNotes, {
+			lowerFlat,
+			sharp,
+			doubleFlat,
+			doubleSharp
 		});
-		const betterRoot = PitchClass.print(
-			rootFromAvailable || PitchClass.fromCanonicalPitchClass(c.root)
-		)
-			.replaceAll('♭', lowerFlat)
-			.replaceAll('♯', sharp)
-			.replaceAll('𝄫', doubleFlat)
-			.replaceAll('𝄪', doubleSharp);
+		const betterOriginalRoot = normalizeNoteString(c.originalRoot, availableNotes, {
+			lowerFlat,
+			sharp,
+			doubleFlat,
+			doubleSharp
+		});
 
 		const baseModifiers = [
 			betterRoot,
@@ -112,12 +167,18 @@ export namespace GuessedChord {
 			c.add13 ? 'add13' : ''
 		].filter((m) => m);
 
-		return `${baseModifiers.join('')}${additionalModifiers.length ? ' ' : ''}${additionalModifiers.join(' ')}`;
+		const slashModifier =
+			options.slashNotation && c.originalRoot !== c.root ? ` / ${betterOriginalRoot}` : ``;
+
+		return `${baseModifiers.join('')}${additionalModifiers.length ? ' ' : ''}${additionalModifiers.join(' ')}${slashModifier}`;
 	};
 
 	export const getBigConf = (chord: GuessedChord) => {
+		if (chord.hasThreeish && chord.hasFivish) {
+			return 1001;
+		}
 		if (chord.hasThreeish || chord.hasFivish) {
-			return 1;
+			return 1000;
 		}
 		return 0;
 	};
@@ -157,7 +218,10 @@ export namespace GuessedChord {
 	};
 }
 
-export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedChord => {
+export const guessChordNoInversions = (
+	pitches: CanonicalPitchClass[],
+	originalRoot = pitches[0]
+): GuessedChord => {
 	const distanceFromC = CanonicalPitchClass.distanceFromC(pitches[0]);
 
 	const distance = modWithNegative(distanceFromC, CanonicalPitchClass.pitches.length);
@@ -255,6 +319,7 @@ export const guessChordNoInversions = (pitches: CanonicalPitchClass[]): GuessedC
 
 	return {
 		root: pitches[0],
+		originalRoot,
 		major,
 		minor,
 		diminished,
@@ -301,7 +366,7 @@ export const guessChord = (pitches: CanonicalPitchClass[]): GuessedChord => {
 
 	const allPossible = pitches
 		.map((_, idx) => rotate(idx, pitches))
-		.map((p) => guessChordNoInversions(p));
+		.map((p) => guessChordNoInversions(p, pitches[0]));
 
 	const bestRes = allPossible.reduce<{ c: GuessedChord; conf: number; done: boolean }>(
 		(best, curr) => {
@@ -309,7 +374,7 @@ export const guessChord = (pitches: CanonicalPitchClass[]): GuessedChord => {
 				return best;
 			}
 
-			const currConf = GuessedChord.getBigConf(curr) * 1000 - GuessedChord.getComplexity(curr);
+			const currConf = GuessedChord.getBigConf(curr) - GuessedChord.getComplexity(curr);
 
 			const wouldBeDone = curr.hasMiddlish && curr.hasSevenish;
 

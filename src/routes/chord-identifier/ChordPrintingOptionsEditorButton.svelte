@@ -74,6 +74,15 @@
 			>
 				Proper augmented
 			</Toggle>
+
+			<Toggle
+				active={options.slashNotation}
+				onToggle={() => {
+					onChange({ ...options, slashNotation: !options.slashNotation });
+				}}
+			>
+				Slash Notation
+			</Toggle>
 		</div>
 
 		<div class="mt-auto flex justify-end">
