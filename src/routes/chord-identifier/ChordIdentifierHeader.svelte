@@ -5,7 +5,10 @@
 </script>
 
 <div class="flex flex-wrap gap-4 pb-4">
-	<h1 class="mr-auto text-4xl">Identify Chords</h1>
+	<div class="flex mr-auto">
+		<h1 class="text-4xl">Identify Chords</h1>
+		<p class="text-lg ml-2">{#if !showFretboard}(Now supporting realtime MIDI!){/if}</p>
+	</div>
 
 	<div class="flex h-12 w-72 rounded-full bg-gray-200 dark:bg-slate-600">
 		<TwoSidedToggleLink
