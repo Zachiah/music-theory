@@ -30,10 +30,32 @@
 		return GuessedChord.print(guessedChord, printingOptions.data);
 	});
 
-	const togglePitch = (pitch: CanonicalPitch) => {
-		const foundIndex = selectedPitches.findIndex(
+	const getPitchIndex = (pitch: CanonicalPitch) => {
+		return selectedPitches.findIndex(
 			(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
 		);
+	};
+
+	const disablePitch = (pitch: CanonicalPitch) => {
+		const foundIndex = getPitchIndex(pitch);
+		if (foundIndex !== -1) {
+			selectedPitches.splice(foundIndex, 1);
+		}
+
+		CanonicalPitchArray.sort(selectedPitches);
+	};
+
+	const enablePitch = (pitch: CanonicalPitch) => {
+		const foundIndex = getPitchIndex(pitch);
+		if (foundIndex === -1) {
+			selectedPitches.push(pitch);
+		}
+
+		CanonicalPitchArray.sort(selectedPitches);
+	};
+
+	const togglePitch = (pitch: CanonicalPitch) => {
+		const foundIndex = getPitchIndex(pitch);
 		if (foundIndex !== -1) {
 			selectedPitches.splice(foundIndex, 1);
 		} else {
@@ -47,8 +69,14 @@
 	const onMIDIMessage = (event: MIDIMessageEvent) => {
 		const message = decodeMIDIMessage(event);
 
-		if (message.tag === 'note-up' || message.tag === 'note-down') {
-			togglePitch(message.pitch);
+		if (message.tag === 'note-down') {
+			enablePitch(message.pitch);
+			return;
+		}
+
+		if (message.tag === 'note-up') {
+			disablePitch(message.pitch);
+			return;
 		}
 	};
 
