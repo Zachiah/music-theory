@@ -284,4 +284,10 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), o)).toEqual('D7');
 		expect(GuessedChord.print(guessChord(['Eb', 'Gb', 'B']), o)).toEqual('B');
 	});
+
+	it('should support 5 chords', () => {
+		expect(GuessedChord.print(guessChord(['G', 'D']), defaultOptions)).toEqual('G5');
+		expect(GuessedChord.print(guessChord(['G', 'D', 'G']), defaultOptions)).toEqual('G5');
+		expect(GuessedChord.print(guessChord(['Ab', 'Db']), defaultOptions)).toEqual('D♭5 / A♭');
+	});
 });

@@ -12,6 +12,7 @@ export type GuessedChord = {
 	augmented: boolean;
 	sus4: boolean;
 	sus2: boolean;
+	five: boolean;
 	flat5: boolean;
 	seven: boolean;
 	maj7: boolean;
@@ -135,6 +136,7 @@ export namespace GuessedChord {
 
 		const baseModifiers = [
 			betterRoot,
+			c.five ? '5' : '',
 			c.augmented ? aug : '',
 			c.diminished ? dim : '',
 			c.minor ? 'm' : '',
@@ -226,7 +228,7 @@ export const guessChordNoInversions = (
 
 	const distance = modWithNegative(distanceFromC, CanonicalPitchClass.pitches.length);
 
-	const cpc = pitches.map((p) => CanonicalPitchClass.applyOffset(p, -distance));
+	const cpc = [...new Set(pitches.map((p) => CanonicalPitchClass.applyOffset(p, -distance)))];
 
 	const diminished =
 		cpc.includes('Eb') &&
@@ -240,6 +242,7 @@ export const guessChordNoInversions = (
 	const sus4 = cpc.includes('F') && !cpc.includes('E') && !cpc.includes('Eb');
 	const sus2 = cpc.includes('D') && !cpc.includes('E') && !cpc.includes('Eb') && !cpc.includes('F');
 	const flat5 = cpc.includes('Gb') && !cpc.includes('G') && !diminished && !augmented;
+	const five = cpc.includes('G') && cpc.length === 2;
 
 	const maj7 = cpc.includes('B') && cpc.includes('Bb');
 	const seven = maj7;
@@ -327,6 +330,7 @@ export const guessChordNoInversions = (
 		sus4,
 		sus2,
 		highestDegree,
+		five,
 		flat5,
 		seven,
 		maj7,
