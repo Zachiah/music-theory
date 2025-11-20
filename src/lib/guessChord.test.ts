@@ -9,7 +9,8 @@ describe(guessChord, () => {
 		properFlats: true,
 		properSharps: true,
 		properDiminished: true,
-		properAugmented: true
+		properAugmented: true,
+		slashNotation: true
 	};
 
 	it('should accurately handle simple triads', () => {
@@ -80,7 +81,7 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['C', 'E', 'G', 'A']), defaultOptions)).toEqual('C6');
 		expect(GuessedChord.print(guessChord(['C', 'Eb', 'G', 'A']), defaultOptions)).toEqual('Cm6');
 		expect(GuessedChord.print(guessChord(['C', 'Eb', 'E', 'G', 'A']), defaultOptions)).toEqual(
-			'Am7 add♯11'
+			'Am7 add♯11 / C'
 		);
 		expect(GuessedChord.print(guessChord(['C', 'D', 'E', 'G', 'A']), defaultOptions)).toEqual(
 			'C6/9'
@@ -165,7 +166,9 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['C', 'E', 'G', 'Bb', 'B', 'D']), defaultOptions)).toEqual(
 			'C9 7 maj7'
 		);
-		expect(GuessedChord.print(guessChord(['C', 'E', 'Gb', 'Ab']), defaultOptions)).toEqual('A♭+7');
+		expect(GuessedChord.print(guessChord(['C', 'E', 'Gb', 'Ab']), defaultOptions)).toEqual(
+			'A♭+7 / C'
+		);
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'E', 'Gb', 'Ab', 'Bb']), defaultOptions)
 		).toEqual('C+9 ♯11');
@@ -225,25 +228,27 @@ describe(guessChord, () => {
 	});
 
 	it('should support inversions', () => {
-		expect(GuessedChord.print(guessChord(['C', 'F', 'A']), defaultOptions)).toEqual('F');
+		expect(GuessedChord.print(guessChord(['C', 'F', 'A']), defaultOptions)).toEqual('F / C');
 		expect(
 			GuessedChord.print(guessChord(['C', 'Eb', 'Ab']), {
 				...defaultOptions,
 				properAugmented: false
 			})
-		).toEqual('A♭');
+		).toEqual('A♭ / C');
 		expect(
 			GuessedChord.print(guessChord(['C', 'D', 'Eb', 'F', 'Ab', 'Bb']), defaultOptions)
 		).toEqual('Cm11 ♭13');
 		expect(GuessedChord.print(guessChord(['G', 'Bb', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual(
-			'C7 add13'
+			'C7 add13 / G'
 		);
 		expect(GuessedChord.print(guessChord(['G', 'A', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual(
-			'Am7'
+			'Am7 / G'
 		);
-		expect(GuessedChord.print(guessChord(['G', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual('C6');
+		expect(GuessedChord.print(guessChord(['G', 'C', 'E', 'G', 'A']), defaultOptions)).toEqual(
+			'C6 / G'
+		);
 		expect(GuessedChord.print(guessChord(['C', 'F', 'B', 'D']), defaultOptions)).toEqual(
-			'B° add♭9'
+			'B° add♭9 / C'
 		);
 		expect(GuessedChord.print(guessChord(['C', 'G', 'Bb']), defaultOptions)).toEqual('C7');
 		expect(GuessedChord.print(guessChord(['C', 'Bb']), defaultOptions)).toEqual('C7');
@@ -258,7 +263,25 @@ describe(guessChord, () => {
 		expect(GuessedChord.print(guessChord(['G', 'F', 'B', 'E']), defaultOptions)).toEqual(
 			'G7 add13'
 		);
-		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), defaultOptions)).toEqual('D7');
+		expect(
+			GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), defaultOptions, [
+				{ letter: 'F', modifier: 1 }
+			])
+		).toEqual('D7 / F♯');
 		expect(GuessedChord.print(guessChord(['Eb', 'G', 'D', 'F']), defaultOptions)).toEqual('E♭maj9');
+		expect(GuessedChord.print(guessChord(['Bb', 'D', 'G']), defaultOptions)).toEqual('Gm / B♭');
+	});
+
+	it('should properly guess slashed note enharmonically speaking', () => {
+		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), defaultOptions)).toEqual(
+			'D7 / F♯'
+		);
+		expect(GuessedChord.print(guessChord(['Eb', 'Gb', 'B']), defaultOptions)).toEqual('B / D♯');
+	});
+
+	it('should support disabled slash chord notation', () => {
+		const o = { ...defaultOptions, slashNotation: false };
+		expect(GuessedChord.print(guessChord(['Gb', 'A', 'C', 'D']), o)).toEqual('D7');
+		expect(GuessedChord.print(guessChord(['Eb', 'Gb', 'B']), o)).toEqual('B');
 	});
 });

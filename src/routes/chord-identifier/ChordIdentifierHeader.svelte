@@ -5,9 +5,11 @@
 </script>
 
 <div class="flex flex-wrap gap-4 pb-4">
-	<div class="flex mr-auto">
+	<div class="mr-auto flex">
 		<h1 class="text-4xl">Identify Chords</h1>
-		<p class="text-lg ml-2">{#if !showFretboard}(Now supporting realtime MIDI!){/if}</p>
+		<p class="ml-2 text-lg">
+			{#if !showFretboard}(Now supporting realtime MIDI!){/if}
+		</p>
 	</div>
 
 	<div class="flex h-12 w-72 rounded-full bg-gray-200 dark:bg-slate-600">

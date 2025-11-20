@@ -57,7 +57,7 @@ export namespace CanonicalPitch {
 			return null;
 		}
 
-		const negative = match[2] === '-' ? -1 : 1
+		const negative = match[2] === '-' ? -1 : 1;
 		return {
 			octave: negative * +match[3],
 			pitchClass: PitchClass.toCanonicalPitchClass(pitchClass)
