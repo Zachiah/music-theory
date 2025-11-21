@@ -11,7 +11,7 @@
 	import FancySelect from '$lib/FancySelect.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
 
-	let typedPitchString = $state('');
+	let typedPitchString = $state('C');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
 	const pitch = $derived(typedPitch || PitchClass.create('c')!);
 
