@@ -18,8 +18,8 @@ const defaults = {
 	sixNine: true,
 	properFlats: true,
 	properSharps: true,
-	properDiminished: true,
-	properAugmented: true,
+	properDiminished: false,
+	properAugmented: false,
 	slashNotation: true
 };
 
