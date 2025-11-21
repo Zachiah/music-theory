@@ -1,8 +1,9 @@
 <script lang="ts">
 	let {
 		value = $bindable(),
-		options
-	}: { value: string; options: { value: string; label: string }[] } = $props();
+		options,
+		placeholder
+	}: { value: string; options: { value: string; label: string }[]; placeholder: string } = $props();
 
 	let search: string = $state('');
 
@@ -19,7 +20,7 @@
 </script>
 
 <div
-	class="relative h-11 w-full rounded-md dark:bg-slate-600 dark:text-white"
+	class="relative h-13 w-full rounded-md dark:bg-slate-600 dark:text-white"
 	onfocusout={async (e) => {
 		if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget as Node)) {
 			return;
@@ -29,11 +30,12 @@
 		search = '';
 	}}
 >
+	<div class="absolute top-0.5 left-3 text-xs text-slate-300">{placeholder}</div>
 	<input
 		placeholder={options.find((o) => o.value === value)?.label || ''}
 		onclick={() => (activeIdx = 0)}
 		onfocus={() => (activeIdx = 0)}
-		class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-md bg-transparent placeholder:text-black focus:cursor-text focus:placeholder:text-gray-600 dark:placeholder:text-white dark:focus:placeholder:text-slate-300"
+		class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-md bg-transparent placeholder:text-black focus:cursor-text focus:placeholder:text-transparent dark:placeholder:text-white dark:focus:placeholder:text-transparent"
 		onkeydown={(e) => {
 			if (e.key === 'ArrowDown') {
 				activeIdx = Math.min(activeIdx! + 1, options.length - 1);

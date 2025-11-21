@@ -9,6 +9,7 @@
 	import { CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import ScaleChordsOfPattern from '$lib/ScaleChordsOfPattern.svelte';
 	import FancySelect from '$lib/FancySelect.svelte';
+	import FancyInput from '$lib/FancyInput.svelte';
 
 	let typedPitchString = $state('');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -34,13 +35,10 @@
 
 	<div>
 		<form class="flex flex-col gap-2 md:flex-row">
-			<input
-				class="flex-1 rounded-md dark:bg-slate-600 dark:text-white dark:placeholder:text-slate-300"
-				placeholder="Type a note. (Ex. C)"
-				bind:value={typedPitchString}
-			/>
+			<FancyInput placeholder="Tonic" bind:value={typedPitchString} />
 
 			<FancySelect
+				placeholder="Scale Type"
 				bind:value={selectedScaleSlug}
 				options={scales.map((scale) => ({
 					label: ScaleName.print(scale.names[0]),
