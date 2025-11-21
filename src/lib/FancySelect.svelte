@@ -33,7 +33,7 @@
 		placeholder={options.find((o) => o.value === value)?.label || ''}
 		onclick={() => (activeIdx = 0)}
 		onfocus={() => (activeIdx = 0)}
-		class="absolute top-0 left-0 h-full w-full rounded-md bg-transparent dark:placeholder:text-slate-300"
+		class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-md bg-transparent placeholder:text-black focus:cursor-text focus:placeholder:text-gray-600 dark:placeholder:text-white dark:focus:placeholder:text-slate-300"
 		onkeydown={(e) => {
 			if (e.key === 'ArrowDown') {
 				activeIdx = Math.min(activeIdx! + 1, options.length - 1);
@@ -53,6 +53,10 @@
 			}
 		}
 	/>
+
+	<span
+		class="icon-[heroicons--chevron-down] pointer-events-none absolute top-1/2 right-4 -translate-y-1/2"
+	></span>
 
 	{#if activeIdx !== null}
 		<div
