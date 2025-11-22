@@ -1,26 +1,10 @@
 import { describe, it, expect } from 'vitest';
 
 import { CanonicalPitch as CP, CanonicalPitchArray as CPA } from './CanonicalPitch';
+import { Pitch } from './Pitch';
 
 describe('CP', () => {
-	it('Can parse pitches', () => {
-		expect(CP.parse('C5')).toEqual<CP>({ octave: 5, pitchClass: 'C' });
-		expect(CP.parse('C#5')).toEqual<CP>({ octave: 5, pitchClass: 'Db' });
-		expect(CP.parse('Bb8')).toEqual<CP>({ octave: 8, pitchClass: 'Bb' });
-		expect(CP.parse('Eb-4')).toEqual({ octave: -4, pitchClass: 'Eb' });
-		expect(CP.parse('P2')).toEqual(null);
-		expect(CP.parse('asdlfkj')).toEqual(null);
-	});
-
-	const n = (s: string) => {
-		const note = CP.parse(s);
-
-		if (!note) {
-			throw new Error('failed to parse note');
-		}
-
-		return note;
-	};
+	const n = (s: string) => Pitch.toCanonical(Pitch.parse(s)!);
 
 	it('Can increment pitches', () => {
 		expect(CP.applyOffset(n('B3'), 1)).toEqual<CP>(n('C4'));

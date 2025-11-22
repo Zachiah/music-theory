@@ -1,3 +1,5 @@
+import { modWithNegative } from './util';
+
 export namespace PitchConstituents {
 	export const letterNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 	export type LetterName = (typeof letterNames)[number];
@@ -6,6 +8,14 @@ export namespace PitchConstituents {
 		const idx = letterNames.indexOf(letter);
 
 		return letterNames[(idx + amount) % letterNames.length];
+	};
+
+	export const letterBasedHeight = (letter: LetterName, octave: number) => {
+		const letterHeight = modWithNegative(
+			letterNames.indexOf(letter) - letterNames.indexOf('C'),
+			letterNames.length
+		);
+		return letterNames.length * octave + letterHeight;
 	};
 
 	export const validateLetterName = (str: string): LetterName | null => {

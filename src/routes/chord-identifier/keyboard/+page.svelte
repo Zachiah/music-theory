@@ -12,14 +12,16 @@
 	import * as Tone from 'tone';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
+	import GrandStaff from '$lib/staff/GrandStaff.svelte';
+	import { normalizeChordPitchesWithOctaves } from '$lib/categorizeChordNotes';
 
 	let selectedPitches: CanonicalPitchArray = $state([]);
 
 	let allowInversions = $state(true);
 
-	const chordString = $derived.by(() => {
+	const guessedChord = $derived.by(() => {
 		if (selectedPitches.length === 0) {
-			return '';
+			return null;
 		}
 
 		const pitchClasses = selectedPitches.map((p) => p.pitchClass);
@@ -27,8 +29,12 @@
 			? guessChord(pitchClasses)
 			: guessChordNoInversions(pitchClasses);
 
-		return GuessedChord.print(guessedChord, printingOptions.data);
+		return guessedChord;
 	});
+
+	const chordString = $derived(
+		guessedChord === null ? '' : GuessedChord.print(guessedChord, printingOptions.data)
+	);
 
 	const getPitchIndex = (pitch: CanonicalPitch) => {
 		return selectedPitches.findIndex(
@@ -140,5 +146,13 @@
 		labels="selected"
 	/>
 
-	<p class="text-3xl">&nbsp;{chordString}</p>
+	<div class="flex gap-4">
+		<GrandStaff
+			notes={guessedChord ? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord) : []}
+		/>
+
+		<p class="flex-grow rounded-md bg-gray-200 p-4 p-4 text-3xl dark:bg-slate-600">
+			&nbsp;{chordString}
+		</p>
+	</div>
 </Container>
