@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CanonicalPitch, CanonicalPitchArray } from './CanonicalPitch';
+	import { Pitch } from './Pitch';
 
 	const {
 		start,
@@ -65,30 +66,30 @@
 
 <div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
 	<div class="flex w-min" style="--w: 20px; --h: 15px;">
-		{#each noteData as { pitch, blackKey, selected, label } (CanonicalPitch.print(pitch))}
+		{#each noteData as { pitch, blackKey, selected, label } (Pitch.print(Pitch.fromCanonical(pitch)))}
 			<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
 				<button
-					aria-label={`Toggle note ${CanonicalPitch.print(pitch)}`}
+					aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(pitch))}`}
 					class="flex h-full w-full items-end justify-center rounded-b-md border border-gray-600 pb-2 text-black"
 					class:bg-blue-500={selected}
 					class:bg-white={!selected}
 					onclick={() => toggle(pitch)}
 				>
 					{#if label}
-						{CanonicalPitch.print(pitch)}
+						{Pitch.print(Pitch.fromCanonical(pitch))}
 					{/if}
 				</button>
 
 				{#if blackKey}
 					<button
-						aria-label={`Toggle note ${CanonicalPitch.print(blackKey.pitch)}`}
+						aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(blackKey.pitch))}`}
 						class="absolute top-0 right-0 z-20 flex h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 border-gray-600 pb-2 text-white"
 						class:bg-black={!blackKey.selected}
 						class:bg-blue-500={blackKey.selected}
 						onclick={() => toggle(blackKey.pitch)}
 					>
 						{#if blackKey.label}
-							{CanonicalPitch.print(blackKey.pitch)}
+							{Pitch.print(Pitch.fromCanonical(blackKey.pitch))}
 						{/if}
 					</button>
 				{/if}
