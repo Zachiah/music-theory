@@ -141,7 +141,9 @@
 	<Keyboard
 		start={{ pitchClass: 'C', octave: 3 }}
 		noteNumber={37}
-		activePitches={selectedPitches}
+		activePitches={guessedChord
+			? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord)
+			: []}
 		toggle={togglePitch}
 		labels="selected"
 	/>
