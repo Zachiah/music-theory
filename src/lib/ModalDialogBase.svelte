@@ -15,6 +15,14 @@
 	let pressedInside = $state(false);
 </script>
 
+<svelte:window
+	onkeyup={(e) => {
+		if (e.key === 'Escape') {
+			onClose();
+		}
+	}}
+/>
+
 {#if open}
 	<div
 		role="presentation"
