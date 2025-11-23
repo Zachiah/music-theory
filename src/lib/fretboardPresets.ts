@@ -29,13 +29,14 @@ export const defaultPresets: Fretboard[] = [
 		dots: guitarDots
 	},
 	{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'], dots: guitarDots },
-	{ name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'], dots: guitarDots },
+	{ name: 'DADGAD Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'], dots: guitarDots },
 	{
 		name: 'Ukelele (reentrant)',
 		strings: ['G4', 'C4', 'E4', 'A4'],
 		frets: 18,
 		dots: ukeleleDots
 	},
+	{ name: 'Bass', strings: ['E1', 'A1', 'D2', 'G2'], dots: guitarDots },
 	{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'], frets: 18, dots: ukeleleDots }
 ].map((row) => ({
 	id: generateId(),
