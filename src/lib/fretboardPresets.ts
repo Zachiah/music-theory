@@ -1,6 +1,6 @@
-import { CanonicalPitch } from './CanonicalPitch';
 import type { Fretboard } from './Fretboard';
 import { generateId } from './generateId';
+import { Pitch } from './Pitch';
 
 const guitarDots = [
 	null,
@@ -48,11 +48,11 @@ export const defaultPresets: Fretboard[] = [
 	frets: 24,
 	...row,
 	strings: row.strings.map((s) => {
-		const parsed = CanonicalPitch.parse(s);
+		const parsed = Pitch.parse(s);
 		if (!parsed) {
 			throw new Error('Failed to parse');
 		}
 
-		return parsed;
+		return Pitch.toCanonical(parsed);
 	})
 }));

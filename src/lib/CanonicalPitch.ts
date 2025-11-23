@@ -1,5 +1,4 @@
 import { CanonicalPitchClass } from './CanonicalPitchClass';
-import { PitchClass } from './PitchClass';
 
 export type CanonicalPitch = {
 	octave: number;
@@ -8,6 +7,10 @@ export type CanonicalPitch = {
 
 export namespace CanonicalPitch {
 	export const applyOffset = (p: CanonicalPitch, offset: number): CanonicalPitch => {
+		if (isNaN(offset)) {
+			throw new Error('Offset was NaN');
+		}
+
 		if (offset === 0) {
 			return p;
 		}
@@ -42,30 +45,6 @@ export namespace CanonicalPitch {
 		const extra = CanonicalPitchClass.distanceFromC(pitch.pitchClass);
 
 		return fromOctave + extra;
-	};
-
-	export const parse = (str: string): CanonicalPitch | null => {
-		const regex = /^([^-0-9]+)(-?)(\d+)$/;
-		const match = str.match(regex);
-
-		if (!match) {
-			return null;
-		}
-
-		const pitchClass = PitchClass.create(match[1]);
-		if (!pitchClass) {
-			return null;
-		}
-
-		const negative = match[2] === '-' ? -1 : 1;
-		return {
-			octave: negative * +match[3],
-			pitchClass: PitchClass.toCanonicalPitchClass(pitchClass)
-		};
-	};
-
-	export const print = (p: CanonicalPitch) => {
-		return `${p.pitchClass}${p.octave}`;
 	};
 }
 

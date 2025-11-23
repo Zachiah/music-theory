@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CanonicalPitch } from './CanonicalPitch';
 	import type { Fretboard } from './Fretboard';
+	import { Pitch } from './Pitch';
 
 	type FretActivation = 'neutral' | 'disabled' | 'active' | 'none';
 
@@ -43,7 +44,7 @@
 		`}
 	>
 		<div class="flex" class:flex-col={vertical}>
-			{#each new Array(fretboard.frets + 1).fill(null) as _, fretIdx}
+			{#each new Array(fretboard.frets + 1).fill(null) as _, fretIdx (fretIdx)}
 				{@const fretSizeMultiplier =
 					fretIdx === 0 ? 1 / 3 : variableFretSize ? getFretSizeMultiplier(fretIdx - 1) : 1}
 
@@ -61,14 +62,14 @@
 						class={`absolute flex ${vertical ? 'h-[calc(100%_-_8px)]' : 'h-full'} ${vertical ? 'w-full' : 'w-[calc(100%_-_8px)]'} items-center`}
 						class:flex-col={!vertical}
 					>
-						{#each new Array(fretboard.dots[fretIdx - 1] ?? 0).fill(null) as _}
+						{#each new Array(fretboard.dots[fretIdx - 1] ?? 0).fill(null) as _, idx (idx)}
 							<div class="flex flex-grow items-center justify-center">
 								<div class="h-4 w-4 rounded-full bg-white"></div>
 							</div>
 						{/each}
 					</div>
 
-					{#each usableStrings as { s: stringPitch, idx }}
+					{#each usableStrings as { s: stringPitch, idx } (idx)}
 						{@const pitch = CanonicalPitch.applyOffset(stringPitch, fretIdx)}
 						{@const fretActivation = stringDecorations[idx][fretIdx]}
 
@@ -95,7 +96,7 @@
 									class:text-gray-600={fretActivation === 'disabled'}
 									class:bg-blue-500={fretActivation === 'active'}
 								>
-									{CanonicalPitch.print(pitch)}
+									{Pitch.print(Pitch.fromCanonical(pitch))}
 								</div>
 							{/if}
 						</button>

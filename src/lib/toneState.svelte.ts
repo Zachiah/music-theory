@@ -1,5 +1,6 @@
 import * as Tone from 'tone';
 import { CanonicalPitch } from './CanonicalPitch';
+import { Pitch } from './Pitch';
 
 let synth = $state<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> | null>(null);
 if (typeof window !== 'undefined') {
@@ -14,10 +15,14 @@ export const useSynth = () => {
 	};
 };
 
+const getPlayableString = (pitches: CanonicalPitch[]) => {
+	return pitches.map((p) => Pitch.print(Pitch.fromCanonical(p))).map((p) => p.replaceAll('♭', 'b'));
+};
+
 export const demoChord = (pitches: CanonicalPitch[], now: number) => {
 	const synth = useSynth();
 
-	const printablePitches = pitches.map((cp) => CanonicalPitch.print(cp));
+	const printablePitches = getPlayableString(pitches);
 
 	synth.data?.triggerAttackRelease(printablePitches, '4n');
 };
@@ -25,7 +30,7 @@ export const demoChord = (pitches: CanonicalPitch[], now: number) => {
 export const demoScale = (pitches: CanonicalPitch[], now: number) => {
 	const synth = useSynth();
 
-	const printablePitches = pitches.map((cp) => CanonicalPitch.print(cp));
+	const printablePitches = getPlayableString(pitches);
 
 	for (const [idx, pp] of [
 		...printablePitches,
