@@ -11,7 +11,7 @@
 	}: {
 		start: CanonicalPitch;
 		noteNumber: number;
-		activePitches: Pitch[];
+		activePitches: { pitch: Pitch; extraText?: string }[];
 		toggle: (pitch: CanonicalPitch) => void;
 		labels: 'all' | 'selected' | 'none';
 	} = $props();
@@ -19,10 +19,12 @@
 	type NoteData = {
 		pitch: CanonicalPitch;
 		displayPitch?: Pitch;
+		extraText?: string;
 		blackKey: null | {
 			pitch: CanonicalPitch;
 			displayPitch?: Pitch;
 			label: boolean;
+			extraText?: string;
 		};
 		label: boolean;
 	};
@@ -34,19 +36,24 @@
 	const noteData: NoteData[] = $derived(
 		new Array(noteNumber).fill(null).reduce<NoteData[]>((acc, _, idx) => {
 			const pitch = CanonicalPitch.applyOffset(start, idx);
-			const displayPitch = activePitches.find((p) => {
-				const c = Pitch.toCanonical(p);
+			const displayPitchData = activePitches.find((p) => {
+				const c = Pitch.toCanonical(p.pitch);
 				return c.octave === pitch.octave && c.pitchClass === pitch.pitchClass;
 			});
 
-			const label = labels === 'selected' ? !!displayPitch : labels === 'all' ? true : false;
+			const label = labels === 'selected' ? !!displayPitchData : labels === 'all' ? true : false;
 
 			if (pitch.pitchClass.endsWith('b')) {
 				return [
 					...acc.slice(0, acc.length - 1),
 					{
 						...acc[acc.length - 1],
-						blackKey: { displayPitch, pitch, label }
+						blackKey: {
+							displayPitch: displayPitchData?.pitch,
+							extraText: displayPitchData?.extraText,
+							pitch,
+							label
+						}
 					}
 				];
 			}
@@ -56,7 +63,8 @@
 				{
 					pitch,
 					blackKey: null,
-					displayPitch,
+					displayPitch: displayPitchData?.pitch,
+					extraText: displayPitchData?.extraText,
 					label
 				}
 			];
@@ -66,7 +74,7 @@
 
 <div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
 	<div class="flex w-min" style="--w: 20px; --h: 15px;">
-		{#each noteData as { pitch, blackKey, displayPitch, label } (Pitch.print(Pitch.fromCanonical(pitch)))}
+		{#each noteData as { pitch, blackKey, displayPitch, label, extraText } (Pitch.print(Pitch.fromCanonical(pitch)))}
 			<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
 				<button
 					aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(pitch))}`}
@@ -76,7 +84,10 @@
 					onclick={() => toggle(pitch)}
 				>
 					{#if label}
-						{Pitch.print(displayPitch || Pitch.fromCanonical(pitch))}
+						<div class="flex flex-col">
+							<span>{extraText}</span>
+							<span>{Pitch.print(displayPitch || Pitch.fromCanonical(pitch))}</span>
+						</div>
 					{/if}
 				</button>
 
@@ -89,7 +100,12 @@
 						onclick={() => toggle(blackKey.pitch)}
 					>
 						{#if blackKey.label}
-							{Pitch.print(blackKey.displayPitch || Pitch.fromCanonical(blackKey.pitch))}
+							<div class="flex flex-col">
+								<span>{blackKey.extraText}</span>
+								<span
+									>{Pitch.print(blackKey.displayPitch || Pitch.fromCanonical(blackKey.pitch))}</span
+								>
+							</div>
 						{/if}
 					</button>
 				{/if}

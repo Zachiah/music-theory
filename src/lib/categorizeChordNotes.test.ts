@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest';
 import {
 	categorizeChordNotes,
 	getModifiedOctave,
-	normalizeChordPitches,
 	scaleDegreeToPitchClass,
 	type ScaleDegree
 } from './categorizeChordNotes';

@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
-	import { normalizeChordPitchesWithOctaves } from '$lib/categorizeChordNotes';
+	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
 
 	let selectedPitches: CanonicalPitchArray = $state([]);
 
@@ -142,7 +142,10 @@
 		start={{ pitchClass: 'C', octave: 3 }}
 		noteNumber={37}
 		activePitches={guessedChord
-			? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord)
+			? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord).map((p) => ({
+					pitch: p.pitch,
+					extraText: ScaleDegree.print(p.scaleDegree)
+				}))
 			: []}
 		toggle={togglePitch}
 		labels="selected"
@@ -150,7 +153,9 @@
 
 	<div class="flex gap-4">
 		<GrandStaff
-			notes={guessedChord ? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord) : []}
+			notes={guessedChord
+				? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord).map((p) => p.pitch)
+				: []}
 		/>
 
 		<p class="flex-grow rounded-md bg-gray-200 p-4 p-4 text-3xl dark:bg-slate-600">

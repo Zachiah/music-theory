@@ -24,6 +24,36 @@ export type ScaleDegree =
 	| 'flat7'
 	| '7';
 
+export namespace ScaleDegree {
+	export const print = (s: ScaleDegree) => {
+		const mapping: { [key in ScaleDegree]: string } = {
+			'1': 'I',
+			flat2: '♭II',
+			'2': 'II',
+			sharp2: '♯II',
+			flat3: '♭III',
+			'3': 'III',
+			'4': 'IV',
+			sharp4: '♯IV',
+			flat5: '♭V',
+			'5': 'V',
+			sharp5: '♯V',
+			flat6: '♭VI',
+			'6': 'VI',
+			flatflat7: '♭♭VII',
+			flat7: '♭VII',
+			'7': 'VII'
+		};
+
+		if (!mapping[s]) {
+			throw new Error(`invalid scale degree: ${s}`);
+		}
+
+		console.log(mapping[s]);
+		return mapping[s];
+	};
+}
+
 export const categorizeChordNotes = (
 	pitches: CanonicalPitchClass[],
 	guessedChord: GuessedChord
@@ -125,17 +155,6 @@ export const scaleDegreeToPitchClass = (scaleDegree: ScaleDegree, root: PitchCla
 	};
 };
 
-export const normalizeChordPitches = (
-	pitches: CanonicalPitchClass[],
-	guessedChord: GuessedChord
-): PitchClass[] => {
-	const categorized = categorizeChordNotes(pitches, guessedChord);
-
-	return categorized.map((c) =>
-		scaleDegreeToPitchClass(c, PitchClass.fromCanonicalPitchClass(guessedChord.root))
-	);
-};
-
 export const getModifiedOctave = (
 	originalOctave: number,
 	originalPitchClass: PitchClass,
@@ -155,22 +174,23 @@ export const getModifiedOctave = (
 export const normalizeChordPitchesWithOctaves = (
 	pitches: CanonicalPitch[],
 	guessedChord: GuessedChord
-): Pitch[] => {
+): { pitch: Pitch; scaleDegree: ScaleDegree }[] => {
 	const categorized = categorizeChordNotes(
 		pitches.map((p) => p.pitchClass),
 		guessedChord
 	);
 
-	return categorized
-		.map((c) => scaleDegreeToPitchClass(c, PitchClass.fromCanonicalPitchClass(guessedChord.root)))
-		.map((pitchClass, idx) => {
-			return {
-				pitchClass,
-				octave: getModifiedOctave(
-					pitches[idx].octave,
-					PitchClass.fromCanonicalPitchClass(pitches[idx].pitchClass),
-					pitchClass
-				)
-			};
-		});
+	return categorized.map((c, idx) => {
+		const p = scaleDegreeToPitchClass(c, PitchClass.fromCanonicalPitchClass(guessedChord.root));
+		const pitch: Pitch = {
+			pitchClass: p,
+			octave: getModifiedOctave(
+				pitches[idx].octave,
+				PitchClass.fromCanonicalPitchClass(pitches[idx].pitchClass),
+				p
+			)
+		};
+
+		return { pitch, scaleDegree: c };
+	});
 };
