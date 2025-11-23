@@ -149,10 +149,12 @@ const getFirstAvailableSpace = (data: number[], needed: number): number => {
 		return 0;
 	}
 
+
 	const compliment = Array.from({ length: Math.max(...data) }, (_, idx) => idx).filter(
 		(num) => !data.includes(num)
 	);
-	const grouped = breakApartArray(compliment, (a, b) => b - a > 1);
+
+	const grouped = breakApartArray(compliment, (a, b) => (b - a) <= 1);
 
 	const foundGroup = grouped.find((group) => group.length >= needed);
 
