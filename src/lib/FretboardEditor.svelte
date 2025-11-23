@@ -2,6 +2,7 @@
 	import Button from './Button.svelte';
 	import { CanonicalPitch } from './CanonicalPitch';
 	import { CanonicalPitchClass } from './CanonicalPitchClass';
+	import FancySelect from './FancySelect.svelte';
 	import FormField from './FormField.svelte';
 	import type { Fretboard } from './Fretboard';
 	import ModalDialogBase from './ModalDialogBase.svelte';
@@ -61,33 +62,65 @@
 				class="dark:bg-slate-600"
 				type="number"
 				value={currentFretboard.frets}
+				max="100"
 				oninput={(e) => {
-					currentFretboard.frets = +e.currentTarget.value;
+					const MAX_FRETS = 32;
+					const f = Math.min(+e.currentTarget.value, MAX_FRETS);
+
+					e.currentTarget.value = '' + f;
+
+					currentFretboard.frets = f;
 					currentFretboard.dots = new Array(currentFretboard.frets).fill(0);
 				}}
 			/>
 		</FormField>
 
-		<h3 class="text-2xl">Dots</h3>
-		<div class="flex flex-wrap gap-4">
-			{#each currentFretboard.dots as dot, dotIdx}
-				<label class="flex gap-4 rounded-md p-4 shadow-md">
-					<div>Fret {dotIdx + 1}</div>
-					<input
-						class="w-12 border-0 border-b p-0 text-right dark:bg-slate-600"
-						type="number"
-						value={dot}
-						oninput={(e) => {
-							currentFretboard.dots[dotIdx] = +e.currentTarget.value;
-						}}
-					/>
-				</label>
-			{/each}
-		</div>
+		<FormField el="div" label="Dots" error="">
+			<div class="flex flex-col flex-wrap gap-2">
+				{#each currentFretboard.dots as dotData, idx (idx)}
+					<div class="flex rounded-full">
+						<FancySelect
+							placeholder="Fret Number"
+							bind:value={() => '' + dotData.fretNumber, (v) => (dotData.fretNumber = +v)}
+							options={Array.from({ length: currentFretboard.frets }).map((_, f) => ({
+								value: '' + f,
+								label: '' + f
+							}))}
+						/>
+
+						<FancySelect
+							placeholder="Dots"
+							bind:value={() => '' + dotData.dots, (v) => (dotData.dots = +v)}
+							options={Array.from({ length: 2 }).map((_, f) => ({
+								value: '' + (f + 1),
+								label: '' + (f + 1)
+							}))}
+						/>
+
+						<button
+							class="rounded-r-full border px-4"
+							onclick={() => {
+								currentFretboard.dots = [
+									...currentFretboard.dots.slice(0, idx),
+									...currentFretboard.dots.slice(idx + 1)
+								];
+							}}>X</button
+						>
+					</div>
+				{/each}
+				<div>
+					<Button
+						onClick={() =>
+							(currentFretboard.dots = [...currentFretboard.dots, { fretNumber: 1, dots: 1 }])}
+						>Add dot(s) on fret</Button
+					>
+				</div>
+			</div>
+		</FormField>
 
 		<FormField el="div" label="Strings" error={stringsError}>
 			<div class="flex flex-col flex-wrap gap-2">
-				{#each currentFretboard.strings as string, idx}
+				{#each currentFretboard.strings as string, idx (idx)}
 					<div class="flex rounded-full">
 						<select
 							class="w-16 rounded-l-full px-4 py-2 text-xs dark:bg-slate-600"
@@ -100,7 +133,7 @@
 								onStringChange(idx, { ...string, pitchClass: p });
 							}}
 						>
-							{#each CanonicalPitchClass.pitches as pitch}
+							{#each CanonicalPitchClass.pitches as pitch (pitch)}
 								<option>{pitch}</option>
 							{/each}
 						</select>
@@ -112,7 +145,7 @@
 								onStringChange(idx, { ...string, octave: +e.currentTarget.value });
 							}}
 						>
-							{#each new Array(8).fill(null).map((_, i) => i + 1) as octave}
+							{#each new Array(8).fill(null).map((_, i) => i + 1) as octave (octave)}
 								<option>{octave}</option>
 							{/each}
 						</select>

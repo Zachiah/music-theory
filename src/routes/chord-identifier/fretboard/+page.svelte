@@ -17,7 +17,7 @@
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
-		2,
+		3,
 		defaultPresets
 	);
 

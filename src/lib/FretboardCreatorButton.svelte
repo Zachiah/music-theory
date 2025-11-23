@@ -12,7 +12,7 @@
 		id: generateId(),
 		name: '',
 		strings: [],
-		dots: new Array(24).fill(null),
+		dots: [],
 		frets: 24
 	});
 </script>

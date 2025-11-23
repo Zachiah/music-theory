@@ -4,6 +4,6 @@ export type Fretboard = {
 	id: string;
 	name: string;
 	strings: CanonicalPitch[];
-	dots: (null | number)[];
+	dots: { fretNumber: number; dots: number }[];
 	frets: number;
 };

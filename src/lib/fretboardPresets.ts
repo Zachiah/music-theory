@@ -2,31 +2,25 @@ import type { Fretboard } from './Fretboard';
 import { generateId } from './generateId';
 import { Pitch } from './Pitch';
 
-const guitarDots = [
-	null,
-	null,
-	1,
-	null,
-	1,
-	null,
-	1,
-	null,
-	1,
-	null,
-	null,
-	2,
-	null,
-	null,
-	1,
-	null,
-	1,
-	null,
-	1,
-	null,
-	1
+const guitarDots: Fretboard['dots'] = [
+	{ fretNumber: 3, dots: 1 },
+	{ fretNumber: 5, dots: 1 },
+	{ fretNumber: 7, dots: 1 },
+	{ fretNumber: 9, dots: 1 },
+	{ fretNumber: 12, dots: 2 },
+	{ fretNumber: 15, dots: 1 },
+	{ fretNumber: 17, dots: 1 },
+	{ fretNumber: 19, dots: 1 },
+	{ fretNumber: 21, dots: 1 }
 ];
 
-const ukeleleDots = [null, null, 1, null, 1, null, 1, null, null, 1, null, 1];
+const ukeleleDots: Fretboard['dots'] = [
+	{ fretNumber: 3, dots: 1 },
+	{ fretNumber: 5, dots: 1 },
+	{ fretNumber: 7, dots: 1 },
+	{ fretNumber: 10, dots: 1 },
+	{ fretNumber: 11, dots: 1 }
+];
 
 export const defaultPresets: Fretboard[] = [
 	{

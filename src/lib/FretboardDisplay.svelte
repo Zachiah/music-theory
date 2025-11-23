@@ -48,6 +48,8 @@
 				{@const fretSizeMultiplier =
 					fretIdx === 0 ? 1 / 3 : variableFretSize ? getFretSizeMultiplier(fretIdx - 1) : 1}
 
+				{@const dots = fretboard.dots.find((d) => d.fretNumber === fretIdx)?.dots || 0}
+
 				<div
 					class="relative flex"
 					class:flex-col={!vertical}
@@ -62,7 +64,7 @@
 						class={`absolute flex ${vertical ? 'h-[calc(100%_-_8px)]' : 'h-full'} ${vertical ? 'w-full' : 'w-[calc(100%_-_8px)]'} items-center`}
 						class:flex-col={!vertical}
 					>
-						{#each new Array(fretboard.dots[fretIdx - 1] ?? 0).fill(null) as _, idx (idx)}
+						{#each Array.from({ length: dots }) as _, idx (idx)}
 							<div class="flex flex-grow items-center justify-center">
 								<div class="h-4 w-4 rounded-full bg-white"></div>
 							</div>
