@@ -20,5 +20,4 @@ This site is a work in progress. It hosts music tools.
 - [ ] CI testing
 - [ ] Make lower strings a bit thicker
 - [ ] Add tutorial
-- [ ] When you have a chord on the keyboard, label the keys by their function in the chord
 - [ ] If you type "rick" into the scale identifier note section it should rickroll you when you click play
