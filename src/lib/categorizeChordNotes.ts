@@ -49,7 +49,6 @@ export namespace ScaleDegree {
 			throw new Error(`invalid scale degree: ${s}`);
 		}
 
-		console.log(mapping[s]);
 		return mapping[s];
 	};
 }
