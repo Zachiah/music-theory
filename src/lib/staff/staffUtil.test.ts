@@ -8,13 +8,7 @@ describe(getAlignment, () => {
 		const pitches = notes.map((n) => Pitch.parse(n)!);
 		const alignments = getAlignment(pitches);
 
-		const expectedResult = pitches.map((p, idx) => {
-			const natural = Array.isArray(expected[idx]);
-			const alignment = Array.isArray(expected[idx]) ? expected[idx][0] : expected[idx];
-			return { pitch: p, alignment, natural };
-		});
-
-		expect(alignments).toEqual(expectedResult);
+		expect(alignments.map((al) => (al.natural ? [al.alignment] : al.alignment))).toEqual(expected);
 	};
 	it('should handle basic situations properly', () => {
 		t([], []);
@@ -30,10 +24,14 @@ describe(getAlignment, () => {
 	});
 
 	it('should give notes on the same location extra space', () => {
-		t(['C4', 'Db4', 'D4'], [0, 2, [4]]);
+		t(['C4', 'Db4', 'D4'], [1, 0, [3]]);
 	});
 
 	it("should take into account the previous line's notes if necessary", () => {
 		t(['C4', 'Db4', 'D4', 'Eb4', 'E4'], [0, 2, [4], 0, [6]]);
+	});
+
+	it('should put accidentals first if possible', () => {
+		t(['C3', 'D3', 'E3', 'F#3', 'G3', 'A3', 'B3'], [1, 0, 1, 0, 1, 0, 1]);
 	});
 });

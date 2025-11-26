@@ -171,37 +171,53 @@ export const getAlignment = (pitches: Pitch[]): PitchWithAlignment[] => {
 	const groups = splitByLine(sorted, false).map((group) => splitByLine(group, true));
 
 	return groups.flatMap((group) => {
-		const groupProcessed: PitchWithAlignment[][] = [];
+		const normal = getGroupAlignment(group, false);
+		const offset = getGroupAlignment(group, true);
 
-		for (const lineGroup of group) {
-			const previouslyTaken = getTakenSpaces(groupProcessed[groupProcessed.length - 1] || []);
+		const normalHighest = Math.max(...normal.map((n) => n.alignment));
+		const offsetHighest = Math.max(...offset.map((n) => n.alignment));
 
-			groupProcessed.push([]);
-
-			for (const pitch of lineGroup) {
-				const currentlyTaken = getTakenSpaces(groupProcessed[groupProcessed.length - 1]);
-
-				const natural = pitch.pitchClass.modifier === 0 && lineGroup.length > 1;
-
-				const size = (() => {
-					const rawModifierSize = getModifierSpace(pitch.pitchClass.modifier);
-
-					return 1 + (natural ? 1 : 0) + rawModifierSize;
-				})();
-
-				const start = getFirstAvailableSpace(
-					[...previouslyTaken, ...currentlyTaken].toSorted(),
-					size
-				);
-
-				groupProcessed[groupProcessed.length - 1].push({
-					pitch,
-					alignment: start === 0 ? 0 : start + size - 1,
-					natural
-				});
-			}
-		}
-
-		return groupProcessed.flat();
+		return normalHighest > offsetHighest ? offset : normal;
 	});
+};
+
+const getGroupAlignment = (group: Pitch[][], offset: boolean): PitchWithAlignment[] => {
+	const groupProcessed: PitchWithAlignment[][] = [];
+
+	for (const [idx, lineGroup] of group.entries()) {
+		const previouslyTaken = getTakenSpaces(groupProcessed[groupProcessed.length - 1] || []);
+
+		groupProcessed.push(getLineGroupAlignment(lineGroup, previouslyTaken, offset && idx === 0));
+	}
+
+	return groupProcessed.flat();
+};
+
+const getLineGroupAlignment = (lineGroup: Pitch[], previouslyTaken: number[], offset: boolean) => {
+	const res: PitchWithAlignment[] = [];
+
+	for (const [idx, pitch] of lineGroup.entries()) {
+		const currentlyTaken = getTakenSpaces(res);
+
+		const natural = pitch.pitchClass.modifier === 0 && lineGroup.length > 1;
+
+		const size = (() => {
+			const rawModifierSize = getModifierSpace(pitch.pitchClass.modifier);
+
+			return 1 + (natural ? 1 : 0) + rawModifierSize;
+		})();
+
+		const start =
+			offset && idx === 0
+				? 1
+				: getFirstAvailableSpace([...previouslyTaken, ...currentlyTaken].toSorted(), size);
+
+		res.push({
+			pitch,
+			alignment: start === 0 ? 0 : start + size - 1,
+			natural
+		});
+	}
+
+	return res;
 };
