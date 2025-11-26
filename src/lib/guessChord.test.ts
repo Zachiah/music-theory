@@ -13,7 +13,7 @@ describe(guessChord, () => {
 		augmented: 'aug',
 		major: 'maj',
 		minor: 'm',
-		halfDiminished: 'half-dim',
+		halfDiminished: 'ø',
 		slashNotation: true
 	};
 
@@ -42,7 +42,7 @@ describe(guessChord, () => {
 		t(['C', 'Eb', 'G', 'Bb'], 'Cm7');
 		t(['C', 'Eb', 'G', 'B'], 'CmMaj7');
 		t(['C', 'Eb', 'Gb', 'A'], 'Cdim7');
-		t(['C', 'Eb', 'Gb', 'Bb'], 'C half-dim');
+		t(['C', 'Eb', 'Gb', 'Bb'], 'Cø');
 		t(['C', 'Eb', 'Gb', 'B'], 'CdimMaj7');
 		t(['C', 'E', 'Ab', 'Bb'], 'Caug7');
 		t(['C', 'E', 'Ab', 'B'], 'CaugMaj7');
@@ -177,7 +177,6 @@ describe(guessChord, () => {
 
 		// half diminished
 		t(['C', 'Eb', 'Gb', 'Bb'], 'Cø', { halfDiminished: 'ø' });
-		t(['C', 'Eb', 'Gb', 'Bb'], 'C half-dim', { halfDiminished: 'half-dim' });
 		t(['C', 'Eb', 'Gb', 'Bb'], 'Cm7 b5', { halfDiminished: 'm7b5' });
 	});
 });

@@ -52,7 +52,7 @@ export namespace GuessedChord {
 		minor: '-' | 'm';
 		diminished: '°' | 'dim';
 		augmented: '+' | 'aug' | '#5';
-		halfDiminished: 'ø' | 'half-dim' | 'm7b5';
+		halfDiminished: 'ø' | 'm7b5';
 		slashNotation: boolean;
 	};
 
@@ -101,10 +101,6 @@ export namespace GuessedChord {
 		const halfDiminished = (() => {
 			if (options.halfDiminished === 'ø') {
 				return 'ø';
-			}
-
-			if (options.halfDiminished === 'half-dim') {
-				return ' half-dim';
 			}
 
 			return `${min}7 ${lowerFlat}5`;

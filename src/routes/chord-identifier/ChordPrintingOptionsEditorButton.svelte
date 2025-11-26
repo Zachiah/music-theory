@@ -131,8 +131,7 @@
 						})
 				}
 				options={[
-					{ value: 'half-dim', label: 'half-dim' },
-					{ value: 'ø', label: 'Symbol (ø)' },
+					{ value: 'ø', label: 'ø' },
 					{ value: 'm7b5', label: 'm7b5' }
 				]}
 			/>

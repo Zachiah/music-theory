@@ -67,7 +67,7 @@ const defaults: GuessedChord.PrintingOptions = {
 	augmented: 'aug',
 	minor: 'm',
 	major: 'maj',
-	halfDiminished: 'half-dim',
+	halfDiminished: 'm7b5',
 	slashNotation: true
 };
 
