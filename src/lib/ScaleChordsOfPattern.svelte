@@ -5,8 +5,7 @@
 	import { Intervals } from './Intervals';
 	import { PitchClass } from './PitchClass';
 	import { printingOptions } from './printingOptionsState.svelte';
-	import { demoChord } from './toneState.svelte';
-	import * as Tone from 'tone';
+	import { playback } from './Playback';
 
 	const {
 		pattern,
@@ -21,9 +20,9 @@
 
 		<Button
 			onClick={() => {
-				demoChord(
+				playback.demoChord(
 					CanonicalPitchArray.fromCanonicalPitchClasses(canonicalPitchClasses, 4),
-					Tone.now()
+					playback.now()
 				);
 			}}
 		>

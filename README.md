@@ -23,7 +23,9 @@ This site is a work in progress. It hosts music tools.
 - [ ] If you type "rick" into the scale identifier note section it should rickroll you when you click play
 
 ## License
+
 This project is licensed under the MIT License — see the [LICENSE](./LICENSE.md) file for details.
 
 ## Attribution
+
 - Audio samples in this project were sourced from the University of Iowa Electronic Music Studios’ Musical Instrument Samples collection.
