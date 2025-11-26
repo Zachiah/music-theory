@@ -95,7 +95,8 @@ export namespace GuessedChord {
 		const maj = options.major;
 		const min = options.minor;
 		const dim = options.diminished;
-		const aug = options.augmented === '#5' ? `${sharp}5` : options.augmented;
+		const aug = options.augmented === '#5' ? '' : options.augmented;
+		const sharp5 = options.augmented === '#5' ? `${sharp}5` : '';
 
 		const halfDiminished = (() => {
 			if (options.halfDiminished === 'ø') {
@@ -175,6 +176,7 @@ export namespace GuessedChord {
 		].filter((m) => m);
 
 		const additionalModifiers = [
+			c.augmented ? sharp5 : '',
 			c.flatSix ? flatSix : '',
 			c.seven ? '7' : '',
 			c.maj7 ? `${maj}7` : '',

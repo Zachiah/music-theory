@@ -172,7 +172,8 @@ describe(guessChord, () => {
 		// augmented
 		t(['C', 'E', 'Ab'], 'C+', { augmented: '+' });
 		t(['C', 'E', 'Ab'], 'Caug', { augmented: 'aug' });
-		t(['C', 'E', 'Ab'], 'C#5', { augmented: '#5' });
+		t(['C', 'E', 'Ab'], 'C #5', { augmented: '#5' });
+		t(['C', 'E', 'Ab', 'Bb'], 'C7 #5', { augmented: '#5' });
 
 		// half diminished
 		t(['C', 'Eb', 'Gb', 'Bb'], 'Cø', { halfDiminished: 'ø' });
