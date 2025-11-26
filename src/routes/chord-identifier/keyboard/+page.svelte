@@ -158,7 +158,7 @@
 				: []}
 		/>
 
-		<p class="flex-grow rounded-md bg-gray-200 p-4 p-4 text-3xl dark:bg-slate-600">
+		<p class="flex-grow rounded-md bg-gray-200 p-4 text-3xl dark:bg-slate-600">
 			&nbsp;{chordString}
 		</p>
 	</div>

@@ -1,15 +1,16 @@
 import tailwindcss from '@tailwindcss/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 
 	test: {
-		workspace: [
+		silent: 'passed-only',
+		projects: [
 			{
-				extends: './vite.config.ts',
+				extends: true,
 				plugins: [svelteTesting()],
 
 				test: {
@@ -22,7 +23,7 @@ export default defineConfig({
 				}
 			},
 			{
-				extends: './vite.config.ts',
+				extends: true,
 
 				test: {
 					name: 'server',

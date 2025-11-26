@@ -62,7 +62,7 @@
 
 	{#if activeIdx !== null}
 		<div
-			class="absolute bottom-0 z-20 flex max-h-72 w-full translate-y-full transform flex-col overflow-auto bg-white shadow-md dark:bg-slate-600"
+			class="absolute bottom-0 z-20 flex max-h-72 w-full translate-y-full transform flex-col overflow-auto rounded-md bg-white shadow-2xl dark:bg-slate-600"
 		>
 			{#each filteredOptions as option, idx (option.label)}
 				<button

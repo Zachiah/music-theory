@@ -3,7 +3,7 @@
 	import type { GuessedChord } from '$lib/guessChord';
 	import ModalDialogBase from '$lib/ModalDialogBase.svelte';
 	import ModalDialogCard from '$lib/ModalDialogCard.svelte';
-	import Toggle from '$lib/Toggle.svelte';
+	import FancySelect from '$lib/FancySelect.svelte';
 
 	const {
 		options,
@@ -20,69 +20,134 @@
 
 <ModalDialogBase {open} onClose={() => (open = false)}>
 	<ModalDialogCard>
+		<h2 class="text-2xl">Chord Display Options</h2>
+
 		<div class="flex flex-wrap gap-2">
-			<Toggle
-				active={options.six}
-				onToggle={() => {
-					onChange({ ...options, six: !options.six });
-				}}
-			>
-				6 Chords
-			</Toggle>
+			<FancySelect
+				placeholder="6 Chords"
+				bind:value={
+					() => (options.six ? 'true' : 'false'), (v) => onChange({ ...options, six: v === 'true' })
+				}
+				options={[
+					{ value: 'true', label: 'Yes' },
+					{ value: 'false', label: 'No (add13)' }
+				]}
+			/>
 
-			<Toggle
-				active={options.sixNine}
-				onToggle={() => {
-					onChange({ ...options, sixNine: !options.sixNine });
-				}}
-			>
-				6/9 Chords
-			</Toggle>
+			<FancySelect
+				placeholder="6/9 Chords"
+				bind:value={
+					() => (options.sixNine ? 'true' : 'false'),
+					(v) => onChange({ ...options, sixNine: v === 'true' })
+				}
+				options={[
+					{ value: 'true', label: 'Yes' },
+					{ value: 'false', label: 'No (add9add13)' }
+				]}
+			/>
 
-			<Toggle
-				active={options.properFlats}
-				onToggle={() => {
-					onChange({ ...options, properFlats: !options.properFlats });
-				}}
-			>
-				Proper flats
-			</Toggle>
+			<FancySelect
+				placeholder="Flats"
+				bind:value={
+					() => options.flats,
+					(v) => onChange({ ...options, flats: v as GuessedChord.PrintingOptions['flats'] })
+				}
+				options={[
+					{ value: 'b', label: 'b' },
+					{ value: '♭', label: '♭' }
+				]}
+			/>
 
-			<Toggle
-				active={options.properSharps}
-				onToggle={() => {
-					onChange({ ...options, properSharps: !options.properSharps });
-				}}
-			>
-				Proper sharps
-			</Toggle>
+			<FancySelect
+				placeholder="Sharps"
+				bind:value={
+					() => options.sharps,
+					(v) => onChange({ ...options, sharps: v as GuessedChord.PrintingOptions['sharps'] })
+				}
+				options={[
+					{ value: '#', label: '#' },
+					{ value: '♯', label: '♯' }
+				]}
+			/>
 
-			<Toggle
-				active={options.properDiminished}
-				onToggle={() => {
-					onChange({ ...options, properDiminished: !options.properDiminished });
-				}}
-			>
-				Proper diminished
-			</Toggle>
+			<FancySelect
+				placeholder="Major"
+				bind:value={
+					() => options.major,
+					(v) => onChange({ ...options, major: v as GuessedChord.PrintingOptions['major'] })
+				}
+				options={[
+					{ value: 'maj', label: 'maj' },
+					{ value: 'Δ', label: 'Δ' }
+				]}
+			/>
 
-			<Toggle
-				active={options.properAugmented}
-				onToggle={() => {
-					onChange({ ...options, properAugmented: !options.properAugmented });
-				}}
-			>
-				Proper augmented
-			</Toggle>
+			<FancySelect
+				placeholder="Minor"
+				bind:value={
+					() => options.minor,
+					(v) => onChange({ ...options, minor: v as GuessedChord.PrintingOptions['minor'] })
+				}
+				options={[
+					{ value: 'm', label: 'm' },
+					{ value: '-', label: '-' }
+				]}
+			/>
 
-			<Toggle
-				active={options.slashNotation}
-				onToggle={() => {
-					onChange({ ...options, slashNotation: !options.slashNotation });
-				}}
-			>
-				Slash Notation
-			</Toggle>
+			<FancySelect
+				placeholder="Diminished"
+				bind:value={
+					() => options.diminished,
+					(v) =>
+						onChange({ ...options, diminished: v as GuessedChord.PrintingOptions['diminished'] })
+				}
+				options={[
+					{ value: 'dim', label: 'dim' },
+					{ value: '°', label: '°' }
+				]}
+			/>
+
+			<FancySelect
+				placeholder="Augmented"
+				bind:value={
+					() => options.augmented,
+					(v) => onChange({ ...options, augmented: v as GuessedChord.PrintingOptions['augmented'] })
+				}
+				options={[
+					{ value: 'aug', label: 'aug' },
+					{ value: '+', label: '+' },
+					{ value: '#5', label: '#5' }
+				]}
+			/>
+
+			<FancySelect
+				placeholder="Half Diminished"
+				bind:value={
+					() => options.halfDiminished,
+					(v) =>
+						onChange({
+							...options,
+							halfDiminished: v as GuessedChord.PrintingOptions['halfDiminished']
+						})
+				}
+				options={[
+					{ value: 'half-dim', label: 'half-dim' },
+					{ value: 'ø', label: 'Symbol (ø)' },
+					{ value: 'm7b5', label: 'm7b5' }
+				]}
+			/>
+
+			<FancySelect
+				placeholder="Slash Notation"
+				bind:value={
+					() => (options.slashNotation ? 'true' : 'false'),
+					(v) => onChange({ ...options, slashNotation: v === 'true' })
+				}
+				options={[
+					{ value: 'true', label: 'Yes' },
+					{ value: 'false', label: 'No' }
+				]}
+			/>
 		</div>
 
 		<div class="mt-auto flex justify-end">

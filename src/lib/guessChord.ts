@@ -10,6 +10,7 @@ export type GuessedChord = {
 	minor: boolean;
 	diminished: boolean;
 	augmented: boolean;
+	halfDiminished: boolean;
 	sus4: boolean;
 	sus2: boolean;
 	five: boolean;
@@ -45,10 +46,13 @@ export namespace GuessedChord {
 	export type PrintingOptions = {
 		sixNine: boolean;
 		six: boolean;
-		properFlats: boolean;
-		properSharps: boolean;
-		properDiminished: boolean;
-		properAugmented: boolean;
+		flats: '♭' | 'b';
+		sharps: '♯' | '#';
+		major: 'Δ' | 'maj';
+		minor: '-' | 'm';
+		diminished: '°' | 'dim';
+		augmented: '+' | 'aug' | '#5';
+		halfDiminished: 'ø' | 'half-dim' | 'm7b5';
 		slashNotation: boolean;
 	};
 
@@ -80,19 +84,42 @@ export namespace GuessedChord {
 		options: PrintingOptions,
 		providedAvailableNotes: PitchClass[] = []
 	) => {
-		const major =
-			(c.minor || c.diminished || c.augmented) && c.major ? 'Maj' : c.major ? 'maj' : '';
-
-		const lowerFlat = options.properFlats ? '♭' : 'b';
-		const upperFlat = options.properFlats ? '♭' : 'B';
-		const doubleFlat = options.properFlats ? '𝄫' : 'bb';
-		const sharp = options.properSharps ? '♯' : '#';
-		const doubleSharp = options.properSharps ? '𝄪' : '##';
+		const lowerFlat = options.flats;
+		const upperFlat = options.flats.toUpperCase();
+		const doubleFlat = options.flats === '♭' ? '𝄫' : 'bb';
+		const sharp = options.sharps;
+		const doubleSharp = options.sharps === '♯' ? '𝄪' : '##';
 		const six = options.six ? '6' : ' add13';
 		const flatSix = options.six ? `${lowerFlat}6` : ' add13';
 		const sixNine = options.sixNine ? '6/9' : ' add9 add13';
-		const dim = options.properDiminished ? '°' : 'dim';
-		const aug = options.properAugmented ? '+' : 'aug';
+		const maj = options.major;
+		const min = options.minor;
+		const dim = options.diminished;
+		const aug = options.augmented === '#5' ? `${sharp}5` : options.augmented;
+
+		const halfDiminished = (() => {
+			if (options.halfDiminished === 'ø') {
+				return 'ø';
+			}
+
+			if (options.halfDiminished === 'half-dim') {
+				return ' half-dim';
+			}
+
+			return `${min}7 ${lowerFlat}5`;
+		})();
+
+		const major = (() => {
+			if ((c.minor || c.diminished || c.augmented) && c.major) {
+				return `${maj[0].toUpperCase()}${maj.slice(1)}`;
+			}
+
+			if (c.major) {
+				return maj;
+			}
+
+			return '';
+		})();
 
 		const availableNotes = (() => {
 			if (providedAvailableNotes.length !== 0) {
@@ -139,9 +166,10 @@ export namespace GuessedChord {
 			c.five ? '5' : '',
 			c.augmented ? aug : '',
 			c.diminished ? dim : '',
-			c.minor ? 'm' : '',
+			c.minor ? min : '',
 			c.six ? six : '',
 			c.sixNine ? sixNine : '',
+			c.halfDiminished ? halfDiminished : '',
 			major,
 			c.highestDegree === null ? '' : c.highestDegree
 		].filter((m) => m);
@@ -149,7 +177,7 @@ export namespace GuessedChord {
 		const additionalModifiers = [
 			c.flatSix ? flatSix : '',
 			c.seven ? '7' : '',
-			c.maj7 ? 'maj7' : '',
+			c.maj7 ? `${maj}7` : '',
 			c.flat5 ? `${lowerFlat}5` : '',
 			c.flat9 ? `${lowerFlat}9` : '',
 			c.nine ? '9' : '',
@@ -236,12 +264,15 @@ export const guessChordNoInversions = (
 		!cpc.includes('E') &&
 		!cpc.includes('G') &&
 		!cpc.includes('Bb');
-	const minor = cpc.includes('Eb') && !cpc.includes('E') && !diminished;
+	const halfDiminished =
+		cpc.length === 4 && cpc.includes('Eb') && cpc.includes('Gb') && cpc.includes('Bb');
+	const minor = cpc.includes('Eb') && !cpc.includes('E') && !diminished && !halfDiminished;
 	const major = cpc.includes('B') && !cpc.includes('Bb');
 	const augmented = cpc.includes('E') && cpc.includes('Ab') && !cpc.includes('G');
 	const sus4 = cpc.includes('F') && !cpc.includes('E') && !cpc.includes('Eb');
 	const sus2 = cpc.includes('D') && !cpc.includes('E') && !cpc.includes('Eb') && !cpc.includes('F');
-	const flat5 = cpc.includes('Gb') && !cpc.includes('G') && !diminished && !augmented;
+	const flat5 =
+		cpc.includes('Gb') && !cpc.includes('G') && !diminished && !augmented && !halfDiminished;
 	const five = cpc.includes('G') && cpc.length === 2;
 
 	const maj7 = cpc.includes('B') && cpc.includes('Bb');
@@ -293,7 +324,7 @@ export const guessChordNoInversions = (
 	const add13 = !isSixNineChord && !isSixChord && !diminished && !hasEleven && cpc.includes('A');
 
 	const highestDegree = (() => {
-		if (isSixNineChord || isSixChord) {
+		if (isSixNineChord || isSixChord || halfDiminished) {
 			return null;
 		}
 		if (!add13 && !thirteen && cpc.includes('A') && !diminished) {
@@ -315,7 +346,8 @@ export const guessChordNoInversions = (
 		return null;
 	})();
 
-	const hasFivish = cpc.includes('G') || augmented || diminished || (minor && flat5);
+	const hasFivish =
+		cpc.includes('G') || augmented || diminished || halfDiminished || (minor && flat5);
 	const hasThreeish = cpc.includes('E') || cpc.includes('Eb');
 	const hasMiddlish = cpc.includes('E') || cpc.includes('Eb') || sus2 || sus4;
 	const hasSevenish = seven || maj7 || (highestDegree || 0) >= 7;
@@ -326,6 +358,7 @@ export const guessChordNoInversions = (
 		major,
 		minor,
 		diminished,
+		halfDiminished,
 		augmented,
 		sus4,
 		sus2,

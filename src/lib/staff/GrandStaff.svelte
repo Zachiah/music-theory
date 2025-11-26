@@ -36,7 +36,7 @@
 	const linePoses = $derived(getVisibleLinePoses(notes));
 </script>
 
-<section class="rounded-md bg-gray-200 p-4 p-4 dark:bg-slate-600">
+<section class="rounded-md bg-gray-200 p-4 dark:bg-slate-600">
 	<div
 		class="wrapper"
 		style="
