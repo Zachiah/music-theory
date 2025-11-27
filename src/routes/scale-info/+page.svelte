@@ -4,12 +4,11 @@
 	import { ScaleDescription, ScaleName } from '$lib/scale';
 	import { Intervals } from '$lib/Intervals';
 	import Button from '$lib/Button.svelte';
-	import * as Tone from 'tone';
-	import { demoScale } from '$lib/toneState.svelte';
 	import { CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import ScaleChordsOfPattern from '$lib/ScaleChordsOfPattern.svelte';
 	import FancySelect from '$lib/FancySelect.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
+	import { playback } from '$lib/Playback';
 
 	let typedPitchString = $state('C');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -68,7 +67,7 @@
 		<div>
 			<Button
 				onClick={() => {
-					demoScale(
+					playback.demoScale(
 						[
 							...CanonicalPitchArray.fromCanonicalPitchClasses(
 								Intervals.getPitches(scale.intervals, pitch).map((p) =>
@@ -81,7 +80,7 @@
 								octave: 5
 							}
 						],
-						Tone.now()
+						playback.now()
 					);
 				}}
 			>

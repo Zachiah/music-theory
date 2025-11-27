@@ -2,18 +2,17 @@
 	import Container from '$lib/Container.svelte';
 	import { printingOptions } from '$lib/printingOptionsState.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
-	import { demoChord } from '$lib/toneState.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
 	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
 	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
-	import * as Tone from 'tone';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
+	import { playback } from '$lib/Playback';
 
 	let selectedPitches: CanonicalPitchArray = $state([]);
 
@@ -119,7 +118,7 @@
 		<Button
 			disabled={selectedPitches.length === 0}
 			onClick={() => {
-				demoChord(selectedPitches, Tone.now());
+				playback.demoChord(selectedPitches, playback.now());
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>

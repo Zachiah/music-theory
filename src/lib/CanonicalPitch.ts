@@ -1,4 +1,5 @@
 import { CanonicalPitchClass } from './CanonicalPitchClass';
+import { inclusiveRange } from './util';
 
 export type CanonicalPitch = {
 	octave: number;
@@ -15,27 +16,33 @@ export namespace CanonicalPitch {
 			return p;
 		}
 
-		const movement = offset > 0 ? 1 : -1;
+		const direction = offset > 0 ? 1 : -1;
+		const amount = Math.abs(offset);
 
-		const octave = (() => {
-			if (p.pitchClass === 'B' && movement === 1) {
-				return p.octave + 1;
+		const octaves = Math.floor(amount / CanonicalPitchClass.pitches.length);
+		const extra = amount % CanonicalPitchClass.pitches.length;
+
+		const newPitchClass = CanonicalPitchClass.applyOffset(p.pitchClass, extra * direction);
+
+		const octaveModifier = (() => {
+			const originalDistance = CanonicalPitchClass.distanceFromC(p.pitchClass);
+			const newDistance = CanonicalPitchClass.distanceFromC(newPitchClass);
+
+			if (direction === 1 && newDistance < originalDistance) {
+				return 1;
 			}
 
-			if (p.pitchClass === 'C' && movement === -1) {
-				return p.octave - 1;
+			if (direction === -1 && newDistance > originalDistance) {
+				return -1;
 			}
 
-			return p.octave;
+			return 0;
 		})();
 
-		return applyOffset(
-			{
-				octave,
-				pitchClass: CanonicalPitchClass.applyOffset(p.pitchClass, movement)
-			},
-			offset - movement
-		);
+		return {
+			octave: p.octave + octaves * direction + octaveModifier,
+			pitchClass: newPitchClass
+		};
 	};
 
 	export const height = (pitch: CanonicalPitch) => {
@@ -45,6 +52,14 @@ export namespace CanonicalPitch {
 		const extra = CanonicalPitchClass.distanceFromC(pitch.pitchClass);
 
 		return fromOctave + extra;
+	};
+
+	export const fromHeight = (height: number) => {
+		return applyOffset({ pitchClass: 'C', octave: 0 }, height);
+	};
+
+	export const getRangeInclusive = (a: CanonicalPitch, b: CanonicalPitch) => {
+		return inclusiveRange(height(a), height(b)).map((h) => fromHeight(h));
 	};
 }
 
