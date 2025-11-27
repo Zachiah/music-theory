@@ -21,6 +21,10 @@ This site is a work in progress. It hosts music tools.
 - [ ] Make lower strings a bit thicker
 - [ ] Add tutorial
 - [ ] If you type "rick" into the scale identifier note section it should rickroll you when you click play
+- [ ] Fetch audio samples in a better fashion
+  - [ ] Only make a certain number of requests at once
+  - [ ] Retry failed requests once
+  - [ ] Tell the user that the audio failed to load (don't show the audio playback button also)
 
 ## License
 
