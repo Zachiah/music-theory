@@ -36,16 +36,20 @@
 		onclick={() => (activeIdx = 0)}
 		onfocus={() => (activeIdx = 0)}
 		class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-md bg-transparent placeholder:text-black focus:cursor-text focus:placeholder:text-transparent dark:placeholder:text-white dark:focus:placeholder:text-transparent"
-		onkeydown={(e) => {
+		onkeyup={(e) => {
 			if (e.key === 'ArrowDown') {
 				activeIdx = Math.min(activeIdx! + 1, options.length - 1);
 			} else if (e.key === 'ArrowUp') {
 				activeIdx = Math.max(0, activeIdx! - 1);
 			} else if (e.key === 'Enter') {
 				value = filteredOptions[activeIdx!].value;
-			} else if (e.key === 'Escape') {
+			} else if (e.key === 'Escape' && activeIdx !== null) {
 				activeIdx = null;
+			} else {
+				return;
 			}
+
+			e.stopPropagation();
 		}}
 		bind:value={
 			() => search,

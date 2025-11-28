@@ -22,7 +22,6 @@ export class Playback {
 					const printed = Pitch.print(Pitch.fromCanonical(p)).replaceAll('♭', 'b');
 
 					const res = await fetch(`/samples/piano/${printed}.mp3`);
-					console.log('content-type:', res.headers.get('content-type'));
 					const arrayBuffer = await res.arrayBuffer();
 					const audioBuffer = await this.#audioContext.decodeAudioData(arrayBuffer);
 
@@ -30,8 +29,6 @@ export class Playback {
 				})
 			)
 		);
-
-		console.log(this.#samples);
 	}
 
 	now() {
