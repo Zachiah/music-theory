@@ -123,7 +123,7 @@
 
 		<div class="flex flex-col flex-wrap gap-2">
 			<h3>Strings</h3>
-			{#if stringsError}
+			{#if stringsError && triedSubmit}
 				<p class="text-red-500">{stringsError}</p>
 			{/if}
 
