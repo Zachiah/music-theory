@@ -7,23 +7,24 @@
 	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
-	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
 	import { playback } from '$lib/Playback';
-
-	let selectedPitches: CanonicalPitchArray = $state([]);
+	import { midiAccess } from '$lib/midiAccess.svelte';
+	import { createCpaState } from '$lib/cpaState.svelte';
 
 	let allowInversions = $state(true);
 
+	const cpaState = createCpaState();
+
 	const guessedChord = $derived.by(() => {
-		if (selectedPitches.length === 0) {
+		if (cpaState.selected.length === 0) {
 			return null;
 		}
 
-		const pitchClasses = selectedPitches.map((p) => p.pitchClass);
+		const pitchClasses = cpaState.selected.map((p) => p.pitchClass);
 		const guessedChord = allowInversions
 			? guessChord(pitchClasses)
 			: guessChordNoInversions(pitchClasses);
@@ -35,78 +36,23 @@
 		guessedChord === null ? '' : GuessedChord.print(guessedChord, printingOptions.data)
 	);
 
-	const getPitchIndex = (pitch: CanonicalPitch) => {
-		return selectedPitches.findIndex(
-			(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
-		);
-	};
-
-	const disablePitch = (pitch: CanonicalPitch) => {
-		const foundIndex = getPitchIndex(pitch);
-		if (foundIndex !== -1) {
-			selectedPitches.splice(foundIndex, 1);
-		}
-
-		CanonicalPitchArray.sort(selectedPitches);
-	};
-
-	const enablePitch = (pitch: CanonicalPitch) => {
-		const foundIndex = getPitchIndex(pitch);
-		if (foundIndex === -1) {
-			selectedPitches.push(pitch);
-		}
-
-		CanonicalPitchArray.sort(selectedPitches);
-	};
-
-	const togglePitch = (pitch: CanonicalPitch) => {
-		const foundIndex = getPitchIndex(pitch);
-		if (foundIndex !== -1) {
-			selectedPitches.splice(foundIndex, 1);
-		} else {
-			selectedPitches.push(pitch);
-		}
-
-		CanonicalPitchArray.sort(selectedPitches);
-	};
-
-	let midiAccess: MIDIAccess | null = null;
 	const onMIDIMessage = (event: MIDIMessageEvent) => {
 		const message = decodeMIDIMessage(event);
 
 		if (message.tag === 'note-down') {
-			enablePitch(message.pitch);
+			cpaState.enable(message.pitch);
 			return;
 		}
 
 		if (message.tag === 'note-up') {
-			disablePitch(message.pitch);
+			cpaState.disable(message.pitch);
 			return;
 		}
 	};
 
 	onMount(() => {
-		const setupMidi = async () => {
-			midiAccess = await navigator.requestMIDIAccess();
-
-			const listenToMIDIInput = (midiAccess: MIDIAccess) => {
-				midiAccess.inputs.forEach((entry) => {
-					entry.addEventListener('midimessage', onMIDIMessage);
-				});
-			};
-
-			listenToMIDIInput(midiAccess);
-		};
-
-		setupMidi();
-
-		return () => {
-			if (midiAccess) {
-				midiAccess.inputs.forEach((entry) => {
-					entry.removeEventListener('midimessage', onMIDIMessage);
-				});
-			}
-		};
+		midiAccess.requestAccess();
+		return midiAccess.listen(onMIDIMessage);
 	});
 </script>
 
@@ -116,9 +62,9 @@
 	<div class="flex flex-wrap gap-4">
 		<h2 class="mr-auto text-2xl">Keyboard</h2>
 		<Button
-			disabled={selectedPitches.length === 0}
+			disabled={cpaState.selected.length === 0}
 			onClick={() => {
-				playback.demoChord(selectedPitches, playback.now());
+				playback.demoChord(cpaState.selected, playback.now());
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>
@@ -141,19 +87,19 @@
 		start={{ pitchClass: 'C', octave: 3 }}
 		noteNumber={37}
 		activePitches={guessedChord
-			? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord).map((p) => ({
+			? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => ({
 					pitch: p.pitch,
 					extraText: ScaleDegree.print(p.scaleDegree)
 				}))
 			: []}
-		toggle={togglePitch}
+		toggle={cpaState.toggle}
 		labels="selected"
 	/>
 
 	<div class="flex gap-4">
 		<GrandStaff
 			notes={guessedChord
-				? normalizeChordPitchesWithOctaves(selectedPitches, guessedChord).map((p) => p.pitch)
+				? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => p.pitch)
 				: []}
 		/>
 

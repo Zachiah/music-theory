@@ -13,6 +13,16 @@ export const rotateArray = <T>(arr: T[], amount: number): T[] => {
 	return [...arr.slice(actualAmount), ...arr.slice(0, actualAmount)];
 };
 
+export const chooseRandom = <T>(arr: T[]): T => {
+	if (arr.length === 0) {
+		throw new Error("Can't get random element of empty array");
+	}
+
+	const idx = Math.floor(Math.random() * arr.length);
+
+	return arr[idx];
+};
+
 export const minBy = <T>(arr: T[], by: (a: T) => number) => {
 	if (arr.length === 0) {
 		throw new Error('minBy does not work on empty arrays');

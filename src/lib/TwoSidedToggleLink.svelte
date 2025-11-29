@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+
 	const {
 		checked,
 		first,
@@ -16,7 +18,7 @@
 
 <a
 	class="group relative flex h-full w-full shrink-0 rounded-full"
-	href={checked ? firstHref : secondHref}
+	href={resolve(checked ? firstHref : secondHref)}
 >
 	<div
 		class="absolute top-0 h-full w-1/2 transform rounded-full bg-blue-500 duration-200"
