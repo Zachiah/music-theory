@@ -33,8 +33,8 @@
 
 	const getRandomPitches = (amount: number) => {
 		const available = CanonicalPitch.getRangeInclusive(
-			{ pitchClass: 'C', octave: 3 },
-			{ pitchClass: 'C', octave: 5 }
+			{ pitchClass: 'C', octave: 2 },
+			{ pitchClass: 'C', octave: 6 }
 		);
 
 		const res: CanonicalPitchArray = [];
