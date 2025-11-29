@@ -73,7 +73,12 @@
 
 	type GameState =
 		| { tag: 'init'; notesAtATime: string; triedSubmit: boolean }
-		| { tag: 'playing'; notesAtATime: number; correctPitches: CanonicalPitchArray };
+		| {
+				tag: 'playing';
+				notesAtATime: number;
+				correctPitches: CanonicalPitchArray;
+				completed: number;
+		  };
 
 	let gameState: GameState = $state({ tag: 'init', notesAtATime: '1', triedSubmit: false });
 
@@ -92,13 +97,23 @@
 			}
 		}
 
-		gameState = { ...gameState, correctPitches: getRandomPitches(gameState.notesAtATime) };
+		gameState = {
+			...gameState,
+			correctPitches: getRandomPitches(gameState.notesAtATime),
+			completed: gameState.completed + 1
+		};
 		cpaState.clear();
 	};
 </script>
 
 <Container>
-	<h1 class="text-4xl">Sight Reading Game</h1>
+	<div class="flex">
+		<h1 class="text-4xl">Sight Reading Game</h1>
+
+		{#if gameState.tag === 'playing'}
+			<p class="ml-auto">Completed: {gameState.completed}</p>
+		{/if}
+	</div>
 
 	{#if gameState.tag === 'init'}
 		{@const parsed = parseNotesAtATime(gameState.notesAtATime)}
@@ -119,7 +134,8 @@
 						gameState = {
 							tag: 'playing',
 							notesAtATime: parsed!,
-							correctPitches: getRandomPitches(parsed!)
+							correctPitches: getRandomPitches(parsed!),
+							completed: 0
 						};
 					}
 				}}>Start</Button
