@@ -73,17 +73,15 @@ const getLinePosesForRange = (pitches: Pitch[], full: boolean): StaffLine[] => {
 };
 
 export const getVisibleLinePoses = (pitches: Pitch[]): StaffLine[] => {
-	const bassExtensionsRaw = filterPitchesInRange(
-		[...pitches],
-		STAFF_LOW,
-		BASS_FIRST_EXTENSION_BELOW
-	);
+	const letters = pitches.map((p) => ({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } }));
+
+	const bassExtensionsRaw = filterPitchesInRange(letters, STAFF_LOW, BASS_FIRST_EXTENSION_BELOW);
 	const bassExtensions: Pitch[] = bassExtensionsRaw.length
 		? [...bassExtensionsRaw, Pitch.fromCanonical(BASS_FIRST_EXTENSION_BELOW)]
 		: [];
 
 	const trebleExtensionsRaw = filterPitchesInRange(
-		[...pitches],
+		letters,
 		TREBLE_FIRST_EXTENSION_ABOVE,
 		STAFF_HIGH
 	);
@@ -91,7 +89,7 @@ export const getVisibleLinePoses = (pitches: Pitch[]): StaffLine[] => {
 		? [...trebleExtensionsRaw, Pitch.fromCanonical(TREBLE_FIRST_EXTENSION_ABOVE)]
 		: [];
 
-	const printedPitches = pitches.map((p) =>
+	const printedPitches = letters.map((p) =>
 		Pitch.print({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } })
 	);
 	const showMiddle =

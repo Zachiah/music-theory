@@ -9,6 +9,7 @@
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { Pitch } from '$lib/Pitch';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
+	import { tickerState } from '$lib/tickerState.svelte';
 	import { chooseRandom } from '$lib/util';
 	import { onMount } from 'svelte';
 
@@ -78,6 +79,8 @@
 				notesAtATime: number;
 				correctPitches: CanonicalPitchArray;
 				completed: number;
+				startedAt: number;
+				startedRoundAt: number;
 		  };
 
 	let gameState: GameState = $state({ tag: 'init', notesAtATime: '1', triedSubmit: false });
@@ -100,7 +103,8 @@
 		gameState = {
 			...gameState,
 			correctPitches: getRandomPitches(gameState.notesAtATime),
-			completed: gameState.completed + 1
+			completed: gameState.completed + 1,
+			startedRoundAt: +new Date()
 		};
 		cpaState.clear();
 	};
@@ -112,7 +116,13 @@
 		<p>(Supports MIDI)</p>
 
 		{#if gameState.tag === 'playing'}
-			<p class="ml-auto">Completed: {gameState.completed}</p>
+			<p class="ml-auto flex flex-col">
+				<span>Completed: {gameState.completed}</span>
+				<span>Time Elapsed: {Math.floor((tickerState.tick - gameState.startedAt) / 1000)}s</span>
+				<span
+					>Time Current: {Math.floor((tickerState.tick - gameState.startedRoundAt) / 1000)}s</span
+				>
+			</p>
 		{/if}
 	</div>
 
@@ -136,7 +146,9 @@
 							tag: 'playing',
 							notesAtATime: parsed!,
 							correctPitches: getRandomPitches(parsed!),
-							completed: 0
+							completed: 0,
+							startedAt: +new Date(),
+							startedRoundAt: +new Date()
 						};
 					}
 				}}>Start</Button
