@@ -1,3 +1,21 @@
+export const formatTimeString = (s: number) => {
+	const SECONDS_IN_MINUTE = 60;
+	const MINUTES_IN_HOUR = 60;
+	const HOURS_IN_DAY = 24;
+
+	const SECONDS_IN_DAY = SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
+	const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
+
+	const days = Math.floor(s / SECONDS_IN_DAY);
+	const hours = Math.floor((s % SECONDS_IN_DAY) / SECONDS_IN_HOUR);
+	const minutes = Math.floor((s % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE);
+	const seconds = s % SECONDS_IN_MINUTE;
+
+	return [days && `${days}d`, hours && `${hours}h`, minutes && `${minutes}m`, `${seconds}s`]
+		.filter((s) => s)
+		.join(' ');
+};
+
 export const modWithNegative = (a: number, b: number, supportNaN = false): number => {
 	if (isNaN(a) || isNaN(b)) {
 		if (supportNaN) return NaN;

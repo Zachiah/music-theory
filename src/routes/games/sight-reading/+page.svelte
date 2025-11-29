@@ -10,7 +10,7 @@
 	import { Pitch } from '$lib/Pitch';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import { tickerState } from '$lib/tickerState.svelte';
-	import { chooseRandom } from '$lib/util';
+	import { chooseRandom, formatTimeString } from '$lib/util';
 	import { onMount } from 'svelte';
 
 	const cpaState = createCpaState({
@@ -118,9 +118,15 @@
 		{#if gameState.tag === 'playing'}
 			<p class="ml-auto flex flex-col">
 				<span>Completed: {gameState.completed}</span>
-				<span>Time Elapsed: {Math.floor((tickerState.tick - gameState.startedAt) / 1000)}s</span>
 				<span
-					>Time Current: {Math.floor((tickerState.tick - gameState.startedRoundAt) / 1000)}s</span
+					>Time Elapsed: {formatTimeString(
+						Math.floor((tickerState.tick - gameState.startedAt) / 1000)
+					)}</span
+				>
+				<span
+					>Time Current: {formatTimeString(
+						Math.floor((tickerState.tick - gameState.startedRoundAt) / 1000)
+					)}</span
 				>
 			</p>
 		{/if}
