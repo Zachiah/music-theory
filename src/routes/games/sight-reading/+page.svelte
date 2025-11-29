@@ -109,6 +109,7 @@
 <Container>
 	<div class="flex">
 		<h1 class="text-4xl">Sight Reading Game</h1>
+		<p>(Supports MIDI)</p>
 
 		{#if gameState.tag === 'playing'}
 			<p class="ml-auto">Completed: {gameState.completed}</p>
@@ -142,7 +143,13 @@
 			>
 		</div>
 	{:else if gameState.tag === 'playing'}
-		<GrandStaff notes={gameState.correctPitches.map(Pitch.fromCanonical)} />
+		<div class="flex gap-4">
+			<GrandStaff notes={gameState.correctPitches.map(Pitch.fromCanonical)} />
+
+			{#if cpaState.selected.length > 0}
+				<GrandStaff notes={cpaState.selected.map(Pitch.fromCanonical)} />
+			{/if}
+		</div>
 		<Keyboard
 			noteNumber={49}
 			start={{ pitchClass: 'C', octave: 2 }}
