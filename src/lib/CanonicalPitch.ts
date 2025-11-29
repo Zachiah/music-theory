@@ -90,4 +90,10 @@ export namespace CanonicalPitchArray {
 
 		return [first, ...fromCanonicalPitchClasses(tail, secondOctave)];
 	};
+
+	export const includes = (pitches: CanonicalPitchArray, p: CanonicalPitch): boolean => {
+		return !!pitches.find(
+			(pitch) => pitch.pitchClass === p.pitchClass && pitch.octave === p.octave
+		);
+	};
 }
