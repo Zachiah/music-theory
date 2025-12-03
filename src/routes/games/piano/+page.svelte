@@ -70,8 +70,6 @@
 	const findKeybind = (e: KeyboardEvent) => {
 		return KEYBINDS.find((k) => {
 			if (k.key.includes('Shift')) {
-				console.log('here');
-				console.log(e.code, k.key);
 				return k.key === e.code || (k.shifted === e.code && e.shiftKey);
 			}
 			return k.key === e.key || (k.shifted === e.key && e.shiftKey);
