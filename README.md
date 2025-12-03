@@ -24,4 +24,6 @@ This project is licensed under the MIT License — see the [LICENSE](./LICENSE.m
 
 ## Attribution
 
-- Audio samples in this project were sourced from the University of Iowa Electronic Music Studios’ Musical Instrument Samples collection.
+| Asset               | Author / Source                                                                                             | License       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- | ------------- |
+| **Florestan_Piano** | [Nando Florestan](https://web.archive.org/web/20160308061905/http://nando.oui.com.br/pages/soundfonts.html) | Public Domain |
