@@ -13,6 +13,10 @@
 	import { chooseRandom, formatTimeString } from '$lib/util';
 	import { onMount } from 'svelte';
 
+	const KEYBOARD_START: CanonicalPitch = { pitchClass: 'C', octave: 2 };
+	const KEYBOARD_LENGTH = 49;
+	const KEYBOARD_END = CanonicalPitch.applyOffset(KEYBOARD_START, KEYBOARD_LENGTH - 1);
+
 	const cpaState = createCpaState({
 		onChange: () => checkValid()
 	});
@@ -33,10 +37,7 @@
 	});
 
 	const getRandomPitches = (amount: number) => {
-		const available = CanonicalPitch.getRangeInclusive(
-			{ pitchClass: 'C', octave: 2 },
-			{ pitchClass: 'C', octave: 6 }
-		);
+		const available = CanonicalPitch.getRangeInclusive(KEYBOARD_START, KEYBOARD_END);
 
 		const res: CanonicalPitchArray = [];
 
@@ -175,10 +176,15 @@
 		</div>
 		<Keyboard
 			noteNumber={49}
-			start={{ pitchClass: 'C', octave: 2 }}
-			activePitches={cpaState.selected.map((pitch) => ({ pitch: Pitch.fromCanonical(pitch) }))}
-			labels="all"
-			toggle={cpaState.toggle}
+			start={KEYBOARD_START}
+			pitchData={CanonicalPitch.getRangeInclusive(KEYBOARD_START, KEYBOARD_END).map((cp) => {
+				const included = !!cpaState.selected.find((cpaStateCp) =>
+					CanonicalPitch.equal(cpaStateCp, cp)
+				);
+
+				return { canonicalPitch: cp, labeled: true, highlighted: included };
+			})}
+			onClick={cpaState.toggle}
 		/>
 	{/if}
 

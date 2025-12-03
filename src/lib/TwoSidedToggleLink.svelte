@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import type { Pathname, RouteId } from '$app/types';
 
 	const {
 		checked,
@@ -11,8 +12,8 @@
 		checked: boolean;
 		first: string;
 		second: string;
-		firstHref: string;
-		secondHref: string;
+		firstHref: RouteId | Pathname;
+		secondHref: RouteId | Pathname;
 	} = $props();
 </script>
 
