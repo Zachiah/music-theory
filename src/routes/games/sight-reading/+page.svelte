@@ -81,12 +81,13 @@
 				completed: number;
 				startedAt: number;
 				startedRoundAt: number;
-		  };
+		  }
+		| { tag: 'paused'; pausedAt: number; prev: GameState & { tag: 'playing' } };
 
 	let gameState: GameState = $state({ tag: 'init', notesAtATime: '1', triedSubmit: false });
 
 	const checkValid = () => {
-		if (gameState.tag === 'init') {
+		if (gameState.tag !== 'playing') {
 			return;
 		}
 
@@ -115,18 +116,21 @@
 		<h1 class="text-4xl">Sight Reading Game</h1>
 		<p>(Supports MIDI)</p>
 
-		{#if gameState.tag === 'playing'}
+		{#if gameState.tag === 'playing' || gameState.tag === 'paused'}
+			{@const g = gameState.tag === 'playing' ? gameState : gameState.prev}
+			{@const currTime = gameState.tag === 'playing' ? tickerState.tick : gameState.pausedAt}
 			<p class="ml-auto flex flex-col">
-				<span>Completed: {gameState.completed}</span>
-				<span
-					>Time Elapsed: {formatTimeString(
-						Math.floor((tickerState.tick - gameState.startedAt) / 1000)
-					)}</span
-				>
-				<span
-					>Time Current: {formatTimeString(
-						Math.floor((tickerState.tick - gameState.startedRoundAt) / 1000)
-					)}</span
+				<span>Completed: {g.completed}</span>
+				<span>Elapsed: {formatTimeString(Math.floor((currTime - g.startedAt) / 1000))}</span>
+				<span>Current: {formatTimeString(Math.floor((currTime - g.startedRoundAt) / 1000))}</span>
+				<Button
+					onClick={() => {
+						gameState = {
+							tag: 'paused',
+							pausedAt: +new Date(),
+							prev: gameState as typeof gameState & { tag: 'playing' }
+						};
+					}}><span class="icon-[heroicons--pause]"></span></Button
 				>
 			</p>
 		{/if}
@@ -160,9 +164,10 @@
 				}}>Start</Button
 			>
 		</div>
-	{:else if gameState.tag === 'playing'}
+	{:else if gameState.tag === 'playing' || gameState.tag === 'paused'}
+		{@const g = gameState.tag === 'playing' ? gameState : gameState.prev}
 		<div class="flex gap-4">
-			<GrandStaff notes={gameState.correctPitches.map(Pitch.fromCanonical)} />
+			<GrandStaff notes={g.correctPitches.map(Pitch.fromCanonical)} />
 
 			{#if cpaState.selected.length > 0}
 				<GrandStaff notes={cpaState.selected.map(Pitch.fromCanonical)} />
@@ -175,5 +180,23 @@
 			labels="all"
 			toggle={cpaState.toggle}
 		/>
+	{/if}
+
+	{#if gameState.tag === 'paused'}
+		<button
+			class="absolute top-0 left-0 z-20 flex h-full w-full cursor-pointer items-center justify-center gap-4 rounded-md bg-white/70 backdrop-blur-md dark:bg-slate-800/70"
+			onclick={() => {
+				const g = gameState as typeof gameState & { tag: 'paused' };
+				const pausedFor = +new Date() - g.pausedAt;
+				gameState = {
+					...g.prev,
+					startedAt: g.prev.startedAt + pausedFor,
+					startedRoundAt: g.prev.startedRoundAt + pausedFor
+				};
+			}}
+		>
+			<span class="text-2xl">Paused</span>
+			<span class="icon-[heroicons--play] size-10"></span>
+		</button>
 	{/if}
 </Container>
