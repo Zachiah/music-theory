@@ -61,6 +61,10 @@ export namespace CanonicalPitch {
 	export const getRangeInclusive = (a: CanonicalPitch, b: CanonicalPitch) => {
 		return inclusiveRange(height(a), height(b)).map((h) => fromHeight(h));
 	};
+
+	export const equal = (a: CanonicalPitch, b: CanonicalPitch) => {
+		return a.octave === b.octave && a.pitchClass === b.pitchClass;
+	};
 }
 
 export type CanonicalPitchArray = CanonicalPitch[];

@@ -14,6 +14,7 @@
 	import { playback } from '$lib/Playback';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
+	import { Pitch } from '$lib/Pitch';
 
 	let allowInversions = $state(true);
 
@@ -86,14 +87,16 @@
 	<Keyboard
 		start={{ pitchClass: 'C', octave: 3 }}
 		noteNumber={37}
-		activePitches={guessedChord
+		pitchData={guessedChord
 			? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => ({
+					canonicalPitch: Pitch.toCanonical(p.pitch),
 					pitch: p.pitch,
-					extraText: ScaleDegree.print(p.scaleDegree)
+					extraText: ScaleDegree.print(p.scaleDegree),
+					labeled: true,
+					highlighted: true
 				}))
 			: []}
-		toggle={cpaState.toggle}
-		labels="selected"
+		onClick={cpaState.toggle}
 	/>
 
 	<div class="flex gap-4">

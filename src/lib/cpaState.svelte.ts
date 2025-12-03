@@ -1,6 +1,12 @@
 import { CanonicalPitchArray, type CanonicalPitch } from './CanonicalPitch';
 
-export const createCpaState = (options: { onChange?: () => void } = {}) => {
+export const createCpaState = (
+	options: {
+		onChange?: (
+			op: { tag: 'enable' | 'disable' | 'toggle'; pitch: CanonicalPitch } | { tag: 'clear' }
+		) => void;
+	} = {}
+) => {
 	const selectedPitches: CanonicalPitchArray = $state([]);
 
 	const getPitchIndex = (pitch: CanonicalPitch) => {
@@ -20,7 +26,7 @@ export const createCpaState = (options: { onChange?: () => void } = {}) => {
 			}
 
 			CanonicalPitchArray.sort(selectedPitches);
-			options.onChange?.();
+			options.onChange?.({ tag: 'disable', pitch });
 		},
 		enable(pitch: CanonicalPitch) {
 			const foundIndex = getPitchIndex(pitch);
@@ -29,7 +35,7 @@ export const createCpaState = (options: { onChange?: () => void } = {}) => {
 			}
 
 			CanonicalPitchArray.sort(selectedPitches);
-			options.onChange?.();
+			options.onChange?.({ tag: 'enable', pitch });
 		},
 		toggle(pitch: CanonicalPitch) {
 			const foundIndex = getPitchIndex(pitch);
@@ -40,11 +46,11 @@ export const createCpaState = (options: { onChange?: () => void } = {}) => {
 			}
 
 			CanonicalPitchArray.sort(selectedPitches);
-			options.onChange?.();
+			options.onChange?.({ tag: 'toggle', pitch });
 		},
 		clear() {
 			selectedPitches.length = 0;
-			options.onChange?.();
+			options.onChange?.({ tag: 'clear' });
 		}
 	};
 };
