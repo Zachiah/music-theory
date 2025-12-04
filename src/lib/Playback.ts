@@ -1,34 +1,18 @@
 import { CanonicalPitch } from './CanonicalPitch';
-import { Pitch } from './Pitch';
+import Soundfont from 'soundfont-player';
 
 export class Playback {
 	#audioContext: AudioContext;
-	#samples: Map<string, AudioBuffer>;
+	#engine!: Soundfont.Player;
 
 	constructor(audioContext: AudioContext) {
 		this.#audioContext = audioContext;
-		this.#samples = new Map();
 	}
 
-	async loadSamples() {
-		const samplePitches = CanonicalPitch.getRangeInclusive(
-			{ pitchClass: 'B', octave: 0 },
-			{ pitchClass: 'C', octave: 8 }
-		);
-
-		this.#samples = new Map(
-			await Promise.all(
-				samplePitches.map(async (p) => {
-					const printed = Pitch.print(Pitch.fromCanonical(p)).replaceAll('♭', 'b');
-
-					const res = await fetch(`/samples/piano/${printed}.mp3`);
-					const arrayBuffer = await res.arrayBuffer();
-					const audioBuffer = await this.#audioContext.decodeAudioData(arrayBuffer);
-
-					return [printed, audioBuffer] as const;
-				})
-			)
-		);
+	async init() {
+		this.#engine = await Soundfont.instrument(this.#audioContext, 'acoustic_grand_piano', {
+			from: '/samples/sf2/000_Florestan_Piano.sf2'
+		});
 	}
 
 	now() {
@@ -36,27 +20,12 @@ export class Playback {
 	}
 
 	playPitch(pitch: CanonicalPitch, time: number): (stopAt: number) => void {
-		const pitchString = Pitch.print(Pitch.fromCanonical(pitch)).replaceAll('♭', 'b');
-		const audioBuffer = this.#samples.get(pitchString);
-		if (!audioBuffer) {
-			throw new Error(`Can't play pitch ${pitchString}`);
+		if (!this.#engine) {
+			throw new Error('Playback engine not initialized');
 		}
-
-		const source = this.#audioContext.createBufferSource();
-		source.buffer = audioBuffer;
-
-		const gain = this.#audioContext.createGain();
-		source.connect(gain).connect(this.#audioContext.destination);
-
-		gain.gain.setValueAtTime(0, time);
-		gain.gain.setTargetAtTime(1, time, 0.002);
-
-		source.start(time);
-
+		const node = this.#engine.play(`${pitch.pitchClass}${pitch.octave}`, time, { gain: 1 });
 		return (stopAt) => {
-			gain.gain.setTargetAtTime(0, stopAt, 0.005);
-
-			source.stop(stopAt);
+			node.stop(stopAt);
 		};
 	}
 
@@ -82,5 +51,5 @@ export let playback: Playback = null!;
 
 if (typeof window !== 'undefined') {
 	playback = new Playback(new AudioContext());
-	playback.loadSamples();
+	playback.init();
 }
