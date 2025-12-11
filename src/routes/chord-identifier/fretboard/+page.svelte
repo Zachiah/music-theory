@@ -13,6 +13,8 @@
 	import { defaultPresets } from '$lib/fretboardPresets';
 	import Button from '$lib/Button.svelte';
 	import { playback } from '$lib/Playback';
+	import GrandStaff from '$lib/staff/GrandStaff.svelte';
+	import { normalizeChordPitchesWithOctaves } from '$lib/categorizeChordNotes';
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -74,19 +76,19 @@
 	let allowInversions = $state(true);
 	let variableFretSize = $state(true);
 
-	const chordString = $derived.by(() => {
+	const guessedChord = $derived.by(() => {
 		if (pitches.length === 0) {
-			return '';
+			return null;
 		}
 
 		const pitchClasses = pitches.map((pitch) => pitch.pitchClass);
 
-		const guessedChord = allowInversions
-			? guessChord(pitchClasses)
-			: guessChordNoInversions(pitchClasses);
-
-		return GuessedChord.print(guessedChord, printingOptions.data);
+		return allowInversions ? guessChord(pitchClasses) : guessChordNoInversions(pitchClasses);
 	});
+
+	const chordString = $derived(
+		guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''
+	);
 
 	let vertical = $state(false);
 </script>
@@ -145,7 +147,7 @@
 		>
 	</div>
 
-	<div class="flex gap-8" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
+	<div class="flex gap-4" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
 		<FretboardDisplay
 			fretboard={fretboardData.fretboard}
 			{stringDecorations}
@@ -160,8 +162,16 @@
 			}}
 		/>
 
-		<div class="flex flex-col gap-8">
-			<p class="text-3xl">&nbsp;{chordString}</p>
+		<div class="flex gap-4">
+			<GrandStaff
+				notes={guessedChord
+					? normalizeChordPitchesWithOctaves(pitches, guessedChord).map((p) => p.pitch)
+					: []}
+			/>
+
+			<p class="flex-grow rounded-md bg-gray-200 p-4 text-3xl dark:bg-slate-600">
+				&nbsp;{chordString}
+			</p>
 		</div>
 	</div>
 </Container>
