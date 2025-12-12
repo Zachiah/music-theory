@@ -15,6 +15,7 @@
 	import { playback } from '$lib/Playback';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import { normalizeChordPitchesWithOctaves } from '$lib/categorizeChordNotes';
+	import SubContainer from '$lib/SubContainer.svelte';
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -163,15 +164,17 @@
 		/>
 
 		<div class="flex gap-4">
-			<GrandStaff
-				notes={guessedChord
-					? normalizeChordPitchesWithOctaves(pitches, guessedChord).map((p) => p.pitch)
-					: []}
-			/>
+			<SubContainer>
+				<GrandStaff
+					notes={guessedChord
+						? normalizeChordPitchesWithOctaves(pitches, guessedChord).map((p) => p.pitch)
+						: []}
+				/>
+			</SubContainer>
 
-			<p class="flex-grow rounded-md bg-gray-200 p-4 text-3xl dark:bg-slate-600">
+			<SubContainer el="p" class="grow text-3xl">
 				&nbsp;{chordString}
-			</p>
+			</SubContainer>
 		</div>
 	</div>
 </Container>

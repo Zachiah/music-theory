@@ -2,6 +2,7 @@
 	import Button from './Button.svelte';
 	import type { Fretboard } from './Fretboard';
 	import FretboardEditor from './FretboardEditor.svelte';
+	import SubContainer from './SubContainer.svelte';
 
 	const {
 		activeFretboard,
@@ -25,12 +26,10 @@
 </script>
 
 <div class="flex flex-wrap gap-4">
-	{#each presets as preset}
+	{#each presets as preset (preset.id)}
 		{@const current = activeFretboard.name === preset.name}
 		{#if editing}
-			<div
-				class="flex items-center gap-2 rounded-md bg-gray-200 px-4 py-2 duration-100 dark:bg-slate-600"
-			>
+			<SubContainer padding="text" class="flex items-center gap-2">
 				<span>{preset.name}</span>
 				<button
 					aria-label="Edit"
@@ -44,7 +43,7 @@
 					aria-label={presets.length === 1 ? "You can't delete the last preset" : 'Delete'}
 					title={presets.length === 1 ? "You can't delete the last preset" : 'Delete'}
 					disabled={presets.length === 1}
-					class="cursor-pointer rounded-md border p-1 px-2 disabled:cursor-not-allowed disabled:text-gray-400"
+					class="disabled:text-text-disabled cursor-pointer rounded-md border p-1 px-2 disabled:cursor-not-allowed"
 					onclick={() => {
 						if (confirmingDelete === preset.id) {
 							onDelete(preset.id);
@@ -59,7 +58,7 @@
 						<span class="icon-[heroicons--trash]"></span>
 					{/if}
 				</button>
-			</div>
+			</SubContainer>
 		{:else}
 			<Button
 				style={current ? 'primary' : 'neutral'}

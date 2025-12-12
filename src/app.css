@@ -3,6 +3,33 @@
 @plugin '@tailwindcss/typography';
 @plugin '@iconify/tailwind4';
 
+@theme {
+	--color-*: initial;
+
+	--color-base: light-dark(oklch(0.928 0.006 264.531), oklch(0.129 0.042 264.695));
+	--color-surface-1: light-dark(oklch(0.704 0.04 256.788), oklch(0.279 0.041 260.031));
+	--color-surface-1-alt: light-dark(oklch(0.707 0.022 261.325), oklch(0.372 0.044 257.287));
+	--color-surface-2: light-dark(oklch(0.968 0.007 247.896), oklch(0.446 0.043 257.281));
+	--color-overlay: light-dark(oklch(0.278 0.033 256.848), oklch(0.446 0.043 257.281));
+
+	--color-text: light-dark(oklch(0.129 0.042 264.695), oklch(0.968 0.007 247.896));
+	--color-text-placeholder: light-dark(oklch(0.707 0.022 261.325), oklch(0.872 0.01 258.338));
+	--color-text-disabled: light-dark(oklch(0.446 0.03 256.802), oklch(0.872 0.01 258.338));
+
+	--color-primary: oklch(0.623 0.214 259.815);
+	--color-danger: oklch(0.637 0.237 25.331);
+	--color-warning: oklch(0.705 0.213 47.604);
+
+	--color-always-white: white;
+	--color-always-black: black;
+	--color-always-light-gray: oklch(0.928 0.006 264.531);
+	--color-always-gray-medium: oklch(0.446 0.03 256.802);
+}
+
+:root {
+	color-scheme: light dark;
+}
+
 * {
 	touch-action: manipulation;
 }

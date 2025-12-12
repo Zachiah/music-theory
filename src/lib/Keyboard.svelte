@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CanonicalPitch } from './CanonicalPitch';
 	import { Pitch } from './Pitch';
+	import SubContainer from './SubContainer.svelte';
 
 	const {
 		start,
@@ -95,16 +96,16 @@
 	</div>
 {/snippet}
 
-<div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
+<SubContainer>
 	<div class="flex w-min" style="--w: 20px; --h: 15px;">
 		{#each noteData as { white, black } (Pitch.print(white.pitch))}
-			<div class="relative h-[calc(15_*_var(--h))] w-[calc(2.4_*_var(--w))] shrink-0 grow-0">
+			<div class="relative h-[calc(15*var(--h))] w-[calc(2.4*var(--w))] shrink-0 grow-0">
 				<!-- svelte-ignore a11y_mouse_events_have_key_events -->
 				<button
 					aria-label={`Toggle note ${Pitch.print(white.pitch)}`}
-					class="flex h-full w-full items-end justify-center rounded-b-md border border-gray-600 pb-2 text-black"
-					class:bg-blue-500={white.highlighted}
-					class:bg-white={!white.highlighted}
+					class="text-always-black border-always-gray-medium flex h-full w-full items-end justify-center rounded-b-md border pb-2"
+					class:bg-primary={white.highlighted}
+					class:bg-always-white={!white.highlighted}
 					onclick={() => onClick?.(white.canonicalPitch)}
 					onmousedown={() => onMouseDown?.(white.canonicalPitch)}
 					onmouseup={() => onMouseUp?.(white.canonicalPitch)}
@@ -118,9 +119,9 @@
 					<!-- svelte-ignore a11y_mouse_events_have_key_events -->
 					<button
 						aria-label={`Toggle note ${Pitch.print(black.pitch)}`}
-						class="absolute top-0 right-0 z-20 flex h-[calc(9_*_var(--h))] w-[calc(1.4_*_var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 border-gray-600 pb-2 text-white"
-						class:bg-blue-500={black.highlighted}
-						class:bg-black={!black.highlighted}
+						class="text-always-white border-always-gray-medium absolute top-0 right-0 z-20 flex h-[calc(9*var(--h))] w-[calc(1.4*var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 pb-2"
+						class:bg-primary={black.highlighted}
+						class:bg-always-black={!black.highlighted}
 						onclick={() => onClick?.(black.canonicalPitch)}
 						onmousedown={() => onMouseDown?.(black.canonicalPitch)}
 						onmouseup={() => onMouseUp?.(black.canonicalPitch)}
@@ -133,4 +134,4 @@
 			</div>
 		{/each}
 	</div>
-</div>
+</SubContainer>

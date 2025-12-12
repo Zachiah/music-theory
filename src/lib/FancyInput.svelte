@@ -13,12 +13,12 @@
 
 <div class="flex flex-col gap-2">
 	{#if error && showError}
-		<p class="text-red-500">{error}</p>
+		<p class="text-warning">{error}</p>
 	{/if}
 
-	<label class="group relative block h-13 min-w-24 flex-0 rounded-md dark:bg-slate-600">
+	<label class="group bg-surface-2 relative block h-13 min-w-24 flex-0 rounded-md">
 		<p
-			class="absolute left-3 transform text-gray-300 duration-200 group-focus-within:top-0.5 group-focus-within:translate-y-0 group-focus-within:text-xs dark:text-slate-300 {value
+			class="text-text-placeholder absolute left-3 transform duration-200 group-focus-within:top-0.5 group-focus-within:translate-y-0 group-focus-within:text-xs {value
 				? 'top-0.5 translate-y-0 text-xs'
 				: 'top-1/2 -translate-y-1/2'}"
 		>

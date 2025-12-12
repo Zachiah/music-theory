@@ -9,6 +9,7 @@
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { Pitch } from '$lib/Pitch';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
+	import SubContainer from '$lib/SubContainer.svelte';
 	import { tickerState } from '$lib/tickerState.svelte';
 	import { chooseRandom, formatTimeString } from '$lib/util';
 	import { onMount } from 'svelte';
@@ -168,10 +169,14 @@
 	{:else if gameState.tag === 'playing' || gameState.tag === 'paused'}
 		{@const g = gameState.tag === 'playing' ? gameState : gameState.prev}
 		<div class="flex gap-4">
-			<GrandStaff notes={g.correctPitches.map(Pitch.fromCanonical)} />
+			<SubContainer>
+				<GrandStaff notes={g.correctPitches.map(Pitch.fromCanonical)} />
+			</SubContainer>
 
 			{#if cpaState.selected.length > 0}
-				<GrandStaff notes={cpaState.selected.map(Pitch.fromCanonical)} />
+				<SubContainer>
+					<GrandStaff notes={cpaState.selected.map(Pitch.fromCanonical)} />
+				</SubContainer>
 			{/if}
 		</div>
 		<Keyboard
@@ -190,7 +195,7 @@
 
 	{#if gameState.tag === 'paused'}
 		<button
-			class="absolute top-0 left-0 z-20 flex h-full w-full cursor-pointer items-center justify-center gap-4 rounded-md bg-white/70 backdrop-blur-md dark:bg-slate-800/70"
+			class="bg-surface-1/70 absolute top-0 left-0 z-20 flex h-full w-full cursor-pointer items-center justify-center gap-4 rounded-md backdrop-blur-md"
 			onclick={() => {
 				const g = gameState as typeof gameState & { tag: 'paused' };
 				const pausedFor = +new Date() - g.pausedAt;

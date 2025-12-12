@@ -24,7 +24,7 @@
 {#if open}
 	<div
 		role="presentation"
-		class="fixed top-0 right-0 bottom-0 left-0 z-50 flex h-screen w-screen items-center justify-center bg-gray-800/80 dark:bg-slate-600/80"
+		class="bg-overlay/80 fixed top-0 right-0 bottom-0 left-0 z-50 flex h-screen w-screen items-center justify-center"
 		onmousedown={(e) => {
 			if (
 				e.currentTarget === e.target ||

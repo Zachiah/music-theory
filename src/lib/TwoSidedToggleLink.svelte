@@ -22,7 +22,7 @@
 	href={resolve(checked ? firstHref : secondHref)}
 >
 	<div
-		class="absolute top-0 h-full w-1/2 transform rounded-full bg-blue-500 duration-200"
+		class="bg-primary absolute top-0 h-full w-1/2 transform rounded-full duration-200"
 		class:right-0={checked}
 		class:translate-x-0={checked}
 		class:right-full={!checked}
