@@ -179,18 +179,18 @@
 				</SubContainer>
 			{/if}
 		</div>
-		<Keyboard
-			noteNumber={49}
-			start={KEYBOARD_START}
-			pitchData={CanonicalPitch.getRangeInclusive(KEYBOARD_START, KEYBOARD_END).map((cp) => {
-				const included = !!cpaState.selected.find((cpaStateCp) =>
-					CanonicalPitch.equal(cpaStateCp, cp)
-				);
-
-				return { canonicalPitch: cp, labeled: true, highlighted: included };
-			})}
-			onClick={cpaState.toggle}
-		/>
+		<SubContainer>
+			<Keyboard
+				noteNumber={49}
+				start={KEYBOARD_START}
+				highlighted={cpaState.selected}
+				onClick={cpaState.toggle}
+			>
+				{#snippet renderKeyText(cp)}
+					<div class="text-sm">{Pitch.print(Pitch.fromCanonical(cp))}</div>
+				{/snippet}
+			</Keyboard>
+		</SubContainer>
 	{/if}
 
 	{#if gameState.tag === 'paused'}

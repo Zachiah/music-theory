@@ -16,6 +16,7 @@
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import { Pitch } from '$lib/Pitch';
 	import SubContainer from '$lib/SubContainer.svelte';
+	import { CanonicalPitch } from '$lib/CanonicalPitch';
 
 	let allowInversions = $state(true);
 
@@ -56,6 +57,10 @@
 		midiAccess.requestAccess();
 		return midiAccess.listen(onMIDIMessage);
 	});
+
+	const normalized = $derived(
+		!guessedChord ? [] : normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord)
+	);
 </script>
 
 <Container>
@@ -85,28 +90,30 @@
 		>
 	</div>
 
-	<Keyboard
-		start={{ pitchClass: 'C', octave: 3 }}
-		noteNumber={37}
-		pitchData={guessedChord
-			? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => ({
-					canonicalPitch: Pitch.toCanonical(p.pitch),
-					pitch: p.pitch,
-					extraText: ScaleDegree.print(p.scaleDegree),
-					labeled: true,
-					highlighted: true
-				}))
-			: []}
-		onClick={cpaState.toggle}
-	/>
+	<SubContainer>
+		<Keyboard
+			start={{ pitchClass: 'C', octave: 3 }}
+			noteNumber={37}
+			onClick={cpaState.toggle}
+			highlighted={cpaState.selected}
+		>
+			{#snippet renderKeyText(cp)}
+				{@const foundNormalized = normalized.find((n) =>
+					CanonicalPitch.equal(Pitch.toCanonical(n.pitch), cp)
+				)}
+				{#if foundNormalized}
+					<div class="flex flex-col">
+						<span>{ScaleDegree.print(foundNormalized.scaleDegree)}</span>
+						<span>{Pitch.print(foundNormalized.pitch)}</span>
+					</div>
+				{/if}
+			{/snippet}
+		</Keyboard>
+	</SubContainer>
 
 	<div class="flex gap-4">
 		<SubContainer>
-			<GrandStaff
-				notes={guessedChord
-					? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => p.pitch)
-					: []}
-			/>
+			<GrandStaff notes={guessedChord ? normalized.map((n) => n.pitch) : []} />
 		</SubContainer>
 
 		<SubContainer el="p" class="grow text-3xl">

@@ -19,6 +19,10 @@
 
 		<span class="grow"></span>
 
+		<li class="contents">
+			<a class="hover:text-primary p-4" href={resolve('/about')}>About</a>
+		</li>
+
 		<li class="contants">
 			<a
 				class="hover:text-primary flex h-full items-center justify-center p-4"
