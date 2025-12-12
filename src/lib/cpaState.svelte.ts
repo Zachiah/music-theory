@@ -1,10 +1,12 @@
 import { CanonicalPitchArray, type CanonicalPitch } from './CanonicalPitch';
 
+export type CpaStateChange =
+	| { tag: 'enable' | 'disable' | 'toggle'; pitch: CanonicalPitch }
+	| { tag: 'clear' };
+
 export const createCpaState = (
 	options: {
-		onChange?: (
-			op: { tag: 'enable' | 'disable' | 'toggle'; pitch: CanonicalPitch } | { tag: 'clear' }
-		) => void;
+		onChange?: (change: CpaStateChange) => void;
 	} = {}
 ) => {
 	const selectedPitches: CanonicalPitchArray = $state([]);
