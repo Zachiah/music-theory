@@ -124,7 +124,7 @@
 		<div class="flex flex-col flex-wrap gap-2">
 			<h3>Strings</h3>
 			{#if stringsError && triedSubmit}
-				<p class="text-red-500">{stringsError}</p>
+				<p class="text-warning">{stringsError}</p>
 			{/if}
 
 			{#each currentFretboard.strings as string, idx (idx)}

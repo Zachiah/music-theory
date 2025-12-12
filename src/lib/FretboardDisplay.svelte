@@ -2,6 +2,7 @@
 	import { CanonicalPitch } from './CanonicalPitch';
 	import type { Fretboard } from './Fretboard';
 	import { Pitch } from './Pitch';
+	import SubContainer from './SubContainer.svelte';
 
 	type FretActivation = 'neutral' | 'disabled' | 'active' | 'none';
 
@@ -35,11 +36,11 @@
 	};
 </script>
 
-<div class="overflow-auto rounded-md bg-gray-200 p-4 dark:bg-slate-600">
+<SubContainer>
 	<div
 		class="w-min bg-[brown]"
 		style={`
-			--angle: ${vertical ? 90 : 45}deg; 
+			--angle: ${vertical ? 90 : 45}deg;
 			background: linear-gradient(var(--angle), oklab(72.1% 0.029 0.075), oklab(43.5% 0.054 0.063))
 		`}
 	>
@@ -61,12 +62,12 @@
 					class:h-[calc(var(--base-size)_*_var(--multiplier))]={vertical}
 				>
 					<div
-						class={`absolute flex ${vertical ? 'h-[calc(100%_-_8px)]' : 'h-full'} ${vertical ? 'w-full' : 'w-[calc(100%_-_8px)]'} items-center`}
+						class={`absolute flex ${vertical ? 'h-[calc(100%-8px)]' : 'h-full'} ${vertical ? 'w-full' : 'w-[calc(100%-8px)]'} items-center`}
 						class:flex-col={!vertical}
 					>
 						{#each Array.from({ length: dots }) as _, idx (idx)}
-							<div class="flex flex-grow items-center justify-center">
-								<div class="h-4 w-4 rounded-full bg-white"></div>
+							<div class="flex grow items-center justify-center">
+								<div class="bg-always-white h-4 w-4 rounded-full"></div>
 							</div>
 						{/each}
 					</div>
@@ -94,9 +95,10 @@
 							{#if fretActivation !== 'none'}
 								<div
 									class={`absolute top-1/2 left-1/2 z-30 flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 ${bridge ? 'scale-70' : ''} transform items-center justify-center rounded-full text-xs`}
-									class:bg-gray-200={fretActivation === 'neutral' || fretActivation === 'disabled'}
-									class:text-gray-600={fretActivation === 'disabled'}
-									class:bg-blue-500={fretActivation === 'active'}
+									class:bg-always-light-gray={fretActivation === 'neutral' ||
+										fretActivation === 'disabled'}
+									class:text-text-disabled={fretActivation === 'disabled'}
+									class:bg-primary={fretActivation === 'active'}
 								>
 									{Pitch.print(Pitch.fromCanonical(pitch))}
 								</div>
@@ -107,7 +109,7 @@
 			{/each}
 		</div>
 	</div>
-</div>
+</SubContainer>
 
 <style>
 	.string {

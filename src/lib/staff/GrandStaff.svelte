@@ -36,41 +36,39 @@
 	const linePoses = $derived(getVisibleLinePoses(notes));
 </script>
 
-<section class="rounded-md bg-gray-200 p-4 dark:bg-slate-600">
-	<div
-		class="wrapper"
-		style="
+<div
+	class="wrapper"
+	style="
 			--staff-size: {STAFF_SIZE};
 			--bass-bottom-pos: {BASS_BOTTOM_POS - STAFF_LOW_POS};
 			--treble-bottom-pos: {TREBLE_BOTTOM_POS - STAFF_LOW_POS};
 		"
-	>
-		<div class="bass-cleff-wrapper">
-			<BassCleff />
-		</div>
-
-		<div class="treble-cleff-wrapper">
-			<TrebleCleff />
-		</div>
-
-		{#each linePoses as { pos, full } (pos)}
-			<div class="staff-line" class:full style="--pos: {pos - STAFF_LOW_POS}"></div>
-		{/each}
-
-		{#each usablePitches as { pitch, letterHeight, alignment, natural } (pitch)}
-			<div
-				class="note-wrapper"
-				style="--pos: {letterHeight - STAFF_LOW_POS}; --alignment: {alignment};"
-			>
-				<div class="note-modifier">
-					{PitchConstituents.printModifiers(pitch.pitchClass.modifier)}
-					{#if natural}♮{/if}
-				</div>
-				<WholeNote />
-			</div>
-		{/each}
+>
+	<div class="bass-cleff-wrapper">
+		<BassCleff />
 	</div>
-</section>
+
+	<div class="treble-cleff-wrapper">
+		<TrebleCleff />
+	</div>
+
+	{#each linePoses as { pos, full } (pos)}
+		<div class="staff-line" class:full style="--pos: {pos - STAFF_LOW_POS}"></div>
+	{/each}
+
+	{#each usablePitches as { pitch, letterHeight, alignment, natural } (pitch)}
+		<div
+			class="note-wrapper"
+			style="--pos: {letterHeight - STAFF_LOW_POS}; --alignment: {alignment};"
+		>
+			<div class="note-modifier">
+				{PitchConstituents.printModifiers(pitch.pitchClass.modifier)}
+				{#if natural}♮{/if}
+			</div>
+			<WholeNote />
+		</div>
+	{/each}
+</div>
 
 <style>
 	div {

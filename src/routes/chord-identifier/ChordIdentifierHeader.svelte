@@ -12,7 +12,7 @@
 		</p>
 	</div>
 
-	<div class="flex h-12 w-72 rounded-full bg-gray-200 dark:bg-slate-600">
+	<div class="bg-surface-2 flex h-12 w-72 rounded-full">
 		<TwoSidedToggleLink
 			first="Keyboard"
 			second="Fretboard"

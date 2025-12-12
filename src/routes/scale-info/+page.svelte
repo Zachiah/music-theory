@@ -9,6 +9,7 @@
 	import FancySelect from '$lib/FancySelect.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
 	import { playback } from '$lib/Playback';
+	import SubContainer from '$lib/SubContainer.svelte';
 
 	let typedPitchString = $state('C');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -47,7 +48,7 @@
 		</form>
 	</div>
 
-	<article class="flex flex-col gap-2 rounded-md bg-gray-200 px-4 py-2 dark:bg-slate-600">
+	<SubContainer el="article" padding="text" class="flex flex-col gap-2">
 		<div class="flex items-center gap-2">
 			<h2 class="text-2xl">
 				{PitchClass.print(pitch)}
@@ -100,13 +101,11 @@
 				<ScaleChordsOfPattern {pattern} pitchClass={pitch} intervals={scale.intervals} />
 			{/each}
 		{/if}
-	</article>
+	</SubContainer>
 
 	{#if !typedPitch && typedPitchString}
-		<div class="rounded-lg bg-red-300 p-4">
+		<div class="bg-warning rounded-lg p-4">
 			Unparsable note: {typedPitchString}
 		</div>
-	{:else}
-		<div class="p-4">&nbsp;</div>
 	{/if}
 </Container>

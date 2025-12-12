@@ -15,6 +15,7 @@
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import { Pitch } from '$lib/Pitch';
+	import SubContainer from '$lib/SubContainer.svelte';
 
 	let allowInversions = $state(true);
 
@@ -100,14 +101,16 @@
 	/>
 
 	<div class="flex gap-4">
-		<GrandStaff
-			notes={guessedChord
-				? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => p.pitch)
-				: []}
-		/>
+		<SubContainer>
+			<GrandStaff
+				notes={guessedChord
+					? normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord).map((p) => p.pitch)
+					: []}
+			/>
+		</SubContainer>
 
-		<p class="flex-grow rounded-md bg-gray-200 p-4 text-3xl dark:bg-slate-600">
+		<SubContainer el="p" class="grow text-3xl">
 			&nbsp;{chordString}
-		</p>
+		</SubContainer>
 	</div>
 </Container>
