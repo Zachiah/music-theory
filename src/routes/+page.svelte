@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
+	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
 	import Container from '$lib/Container.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
@@ -125,6 +126,13 @@
 	<div class="flex gap-4">
 		<SubContainer>
 			<GrandStaff notes={cpaState.selected.map((p) => Pitch.fromCanonical(p))} />
+		</SubContainer>
+
+		<SubContainer>
+			<CircleOfFifths
+				highlighted={guessedChord?.root}
+				selected={normalized.map((n) => n.pitch.pitchClass)}
+			/>
 		</SubContainer>
 
 		<SubContainer el="p" class="grow text-3xl">

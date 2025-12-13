@@ -17,6 +17,7 @@
 	import { Pitch } from '$lib/Pitch';
 	import SubContainer from '$lib/SubContainer.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
 
 	let allowInversions = $state(true);
 
@@ -114,6 +115,13 @@
 	<div class="flex gap-4">
 		<SubContainer>
 			<GrandStaff notes={guessedChord ? normalized.map((n) => n.pitch) : []} />
+		</SubContainer>
+
+		<SubContainer>
+			<CircleOfFifths
+				highlighted={guessedChord?.root}
+				selected={normalized.map((n) => n.pitch.pitchClass)}
+			/>
 		</SubContainer>
 
 		<SubContainer el="p" class="grow text-3xl">
