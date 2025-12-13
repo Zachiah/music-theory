@@ -2,7 +2,6 @@
 	import type { Snippet } from 'svelte';
 	import { CanonicalPitch } from './CanonicalPitch';
 	import { Pitch } from './Pitch';
-	import SubContainer from './SubContainer.svelte';
 
 	const {
 		start,

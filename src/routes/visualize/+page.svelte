@@ -83,7 +83,9 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<SubContainer>
+	<SubContainer class="flex flex-col">
+		<MovingNotesVisualization history={cpaHistoryState.cpaHistory} />
+
 		<Keyboard
 			noteNumber={KEYBOARD_LENGTH}
 			start={KEYBOARD_START}
@@ -105,9 +107,5 @@
 				</div>
 			{/snippet}
 		</Keyboard>
-	</SubContainer>
-
-	<SubContainer>
-		<MovingNotesVisualization history={cpaHistoryState.cpaHistory} />
 	</SubContainer>
 </Container>

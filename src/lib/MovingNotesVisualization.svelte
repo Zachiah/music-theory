@@ -18,8 +18,8 @@
 
 <div class="relative h-96 overflow-hidden" bind:clientHeight={availableElementHeight}>
 	<div
-		class="absolute top-0 left-0 h-full w-full"
-		style="top: {(tickerState.tick - minStart) * SPEED}px;"
+		class="absolute left-0 h-full w-full"
+		style="bottom: {(tickerState.tick - minStart) * SPEED}px;"
 	>
 		{#each history as item (`${item.start}${Pitch.print(Pitch.fromCanonical(item.pitch))}`)}
 			{@const flat = item.pitch.pitchClass.endsWith('b')}
@@ -41,11 +41,11 @@
 			{#if !outOfView}
 				<div
 					class="absolute flex w-[48px] items-center justify-center"
-					style="top: -{(start + length) * SPEED}px; height: {length * SPEED}px; left: {moveOver *
-						48}px"
+					style="bottom: -{(start + length) * SPEED}px; height: {length *
+						SPEED}px; left: {moveOver * 48}px"
 				>
 					<div
-						class="h-full rounded-md bg-linear-to-br to-transparent"
+						class="h-full rounded-md bg-linear-to-tr to-transparent"
 						class:from-always-white={!flat}
 						class:from-always-black={flat}
 						class:w-[48px]={!flat}
@@ -57,6 +57,6 @@
 	</div>
 
 	<div
-		class="from-surface-2/0 to-surface-2 absolute top-0 left-0 h-full w-full bg-linear-to-b"
+		class="from-surface-2/0 to-surface-2 absolute top-0 left-0 h-full w-full bg-linear-to-t"
 	></div>
 </div>
