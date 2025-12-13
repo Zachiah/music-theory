@@ -1,17 +1,19 @@
 import { SvelteDate } from 'svelte/reactivity';
 
-export const tickerState = (() => {
+export const createTickerState = (interval: number) => {
 	let tick = $state(0);
 
-	if (typeof window !== 'undefined') {
-		setInterval(() => {
+	$effect(() => {
+		const intervalHandle = setInterval(() => {
 			tick = +new SvelteDate();
-		}, 100);
-	}
+		}, interval);
+
+		return () => clearInterval(intervalHandle);
+	});
 
 	return {
 		get tick() {
 			return tick;
 		}
 	};
-})();
+};

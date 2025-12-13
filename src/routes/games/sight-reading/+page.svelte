@@ -10,9 +10,11 @@
 	import { Pitch } from '$lib/Pitch';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import SubContainer from '$lib/SubContainer.svelte';
-	import { tickerState } from '$lib/tickerState.svelte';
+	import { createTickerState } from '$lib/tickerState.svelte';
 	import { chooseRandom, formatTimeString } from '$lib/util';
 	import { onMount } from 'svelte';
+
+	const tickerState = createTickerState(100);
 
 	const KEYBOARD_START: CanonicalPitch = { pitchClass: 'C', octave: 2 };
 	const KEYBOARD_LENGTH = 49;
