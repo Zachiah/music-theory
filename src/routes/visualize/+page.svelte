@@ -4,17 +4,11 @@
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
-	import {
-		findPitchForEventByKeybind,
-		getFormattedKeybindForPitch,
-		KEYBOARD_LENGTH,
-		KEYBOARD_START
-	} from '$lib/keyboardKeybinds';
+	import { findPitchForEventByKeybind, getFormattedKeybindForPitch } from '$lib/keyboardKeybinds';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import MovingNotesVisualization from '$lib/MovingNotesVisualization.svelte';
 	import { playback } from '$lib/Playback';
-	import SubContainer from '$lib/SubContainer.svelte';
 	import { onMount } from 'svelte';
 
 	const cpaPlayState = createCpaPlayState(playback);
@@ -83,12 +77,17 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<div class="bg-always-black flex flex-col rounded-md p-4">
-		<MovingNotesVisualization history={cpaHistoryState.cpaHistory} />
+	<div class="bg-always-black flex flex-col overflow-auto rounded-md p-4">
+		<MovingNotesVisualization
+			history={cpaHistoryState.cpaHistory}
+			whiteKeyWidth={27}
+			start={{ pitchClass: 'A', octave: 0 }}
+		/>
 
 		<Keyboard
-			noteNumber={KEYBOARD_LENGTH}
-			start={KEYBOARD_START}
+			whiteKeyWidth={27}
+			noteNumber={88}
+			start={{ pitchClass: 'A', octave: 0 }}
 			highlighted={cpaState.selected}
 			onMouseDown={cpaState.enable}
 			onMouseEnter={(p, pressed) => {

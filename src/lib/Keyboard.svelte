@@ -12,7 +12,8 @@
 		onMouseOut,
 		onMouseEnter,
 		renderKeyText,
-		highlighted
+		highlighted,
+		whiteKeyWidth = 48
 	}: {
 		start: CanonicalPitch;
 		noteNumber: number;
@@ -23,6 +24,7 @@
 		onMouseEnter?: (pitch: CanonicalPitch, mousePressed: boolean) => void;
 		renderKeyText: Snippet<[pitch: CanonicalPitch]>;
 		highlighted: CanonicalPitch[];
+		whiteKeyWidth?: number;
 	} = $props();
 
 	type KeyPair = {
@@ -91,7 +93,7 @@
 	<!-- svelte-ignore a11y_mouse_events_have_key_events -->
 	<button
 		aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(props.pitch))}`}
-		class="text-always-white border-always-gray-medium absolute top-0 right-0 z-20 flex h-[calc(9*var(--h))] w-[calc(1.4*var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 pb-2"
+		class="text-always-white border-always-gray-medium absolute top-0 right-0 z-20 flex h-[calc(9*var(--h))] w-[calc(7/12*var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 pb-2"
 		class:bg-primary={props.highlighted}
 		class:bg-always-black={!props.highlighted}
 		onclick={() => onClick?.(props.pitch)}
@@ -104,9 +106,9 @@
 	</button>
 {/snippet}
 
-<div class="flex w-min" style="--w: 20px; --h: 15px;">
+<div class="flex w-min" style="--w: {whiteKeyWidth}px; --h: {(5 / 16) * whiteKeyWidth}px">
 	{#each noteData as nd (Pitch.print(Pitch.fromCanonical(nd.white)))}
-		<div class="relative h-[calc(15*var(--h))] w-[calc(2.4*var(--w))] shrink-0 grow-0">
+		<div class="relative h-[calc(15*var(--h))] w-(--w) shrink-0 grow-0">
 			{@render whiteKey({
 				pitch: nd.white,
 				highlighted: highlightedStr.includes(Pitch.print(Pitch.fromCanonical(nd.white)))

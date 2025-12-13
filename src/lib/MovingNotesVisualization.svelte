@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { CanonicalPitch } from './CanonicalPitch';
 	import type { CpaHistoryItem } from './cpaHistoryState.svelte';
 	import { Pitch } from './Pitch';
 	import { PitchClass } from './PitchClass';
@@ -7,7 +8,11 @@
 
 	const tickerState = createTickerState(10);
 
-	const { history }: { history: CpaHistoryItem[] } = $props();
+	const {
+		history,
+		start: startNote,
+		whiteKeyWidth
+	}: { history: CpaHistoryItem[]; start: CanonicalPitch; whiteKeyWidth: number } = $props();
 
 	const minStart = $derived(Math.min(...history.map((h) => h.start), tickerState.tick));
 
@@ -16,7 +21,10 @@
 	const SPEED = 1 / 20;
 </script>
 
-<div class="relative h-96 overflow-hidden" bind:clientHeight={availableElementHeight}>
+<div
+	class="relative h-[calc(100vh-400px)] overflow-hidden"
+	bind:clientHeight={availableElementHeight}
+>
 	<div
 		class="absolute left-0 h-full w-full"
 		style="bottom: {(tickerState.tick - minStart) * SPEED}px;"
@@ -27,7 +35,10 @@
 				PitchClass.fromCanonicalPitchClass(item.pitch.pitchClass).letter,
 				item.pitch.octave
 			)}
-			{@const c2LetterHeight = PitchConstituents.letterBasedHeight('C', 2)}
+			{@const c2LetterHeight = PitchConstituents.letterBasedHeight(
+				startNote.pitchClass as PitchConstituents.LetterName,
+				startNote.octave
+			)}
 			{@const letterHeight = absoluteLetterHeight - c2LetterHeight}
 
 			{@const moveOver = letterHeight - (flat ? 0.5 : 0)}
@@ -40,9 +51,9 @@
 
 			{#if !outOfView}
 				<div
-					class="absolute flex w-[48px] items-center justify-center"
-					style="bottom: -{(start + length) * SPEED}px; height: {length *
-						SPEED}px; left: {moveOver * 48}px"
+					class="absolute flex items-center justify-center"
+					style="width: {whiteKeyWidth}px; bottom: -{(start + length) * SPEED}px; height: {length *
+						SPEED}px; left: {moveOver * whiteKeyWidth}px"
 				>
 					<div
 						class="border-always-white h-full translate-y-[5px] transform rounded-md border bg-linear-to-tr to-transparent"
