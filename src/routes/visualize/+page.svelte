@@ -83,7 +83,7 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<SubContainer class="flex flex-col">
+	<div class="bg-always-black flex flex-col rounded-md p-4">
 		<MovingNotesVisualization history={cpaHistoryState.cpaHistory} />
 
 		<Keyboard
@@ -107,5 +107,5 @@
 				</div>
 			{/snippet}
 		</Keyboard>
-	</SubContainer>
+	</div>
 </Container>

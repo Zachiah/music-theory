@@ -45,7 +45,7 @@
 						SPEED}px; left: {moveOver * 48}px"
 				>
 					<div
-						class="h-full rounded-md bg-linear-to-tr to-transparent"
+						class="border-always-white h-full translate-y-[5px] transform rounded-md border bg-linear-to-tr to-transparent"
 						class:from-always-white={!flat}
 						class:from-always-black={flat}
 						class:w-[48px]={!flat}
@@ -57,6 +57,6 @@
 	</div>
 
 	<div
-		class="from-surface-2/0 to-surface-2 absolute top-0 left-0 h-full w-full bg-linear-to-t"
+		class="from-always-black/0 to-always-black absolute top-0 left-0 h-full w-full bg-linear-to-t"
 	></div>
 </div>
