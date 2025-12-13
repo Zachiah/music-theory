@@ -27,12 +27,12 @@ export const createCpaHistoryState = (maxLifeMs: number) => {
 		}
 
 		if (change.tag === 'disable') {
-			const historyItem = cpaHistory.value.find(
+			const items = cpaHistory.value.filter(
 				(item) => CanonicalPitch.equal(item.pitch, change.pitch) && !item.end
 			);
 
-			if (historyItem) {
-				historyItem.end = Date.now();
+			for (const item of items) {
+				item.end = Date.now();
 			}
 		}
 	};
