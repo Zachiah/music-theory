@@ -12,12 +12,14 @@
 	const minStart = $derived(Math.min(...history.map((h) => h.start), tickerState.tick));
 
 	let availableElementHeight = $state(1000);
+
+	const SPEED = 1 / 20;
 </script>
 
 <div class="relative h-96 overflow-hidden" bind:clientHeight={availableElementHeight}>
 	<div
 		class="absolute top-0 left-0 h-full w-full"
-		style="top: {(tickerState.tick - minStart) / 20}px;"
+		style="top: {(tickerState.tick - minStart) * SPEED}px;"
 	>
 		{#each history as item (`${item.start}${Pitch.print(Pitch.fromCanonical(item.pitch))}`)}
 			{@const flat = item.pitch.pitchClass.endsWith('b')}
@@ -34,15 +36,22 @@
 			{@const end = item.end ? item.end - minStart : tickerState.tick - minStart}
 			{@const length = end - start}
 
-			{@const outOfView = (tickerState.tick - minStart - end) / 20 > availableElementHeight}
+			{@const outOfView = (tickerState.tick - minStart - end) * SPEED > availableElementHeight}
 
 			{#if !outOfView}
 				<div
-					class="absolute w-[48px] rounded-md bg-linear-to-br to-transparent"
-					style="top: -{(start + length) / 20}px; height: {length / 20}px; left: {moveOver * 48}px"
-					class:from-always-white={!flat}
-					class:from-always-black={flat}
-				></div>
+					class="absolute flex w-[48px] items-center justify-center"
+					style="top: -{(start + length) * SPEED}px; height: {length * SPEED}px; left: {moveOver *
+						48}px"
+				>
+					<div
+						class="h-full rounded-md bg-linear-to-br to-transparent"
+						class:from-always-white={!flat}
+						class:from-always-black={flat}
+						class:w-[48px]={!flat}
+						class:w-[28px]={flat}
+					></div>
+				</div>
 			{/if}
 		{/each}
 	</div>
