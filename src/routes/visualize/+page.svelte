@@ -14,7 +14,7 @@
 	import { fade } from 'svelte/transition';
 
 	const cpaPlayState = createCpaPlayState(playback);
-	const cpaHistoryState = createCpaHistoryState(10000);
+	const cpaHistoryState = createCpaHistoryState(20000);
 	const cpaState = createCpaState({
 		onChange(change) {
 			cpaPlayState.onCpaChangePlay(change);
