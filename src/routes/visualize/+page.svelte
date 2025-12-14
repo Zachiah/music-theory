@@ -88,7 +88,7 @@
 		{#snippet children({ fullscreen })}
 			<div class="bg-always-black rounded-md p-4">
 				<div
-					class="flex flex-col gap-4 overflow-auto"
+					class="flex flex-col overflow-auto"
 					class:h-[calc(100vh-250px)]={!fullscreen}
 					class:h-[calc(100vh-20px)]={fullscreen}
 					bind:clientWidth={wrapperWidth}
