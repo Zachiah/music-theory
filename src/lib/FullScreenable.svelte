@@ -17,6 +17,7 @@
 	let isFullscreen = $state(false);
 	let showControls = $state(true);
 	let hideControlsTimeout: ReturnType<typeof setTimeout> | null = null;
+	let isHoveringControls = false;
 
 	const toggleFullscreen = async () => {
 		if (!document.fullscreenElement && wrapper) {
@@ -42,7 +43,9 @@
 			clearTimeout(hideControlsTimeout);
 		}
 		hideControlsTimeout = setTimeout(() => {
-			showControls = false;
+			if (!isHoveringControls) {
+				showControls = false;
+			}
 		}, 2000);
 	};
 
@@ -84,9 +87,21 @@
 
 <div class="relative" bind:this={wrapper}>
 	{#if showControls}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="absolute top-4 right-4 z-50 flex items-center gap-2"
 			transition:fade={{ duration: 150 }}
+			onmouseenter={() => {
+				isHoveringControls = true;
+				showControls = true;
+				if (hideControlsTimeout) {
+					clearTimeout(hideControlsTimeout);
+				}
+			}}
+			onmouseleave={() => {
+				isHoveringControls = false;
+				scheduleHide();
+			}}
 		>
 			{#if actions}
 				{@render actions({ fullscreen: isFullscreen })}
