@@ -1,16 +1,21 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	const {
 		children,
+		icon,
 		onClick,
 		style = 'primary',
-		disabled = false
+		disabled = false,
+		attrs = {}
 	}: {
-		children: Snippet<[]>;
+		children?: Snippet<[]>;
+		icon?: string;
 		onClick(): void;
 		style?: 'danger' | 'primary' | 'neutral' | 'warning';
 		disabled?: boolean;
+		attrs?: HTMLButtonAttributes;
 	} = $props();
 
 	const classStyles = {
@@ -29,8 +34,17 @@
 
 <button
 	{disabled}
-	class={`rounded-md px-4 py-2 text-inherit ${disabled ? disabledClassStyles[style] : classStyles[style]}`}
+	class={`relative rounded-md text-inherit ${disabled ? disabledClassStyles[style] : classStyles[style]}`}
 	onclick={onClick}
+	class:py-2={!icon}
+	class:px-4={!icon}
+	class:size-10={icon}
+	{...attrs}
 >
-	{@render children()}
+	{#if icon}
+		<span
+			class="{icon} absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 transform"
+		></span>
+	{/if}
+	{@render children?.()}
 </button>

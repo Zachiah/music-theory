@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/Button.svelte';
 	import Container from '$lib/Container.svelte';
 	import { createCpaHistoryState } from '$lib/cpaHistoryState.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
@@ -142,18 +143,18 @@
 
 	<div class="bg-always-black relative rounded-md p-4" bind:this={fullscreenWrapper}>
 		{#if showControls}
-			<button
-				class="hover:text-primary border-always-gray-medium bg-surface-2 absolute top-4 right-4 z-50 flex items-center justify-center rounded-md border p-2 transition-opacity"
-				aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-				onclick={toggleFullscreen}
-				transition:fade={{ duration: 150 }}
-			>
-				<span
-					class={isFullscreen
-						? 'icon-[heroicons--arrows-pointing-in] size-5'
-						: 'icon-[heroicons--arrows-pointing-out] size-5'}
-				></span>
-			</button>
+			<div class="absolute top-2 right-2 z-20" transition:fade={{ duration: 150 }}>
+				<Button
+					icon={isFullscreen
+						? 'icon-[heroicons--arrows-pointing-in]'
+						: 'icon-[heroicons--arrows-pointing-out]'}
+					style="neutral"
+					attrs={{
+						'aria-label': isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
+					}}
+					onClick={toggleFullscreen}
+				/>
+			</div>
 		{/if}
 
 		<div
