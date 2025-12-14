@@ -12,12 +12,18 @@
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
 	import { onMount } from 'svelte';
+	import Button from '$lib/Button.svelte';
+
+	let audible = $state(true);
+	let showKeybinds = $state(true);
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaHistoryState = createCpaHistoryState(20000);
 	const cpaState = createCpaState({
 		onChange(change) {
-			cpaPlayState.onCpaChangePlay(change);
+			if (audible) {
+				cpaPlayState.onCpaChangePlay(change);
+			}
 			cpaHistoryState.onCpaChangeHistory(change);
 		}
 	});
@@ -85,6 +91,23 @@
 	</div>
 
 	<FullScreenable>
+		{#snippet actions()}
+			<Button
+				onClick={() => {
+					audible = !audible;
+				}}
+				style={audible ? 'primary' : 'neutral'}
+				icon="icon-[heroicons--speaker-wave]"
+			/>
+			<Button
+				onClick={() => {
+					showKeybinds = !showKeybinds;
+				}}
+				style={showKeybinds ? 'primary' : 'neutral'}
+				icon="icon-[heroicons--eye]"
+			/>
+		{/snippet}
+
 		{#snippet children({ fullscreen })}
 			<div class="bg-always-black rounded-md p-4">
 				<div
@@ -117,7 +140,9 @@
 							{@const keybind = getFormattedKeybindForPitch(cp)}
 
 							<div class="flex flex-col">
-								<span>{keybind}</span>
+								{#if showKeybinds}
+									<span>{keybind}</span>
+								{/if}
 							</div>
 						{/snippet}
 					</Keyboard>
