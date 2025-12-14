@@ -8,14 +8,19 @@
 	import { findPitchForEventByKeybind, getFormattedKeybindForPitch } from '$lib/keyboardKeybinds';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
-	import MovingNotesVisualization from '$lib/MovingNotesVisualization.svelte';
+	import MovingNotesVisualization, {
+		vizColorSchemes,
+		type VizColorScheme
+	} from '$lib/MovingNotesVisualization.svelte';
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
 	import { onMount } from 'svelte';
 	import Button from '$lib/Button.svelte';
+	import FancySelect from '$lib/FancySelect.svelte';
 
 	let audible = $state(true);
 	let showKeybinds = $state(true);
+	let colorScheme: VizColorScheme = $state('bw');
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaHistoryState = createCpaHistoryState(20000);
@@ -92,6 +97,13 @@
 
 	<FullScreenable>
 		{#snippet actions()}
+			<div class="w-32">
+				<FancySelect
+					bind:value={colorScheme}
+					placeholder="Color Scheme"
+					options={vizColorSchemes.map((s) => ({ label: s, value: s }))}
+				/>
+			</div>
 			<Button
 				onClick={() => {
 					audible = !audible;
@@ -117,6 +129,7 @@
 					bind:clientWidth={wrapperWidth}
 				>
 					<MovingNotesVisualization
+						{colorScheme}
 						history={cpaHistoryState.cpaHistory}
 						whiteKeyWidth={wrapperWidth / numWhiteNotes}
 						start={{ pitchClass: 'A', octave: 0 }}

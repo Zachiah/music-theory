@@ -1,3 +1,8 @@
+<script lang="ts" module>
+	export const vizColorSchemes = ['bw', 'rainbow'] as const;
+	export type VizColorScheme = (typeof vizColorSchemes)[number];
+</script>
+
 <script lang="ts">
 	import type { CanonicalPitch } from './CanonicalPitch';
 	import type { CpaHistoryItem } from './cpaHistoryState.svelte';
@@ -11,14 +16,50 @@
 	const {
 		history,
 		start: startNote,
-		whiteKeyWidth
-	}: { history: CpaHistoryItem[]; start: CanonicalPitch; whiteKeyWidth: number } = $props();
+		whiteKeyWidth,
+		colorScheme
+	}: {
+		history: CpaHistoryItem[];
+		start: CanonicalPitch;
+		whiteKeyWidth: number;
+		colorScheme: VizColorScheme;
+	} = $props();
 
 	const minStart = $derived(Math.min(...history.map((h) => h.start), tickerState.tick));
 
 	let availableElementHeight = $state(1000);
 
 	const SPEED = 1 / 20;
+
+	type ColorScheme = { classes: string; styles: string };
+
+	const colorSchemes: { [key in VizColorScheme]: (item: CpaHistoryItem) => ColorScheme } = {
+		bw: (item) => {
+			const flat = item.pitch.pitchClass.endsWith('b');
+
+			const flatBased = flat ? 'from-always-black' : 'from-always-white';
+
+			return {
+				classes: `${flatBased} to-transparent bg-linear-to-tr border border-always-white`,
+				styles: ''
+			};
+		},
+		rainbow: (item) => {
+			const rainbowColors = [
+				'#FF0000',
+				'#FF7F00',
+				'#FFFF00',
+				'#00FF00',
+				'#0000FF',
+				'#4B0082',
+				'#8B00FF'
+			];
+			return {
+				classes: 'from-(--b) to-always-white bg-linear-to-tr',
+				styles: `--b: ${rainbowColors[item.start % rainbowColors.length]}`
+			};
+		}
+	};
 </script>
 
 <div class="relative grow overflow-hidden" bind:clientHeight={availableElementHeight}>
@@ -47,15 +88,15 @@
 			{@const outOfView = (tickerState.tick - minStart - end) * SPEED > availableElementHeight}
 
 			{#if !outOfView}
+				{@const c = colorSchemes[colorScheme](item)}
 				<div
 					class="absolute flex items-center justify-center"
 					style="width: {whiteKeyWidth}px; bottom: -{(start + length) * SPEED}px; height: {length *
 						SPEED}px; left: {moveOver * whiteKeyWidth}px"
 				>
 					<div
-						class="border-always-white h-full translate-y-[5px] transform rounded-md border bg-linear-to-tr to-transparent"
-						class:from-always-white={!flat}
-						class:from-always-black={flat}
+						class="h-full translate-y-[5px] transform rounded-md {c.classes}"
+						style={c.styles}
 						class:w-[48px]={!flat}
 						class:w-[28px]={flat}
 					></div>

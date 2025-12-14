@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import Button from './Button.svelte';
 
 	type SlotProps = {
 		fullscreen: boolean;
@@ -107,17 +108,16 @@
 				{@render actions({ fullscreen: isFullscreen })}
 			{/if}
 
-			<button
-				class="hover:text-primary border-always-gray-medium bg-surface-2 flex items-center justify-center rounded-md border p-2"
-				aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-				onclick={toggleFullscreen}
-			>
-				<span
-					class={isFullscreen
-						? 'icon-[heroicons--arrows-pointing-in] size-5'
-						: 'icon-[heroicons--arrows-pointing-out] size-5'}
-				></span>
-			</button>
+			<Button
+				style="neutral"
+				attrs={{
+					'aria-label': isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
+				}}
+				onClick={toggleFullscreen}
+				icon={isFullscreen
+					? 'icon-[heroicons--arrows-pointing-in] size-5'
+					: 'icon-[heroicons--arrows-pointing-out] size-5'}
+			/>
 		</div>
 	{/if}
 

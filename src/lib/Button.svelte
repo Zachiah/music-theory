@@ -34,11 +34,11 @@
 
 <button
 	{disabled}
-	class={`relative rounded-md text-inherit ${disabled ? disabledClassStyles[style] : classStyles[style]}`}
+	class={`relative flex-none rounded-md text-inherit ${disabled ? disabledClassStyles[style] : classStyles[style]}`}
 	onclick={onClick}
 	class:py-2={!icon}
 	class:px-4={!icon}
-	class:size-10={icon}
+	class:size-13={icon}
 	{...attrs}
 >
 	{#if icon}
