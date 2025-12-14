@@ -40,6 +40,43 @@
 		PitchConstituents.letterBasedHeight('C', 8) - PitchConstituents.letterBasedHeight('A', 0) + 1;
 
 	let wrapperWidth: number = $state(1000);
+	let fullscreenWrapper: HTMLDivElement | null = null;
+	let isFullscreen = $state(false);
+
+	const toggleFullscreen = async () => {
+		if (typeof document === 'undefined') {
+			return;
+		}
+
+		if (!document.fullscreenElement && fullscreenWrapper) {
+			try {
+				await fullscreenWrapper.requestFullscreen();
+			} catch {
+				/* ignore */
+			}
+			return;
+		}
+
+		if (document.fullscreenElement) {
+			try {
+				await document.exitFullscreen();
+			} catch {
+				/* ignore */
+			}
+		}
+	};
+
+	if (typeof document !== 'undefined') {
+		const onFullScreenChange = () => {
+			isFullscreen = document.fullscreenElement === fullscreenWrapper;
+		};
+		document.addEventListener('fullscreenchange', onFullScreenChange);
+		$effect(() => {
+			return () => {
+				document.removeEventListener('fullscreenchange', onFullScreenChange);
+			};
+		});
+	}
 </script>
 
 <svelte:window
@@ -83,8 +120,25 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<div class="bg-always-black rounded-md p-4">
-		<div class="flex flex-col overflow-auto" bind:clientWidth={wrapperWidth}>
+	<div class="bg-always-black relative rounded-md p-4" bind:this={fullscreenWrapper}>
+		<button
+			class="hover:text-primary border-always-gray-medium bg-surface-2 absolute top-4 right-4 z-50 flex items-center justify-center rounded-md border p-2"
+			aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+			onclick={toggleFullscreen}
+		>
+			<span
+				class={isFullscreen
+					? 'icon-[heroicons--arrows-pointing-in] size-5'
+					: 'icon-[heroicons--arrows-pointing-out] size-5'}
+			></span>
+		</button>
+
+		<div
+			class="flex h-[calc(100vh-250px)] flex-col gap-4 overflow-auto"
+			class:h-[calc(100vh-250px)]={!isFullscreen}
+			class:h-[calc(100vh-20px)]={isFullscreen}
+			bind:clientWidth={wrapperWidth}
+		>
 			<MovingNotesVisualization
 				history={cpaHistoryState.cpaHistory}
 				whiteKeyWidth={wrapperWidth / numWhiteNotes}

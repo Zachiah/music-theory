@@ -21,10 +21,7 @@
 	const SPEED = 1 / 20;
 </script>
 
-<div
-	class="relative h-[calc(100vh-400px)] overflow-hidden"
-	bind:clientHeight={availableElementHeight}
->
+<div class="relative grow overflow-hidden" bind:clientHeight={availableElementHeight}>
 	<div
 		class="absolute left-0 h-full w-full"
 		style="bottom: {(tickerState.tick - minStart) * SPEED}px;"
