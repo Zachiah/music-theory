@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
 	import Container from '$lib/Container.svelte';
+	import FullScreenable from '$lib/FullScreenable.svelte';
 	import { createCpaHistoryState } from '$lib/cpaHistoryState.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
@@ -11,8 +11,7 @@
 	import MovingNotesVisualization from '$lib/MovingNotesVisualization.svelte';
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
-	import { onMount, onDestroy } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaHistoryState = createCpaHistoryState(20000);
@@ -42,61 +41,6 @@
 		PitchConstituents.letterBasedHeight('C', 8) - PitchConstituents.letterBasedHeight('A', 0) + 1;
 
 	let wrapperWidth: number = $state(1000);
-	let fullscreenWrapper: HTMLDivElement | null = null;
-	let isFullscreen = $state(false);
-	let showControls = $state(true);
-	let hideControlsTimeout: ReturnType<typeof setTimeout> | null = null;
-
-	const toggleFullscreen = async () => {
-		if (typeof document === 'undefined') {
-			return;
-		}
-
-		if (!document.fullscreenElement && fullscreenWrapper) {
-			try {
-				await fullscreenWrapper.requestFullscreen();
-			} catch {
-				/* ignore */
-			}
-			return;
-		}
-
-		if (document.fullscreenElement) {
-			try {
-				await document.exitFullscreen();
-			} catch {
-				/* ignore */
-			}
-		}
-	};
-
-	if (typeof document !== 'undefined') {
-		const onFullScreenChange = () => {
-			isFullscreen = document.fullscreenElement === fullscreenWrapper;
-		};
-		document.addEventListener('fullscreenchange', onFullScreenChange);
-		$effect(() => {
-			return () => {
-				document.removeEventListener('fullscreenchange', onFullScreenChange);
-			};
-		});
-	}
-
-	const handleMouseMove = () => {
-		showControls = true;
-		if (hideControlsTimeout) {
-			clearTimeout(hideControlsTimeout);
-		}
-		hideControlsTimeout = setTimeout(() => {
-			showControls = false;
-		}, 2000);
-	};
-
-	onDestroy(() => {
-		if (hideControlsTimeout) {
-			clearTimeout(hideControlsTimeout);
-		}
-	});
 </script>
 
 <svelte:window
@@ -132,7 +76,6 @@
 
 		cpaState.disable(keybind.canonicalPitch);
 	}}
-	onmousemove={handleMouseMove}
 />
 
 <Container>
@@ -141,56 +84,45 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<div class="bg-always-black relative rounded-md p-4" bind:this={fullscreenWrapper}>
-		{#if showControls}
-			<div class="absolute top-2 right-2 z-20" transition:fade={{ duration: 150 }}>
-				<Button
-					icon={isFullscreen
-						? 'icon-[heroicons--arrows-pointing-in]'
-						: 'icon-[heroicons--arrows-pointing-out]'}
-					style="neutral"
-					attrs={{
-						'aria-label': isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
-					}}
-					onClick={toggleFullscreen}
-				/>
+	<FullScreenable>
+		{#snippet children({ fullscreen })}
+			<div class="bg-always-black rounded-md p-4">
+				<div
+					class="flex flex-col gap-4 overflow-auto"
+					class:h-[calc(100vh-250px)]={!fullscreen}
+					class:h-[calc(100vh-20px)]={fullscreen}
+					bind:clientWidth={wrapperWidth}
+				>
+					<MovingNotesVisualization
+						history={cpaHistoryState.cpaHistory}
+						whiteKeyWidth={wrapperWidth / numWhiteNotes}
+						start={{ pitchClass: 'A', octave: 0 }}
+					/>
+
+					<Keyboard
+						whiteKeyWidth={wrapperWidth / numWhiteNotes}
+						noteNumber={88}
+						start={{ pitchClass: 'A', octave: 0 }}
+						highlighted={cpaState.selected}
+						onMouseDown={cpaState.enable}
+						onMouseEnter={(p, pressed) => {
+							if (pressed) {
+								cpaState.enable(p);
+							}
+						}}
+						onMouseUp={cpaState.disable}
+						onMouseOut={cpaState.disable}
+					>
+						{#snippet renderKeyText(cp)}
+							{@const keybind = getFormattedKeybindForPitch(cp)}
+
+							<div class="flex flex-col">
+								<span>{keybind}</span>
+							</div>
+						{/snippet}
+					</Keyboard>
+				</div>
 			</div>
-		{/if}
-
-		<div
-			class="flex h-[calc(100vh-250px)] flex-col gap-4 overflow-auto"
-			class:h-[calc(100vh-250px)]={!isFullscreen}
-			class:h-[calc(100vh-20px)]={isFullscreen}
-			bind:clientWidth={wrapperWidth}
-		>
-			<MovingNotesVisualization
-				history={cpaHistoryState.cpaHistory}
-				whiteKeyWidth={wrapperWidth / numWhiteNotes}
-				start={{ pitchClass: 'A', octave: 0 }}
-			/>
-
-			<Keyboard
-				whiteKeyWidth={wrapperWidth / numWhiteNotes}
-				noteNumber={88}
-				start={{ pitchClass: 'A', octave: 0 }}
-				highlighted={cpaState.selected}
-				onMouseDown={cpaState.enable}
-				onMouseEnter={(p, pressed) => {
-					if (pressed) {
-						cpaState.enable(p);
-					}
-				}}
-				onMouseUp={cpaState.disable}
-				onMouseOut={cpaState.disable}
-			>
-				{#snippet renderKeyText(cp)}
-					{@const keybind = getFormattedKeybindForPitch(cp)}
-
-					<div class="flex flex-col">
-						<span>{keybind}</span>
-					</div>
-				{/snippet}
-			</Keyboard>
-		</div>
-	</div>
+		{/snippet}
+	</FullScreenable>
 </Container>
