@@ -10,7 +10,8 @@
 	import MovingNotesVisualization from '$lib/MovingNotesVisualization.svelte';
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaHistoryState = createCpaHistoryState(10000);
@@ -42,6 +43,8 @@
 	let wrapperWidth: number = $state(1000);
 	let fullscreenWrapper: HTMLDivElement | null = null;
 	let isFullscreen = $state(false);
+	let showControls = $state(true);
+	let hideControlsTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const toggleFullscreen = async () => {
 		if (typeof document === 'undefined') {
@@ -77,6 +80,22 @@
 			};
 		});
 	}
+
+	const handleMouseMove = () => {
+		showControls = true;
+		if (hideControlsTimeout) {
+			clearTimeout(hideControlsTimeout);
+		}
+		hideControlsTimeout = setTimeout(() => {
+			showControls = false;
+		}, 2000);
+	};
+
+	onDestroy(() => {
+		if (hideControlsTimeout) {
+			clearTimeout(hideControlsTimeout);
+		}
+	});
 </script>
 
 <svelte:window
@@ -112,6 +131,7 @@
 
 		cpaState.disable(keybind.canonicalPitch);
 	}}
+	onmousemove={handleMouseMove}
 />
 
 <Container>
@@ -121,17 +141,20 @@
 	</div>
 
 	<div class="bg-always-black relative rounded-md p-4" bind:this={fullscreenWrapper}>
-		<button
-			class="hover:text-primary border-always-gray-medium bg-surface-2 absolute top-4 right-4 z-50 flex items-center justify-center rounded-md border p-2"
-			aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-			onclick={toggleFullscreen}
-		>
-			<span
-				class={isFullscreen
-					? 'icon-[heroicons--arrows-pointing-in] size-5'
-					: 'icon-[heroicons--arrows-pointing-out] size-5'}
-			></span>
-		</button>
+		{#if showControls}
+			<button
+				class="hover:text-primary border-always-gray-medium bg-surface-2 absolute top-4 right-4 z-50 flex items-center justify-center rounded-md border p-2 transition-opacity"
+				aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+				onclick={toggleFullscreen}
+				transition:fade={{ duration: 150 }}
+			>
+				<span
+					class={isFullscreen
+						? 'icon-[heroicons--arrows-pointing-in] size-5'
+						: 'icon-[heroicons--arrows-pointing-out] size-5'}
+				></span>
+			</button>
+		{/if}
 
 		<div
 			class="flex h-[calc(100vh-250px)] flex-col gap-4 overflow-auto"
