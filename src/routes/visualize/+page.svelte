@@ -8,6 +8,7 @@
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import MovingNotesVisualization from '$lib/MovingNotesVisualization.svelte';
+	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
 	import { onMount } from 'svelte';
 
@@ -34,6 +35,11 @@
 			}
 		});
 	});
+
+	const numWhiteNotes =
+		PitchConstituents.letterBasedHeight('C', 8) - PitchConstituents.letterBasedHeight('A', 0) + 1;
+
+	let wrapperWidth: number = $state(1000);
 </script>
 
 <svelte:window
@@ -77,34 +83,36 @@
 		<p>(Supports MIDI)</p>
 	</div>
 
-	<div class="bg-always-black flex flex-col overflow-auto rounded-md p-4">
-		<MovingNotesVisualization
-			history={cpaHistoryState.cpaHistory}
-			whiteKeyWidth={27}
-			start={{ pitchClass: 'A', octave: 0 }}
-		/>
+	<div class="bg-always-black rounded-md p-4">
+		<div class="flex flex-col overflow-auto" bind:clientWidth={wrapperWidth}>
+			<MovingNotesVisualization
+				history={cpaHistoryState.cpaHistory}
+				whiteKeyWidth={wrapperWidth / numWhiteNotes}
+				start={{ pitchClass: 'A', octave: 0 }}
+			/>
 
-		<Keyboard
-			whiteKeyWidth={27}
-			noteNumber={88}
-			start={{ pitchClass: 'A', octave: 0 }}
-			highlighted={cpaState.selected}
-			onMouseDown={cpaState.enable}
-			onMouseEnter={(p, pressed) => {
-				if (pressed) {
-					cpaState.enable(p);
-				}
-			}}
-			onMouseUp={cpaState.disable}
-			onMouseOut={cpaState.disable}
-		>
-			{#snippet renderKeyText(cp)}
-				{@const keybind = getFormattedKeybindForPitch(cp)}
+			<Keyboard
+				whiteKeyWidth={wrapperWidth / numWhiteNotes}
+				noteNumber={88}
+				start={{ pitchClass: 'A', octave: 0 }}
+				highlighted={cpaState.selected}
+				onMouseDown={cpaState.enable}
+				onMouseEnter={(p, pressed) => {
+					if (pressed) {
+						cpaState.enable(p);
+					}
+				}}
+				onMouseUp={cpaState.disable}
+				onMouseOut={cpaState.disable}
+			>
+				{#snippet renderKeyText(cp)}
+					{@const keybind = getFormattedKeybindForPitch(cp)}
 
-				<div class="flex flex-col">
-					<span>{keybind}</span>
-				</div>
-			{/snippet}
-		</Keyboard>
+					<div class="flex flex-col">
+						<span>{keybind}</span>
+					</div>
+				{/snippet}
+			</Keyboard>
+		</div>
 	</div>
 </Container>
