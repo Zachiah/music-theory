@@ -52,6 +52,8 @@
 		PitchConstituents.letterBasedHeight('C', 8) - PitchConstituents.letterBasedHeight('A', 0) + 1;
 
 	let wrapperWidth: number = $state(1000);
+
+	const whiteKeyWidth = $derived(Math.max(wrapperWidth / numWhiteNotes, 25));
 </script>
 
 <svelte:window
@@ -131,12 +133,12 @@
 					<MovingNotesVisualization
 						{colorScheme}
 						history={cpaHistoryState.cpaHistory}
-						whiteKeyWidth={wrapperWidth / numWhiteNotes}
+						{whiteKeyWidth}
 						start={{ pitchClass: 'A', octave: 0 }}
 					/>
 
 					<Keyboard
-						whiteKeyWidth={wrapperWidth / numWhiteNotes}
+						{whiteKeyWidth}
 						noteNumber={88}
 						start={{ pitchClass: 'A', octave: 0 }}
 						highlighted={cpaState.selected}
