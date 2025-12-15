@@ -1,6 +1,6 @@
 <script lang="ts" module>
-	export const vizColorSchemes = ['bw', 'rainbow', 'fire'] as const;
-	export type VizColorScheme = (typeof vizColorSchemes)[number];
+	export const vizThemes = ['bw', 'rainbow', 'fire'] as const;
+	export type VizThemeName = (typeof vizThemes)[number];
 </script>
 
 <script lang="ts">
@@ -17,12 +17,12 @@
 		history,
 		start: startNote,
 		whiteKeyWidth,
-		colorScheme
+		themeName
 	}: {
 		history: CpaHistoryItem[];
 		start: CanonicalPitch;
 		whiteKeyWidth: number;
-		colorScheme: VizColorScheme;
+		themeName: VizThemeName;
 	} = $props();
 
 	const minStart = $derived(Math.min(...history.map((h) => h.start), tickerState.tick));
@@ -31,9 +31,9 @@
 
 	const SPEED = 1 / 20;
 
-	type ColorScheme = { classes: string; styles: string };
+	type ThemeStyle = { classes: string; styles: string };
 
-	const colorSchemes: { [key in VizColorScheme]: (item: CpaHistoryItem) => ColorScheme } = {
+	const themeStyles: { [key in VizThemeName]: (item: CpaHistoryItem) => ThemeStyle } = {
 		bw: (item) => {
 			const flat = item.pitch.pitchClass.endsWith('b');
 
@@ -95,7 +95,7 @@
 			{@const outOfView = (tickerState.tick - minStart - end) * SPEED > availableElementHeight}
 
 			{#if !outOfView}
-				{@const c = colorSchemes[colorScheme](item)}
+				{@const c = themeStyles[themeName](item)}
 				<div
 					class="absolute flex items-center justify-center"
 					style="width: {whiteKeyWidth}px; bottom: -{(start + length) * SPEED}px; height: {length *

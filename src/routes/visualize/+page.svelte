@@ -9,8 +9,8 @@
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import MovingNotesVisualization, {
-		vizColorSchemes,
-		type VizColorScheme
+		vizThemes,
+		type VizThemeName
 	} from '$lib/MovingNotesVisualization.svelte';
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
@@ -20,7 +20,7 @@
 
 	let audible = $state(true);
 	let showKeybinds = $state(true);
-	let colorScheme: VizColorScheme = $state('bw');
+	let themeName: VizThemeName = $state('bw');
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaHistoryState = createCpaHistoryState(20000);
@@ -101,9 +101,9 @@
 		{#snippet actions()}
 			<div class="w-32">
 				<FancySelect
-					bind:value={colorScheme}
-					placeholder="Color Scheme"
-					options={vizColorSchemes.map((s) => ({ label: s, value: s }))}
+					bind:value={themeName}
+					placeholder="Theme"
+					options={vizThemes.map((s) => ({ label: s, value: s }))}
 				/>
 			</div>
 			<Button
@@ -131,7 +131,7 @@
 					bind:clientWidth={wrapperWidth}
 				>
 					<MovingNotesVisualization
-						{colorScheme}
+						{themeName}
 						history={cpaHistoryState.cpaHistory}
 						{whiteKeyWidth}
 						start={{ pitchClass: 'A', octave: 0 }}
