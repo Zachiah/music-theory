@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	export const vizColorSchemes = ['bw', 'rainbow'] as const;
+	export const vizColorSchemes = ['bw', 'rainbow', 'fire'] as const;
 	export type VizColorScheme = (typeof vizColorSchemes)[number];
 </script>
 
@@ -57,6 +57,13 @@
 			return {
 				classes: 'from-(--b) to-always-white bg-linear-to-tr',
 				styles: `--b: ${rainbowColors[item.start % rainbowColors.length]}`
+			};
+		},
+		fire: (item) => {
+			const fireColors = ['#FF4500', '#FF8C00', '#FFFF00'];
+			return {
+				classes: 'from-warning via-danger via-30% to-transparent bg-linear-to-tr',
+				styles: `--b: ${fireColors[item.start % fireColors.length]}`
 			};
 		}
 	};
