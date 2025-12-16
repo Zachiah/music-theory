@@ -7,6 +7,7 @@
 	import Keyboard from '$lib/Keyboard.svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 	import { Pitch } from '$lib/Pitch';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import SubContainer from '$lib/SubContainer.svelte';
@@ -189,7 +190,9 @@
 				onClick={cpaState.toggle}
 			>
 				{#snippet renderKeyText(cp)}
-					<div class="text-sm">{Pitch.print(Pitch.fromCanonical(cp))}</div>
+					<div class="text-sm">
+						{Pitch.print(Pitch.fromCanonical(cp), musicDisplayOptions.data)}
+					</div>
 				{/snippet}
 			</Keyboard>
 		</SubContainer>

@@ -1,10 +1,10 @@
-import type { CanonicalPitch } from './CanonicalPitch';
-import { CanonicalPitchClass } from './CanonicalPitchClass';
-import type { GuessedChord } from './guessChord';
-import type { Pitch } from './Pitch';
-import { PitchClass } from './PitchClass';
-import { PitchConstituents } from './PitchConstituents';
-import { modWithNegative } from './util';
+import type { CanonicalPitch } from '$lib/CanonicalPitch';
+import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
+import type { Pitch } from '$lib/Pitch';
+import { PitchClass } from '$lib/PitchClass';
+import { PitchConstituents } from '$lib/PitchConstituents';
+import { modWithNegative } from '$lib/util';
+import type { Chord } from './chord';
 
 export type ScaleDegree =
 	| '1'
@@ -55,9 +55,11 @@ export namespace ScaleDegree {
 
 export const categorizeChordNotes = (
 	pitches: CanonicalPitchClass[],
-	guessedChord: GuessedChord
+	guessedChord: Chord
 ): ScaleDegree[] => {
-	const rootDistance = CanonicalPitchClass.distanceFromC(guessedChord.root);
+	const rootDistance = CanonicalPitchClass.distanceFromC(
+		PitchClass.toCanonicalPitchClass(guessedChord.root)
+	);
 	return pitches.map<ScaleDegree>((pitch) => {
 		const distance = modWithNegative(
 			CanonicalPitchClass.distanceFromC(pitch) - rootDistance,
@@ -172,7 +174,7 @@ export const getModifiedOctave = (
 
 export const normalizeChordPitchesWithOctaves = (
 	pitches: CanonicalPitch[],
-	guessedChord: GuessedChord
+	guessedChord: Chord
 ): { pitch: Pitch; scaleDegree: ScaleDegree }[] => {
 	const categorized = categorizeChordNotes(
 		pitches.map((p) => p.pitchClass),
@@ -180,7 +182,7 @@ export const normalizeChordPitchesWithOctaves = (
 	);
 
 	return categorized.map((c, idx) => {
-		const p = scaleDegreeToPitchClass(c, PitchClass.fromCanonicalPitchClass(guessedChord.root));
+		const p = scaleDegreeToPitchClass(c, guessedChord.root);
 		const pitch: Pitch = {
 			pitchClass: p,
 			octave: getModifiedOctave(

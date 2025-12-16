@@ -7,6 +7,10 @@ export type CanonicalPitch = {
 };
 
 export namespace CanonicalPitch {
+	export const id = (p: CanonicalPitch): string => {
+		return `${p.pitchClass}${p.octave}`;
+	};
+
 	export const applyOffset = (p: CanonicalPitch, offset: number): CanonicalPitch => {
 		if (isNaN(offset)) {
 			throw new Error('Offset was NaN');

@@ -23,7 +23,7 @@ export class Playback {
 		if (!this.#engine) {
 			throw new Error('Playback engine not initialized');
 		}
-		const node = this.#engine.play(`${pitch.pitchClass}${pitch.octave}`, time, { gain: 1 });
+		const node = this.#engine.play(CanonicalPitch.id(pitch), time, { gain: 1 });
 		return (stopAt) => {
 			node.stop(stopAt);
 		};

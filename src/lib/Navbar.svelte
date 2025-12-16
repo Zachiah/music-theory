@@ -8,7 +8,8 @@
 		{ href: '/scale-info', label: 'Scale Info' },
 		{ href: '/chord-identifier/keyboard', label: 'Identify' },
 		{ href: '/games', label: 'Games' },
-		{ href: '/visualize', label: 'Visualize' }
+		{ href: '/visualize', label: 'Visualize' },
+		{ href: '/chord-lookup', label: 'Chord Lookup' }
 	];
 
 	let mobileMenuOpen = $state(false);

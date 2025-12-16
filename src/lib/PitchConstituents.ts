@@ -1,3 +1,4 @@
+import { MusicDisplayOptions } from './musicDisplayOptions';
 import { modWithNegative } from './util';
 
 export namespace PitchConstituents {
@@ -56,15 +57,19 @@ export namespace PitchConstituents {
 		}, 0);
 	};
 
-	export const printModifiers = (modifier: number): string => {
+	export const printModifiers = (modifier: number, options: MusicDisplayOptions): string => {
 		const m = Math.abs(modifier);
 
 		const doubles = Math.floor(m / 2);
 		const single = m % 2;
 
 		const flats = modifier < 0;
-		const doubleChar = flats ? '𝄫' : '𝄪';
-		const singleChar = flats ? '♭' : '♯';
+		const doubleChar = flats
+			? MusicDisplayOptions.doubleFlat(options)
+			: MusicDisplayOptions.doubleSharp(options);
+		const singleChar = flats
+			? MusicDisplayOptions.lowerFlat(options)
+			: MusicDisplayOptions.sharp(options);
 
 		return `${doubleChar.repeat(doubles)}${singleChar.repeat(single)}`;
 	};

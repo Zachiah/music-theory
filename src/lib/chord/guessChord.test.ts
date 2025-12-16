@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { guessChord, GuessedChord } from './guessChord';
-import type { CanonicalPitchClass } from './CanonicalPitchClass';
+import { guessChord } from './guessChord';
+import type { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
+import { Chord } from './chord';
+import type { MusicDisplayOptions } from '$lib/musicDisplayOptions';
 
 describe(guessChord, () => {
-	const defaultOptions: GuessedChord.PrintingOptions = {
+	const defaultOptions: MusicDisplayOptions = {
 		sixNine: true,
 		six: true,
 		flats: 'b',
@@ -20,11 +22,9 @@ describe(guessChord, () => {
 	const t = (
 		notes: CanonicalPitchClass[],
 		output: string,
-		options: Partial<GuessedChord.PrintingOptions> = {}
+		options: Partial<MusicDisplayOptions> = {}
 	) => {
-		expect(GuessedChord.print(guessChord(notes), { ...defaultOptions, ...options })).toEqual(
-			output
-		);
+		expect(Chord.print(guessChord(notes), { ...defaultOptions, ...options })).toEqual(output);
 	};
 
 	it('should accurately handle simple triads', () => {

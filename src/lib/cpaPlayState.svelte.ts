@@ -10,17 +10,17 @@ export const createCpaPlayState = (playback: Playback) => {
 		if (change.tag === 'enable') {
 			const disable = playback.playPitch(change.pitch, playback.now());
 
-			const printed = Pitch.print(Pitch.fromCanonical(change.pitch));
+			const id = Pitch.id(Pitch.fromCanonical(change.pitch));
 
-			endSounds.set(printed, () => disable(playback.now()));
+			endSounds.set(id, () => disable(playback.now()));
 			return;
 		}
 
 		if (change.tag === 'disable') {
-			const printed = Pitch.print(Pitch.fromCanonical(change.pitch));
+			const id = Pitch.id(Pitch.fromCanonical(change.pitch));
 
-			endSounds.get(printed)?.();
-			endSounds.delete(printed);
+			endSounds.get(id)?.();
+			endSounds.delete(id);
 
 			return;
 		}

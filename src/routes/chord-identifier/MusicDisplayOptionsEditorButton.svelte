@@ -1,16 +1,16 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import type { GuessedChord } from '$lib/guessChord';
 	import ModalDialogBase from '$lib/ModalDialogBase.svelte';
 	import ModalDialogCard from '$lib/ModalDialogCard.svelte';
 	import FancySelect from '$lib/FancySelect.svelte';
+	import type { MusicDisplayOptions } from '$lib/musicDisplayOptions';
 
 	const {
 		options,
 		onChange
 	}: {
-		options: GuessedChord.PrintingOptions;
-		onChange(o: GuessedChord.PrintingOptions): void;
+		options: MusicDisplayOptions;
+		onChange(o: MusicDisplayOptions): void;
 	} = $props();
 
 	let open = $state(false);
@@ -50,7 +50,7 @@
 				placeholder="Flats"
 				bind:value={
 					() => options.flats,
-					(v) => onChange({ ...options, flats: v as GuessedChord.PrintingOptions['flats'] })
+					(v) => onChange({ ...options, flats: v as MusicDisplayOptions['flats'] })
 				}
 				options={[
 					{ value: 'b', label: 'b' },
@@ -62,7 +62,7 @@
 				placeholder="Sharps"
 				bind:value={
 					() => options.sharps,
-					(v) => onChange({ ...options, sharps: v as GuessedChord.PrintingOptions['sharps'] })
+					(v) => onChange({ ...options, sharps: v as MusicDisplayOptions['sharps'] })
 				}
 				options={[
 					{ value: '#', label: '#' },
@@ -74,7 +74,7 @@
 				placeholder="Major"
 				bind:value={
 					() => options.major,
-					(v) => onChange({ ...options, major: v as GuessedChord.PrintingOptions['major'] })
+					(v) => onChange({ ...options, major: v as MusicDisplayOptions['major'] })
 				}
 				options={[
 					{ value: 'maj', label: 'maj' },
@@ -86,7 +86,7 @@
 				placeholder="Minor"
 				bind:value={
 					() => options.minor,
-					(v) => onChange({ ...options, minor: v as GuessedChord.PrintingOptions['minor'] })
+					(v) => onChange({ ...options, minor: v as MusicDisplayOptions['minor'] })
 				}
 				options={[
 					{ value: 'm', label: 'm' },
@@ -98,8 +98,7 @@
 				placeholder="Diminished"
 				bind:value={
 					() => options.diminished,
-					(v) =>
-						onChange({ ...options, diminished: v as GuessedChord.PrintingOptions['diminished'] })
+					(v) => onChange({ ...options, diminished: v as MusicDisplayOptions['diminished'] })
 				}
 				options={[
 					{ value: 'dim', label: 'dim' },
@@ -111,7 +110,7 @@
 				placeholder="Augmented"
 				bind:value={
 					() => options.augmented,
-					(v) => onChange({ ...options, augmented: v as GuessedChord.PrintingOptions['augmented'] })
+					(v) => onChange({ ...options, augmented: v as MusicDisplayOptions['augmented'] })
 				}
 				options={[
 					{ value: 'aug', label: 'aug' },
@@ -127,7 +126,7 @@
 					(v) =>
 						onChange({
 							...options,
-							halfDiminished: v as GuessedChord.PrintingOptions['halfDiminished']
+							halfDiminished: v as MusicDisplayOptions['halfDiminished']
 						})
 				}
 				options={[

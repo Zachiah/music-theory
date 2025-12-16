@@ -6,6 +6,7 @@
 <script lang="ts">
 	import type { CanonicalPitch } from './CanonicalPitch';
 	import type { CpaHistoryItem } from './cpaHistoryState.svelte';
+	import { musicDisplayOptions } from './musicDisplayOptionsState.svelte';
 	import { Pitch } from './Pitch';
 	import { PitchClass } from './PitchClass';
 	import { PitchConstituents } from './PitchConstituents';
@@ -74,7 +75,7 @@
 		class="absolute left-0 h-full w-full"
 		style="bottom: {(tickerState.tick - minStart) * SPEED}px;"
 	>
-		{#each history as item (`${item.start}${Pitch.print(Pitch.fromCanonical(item.pitch))}`)}
+		{#each history as item (`${item.start}${Pitch.print(Pitch.fromCanonical(item.pitch), musicDisplayOptions.data)}`)}
 			{@const flat = item.pitch.pitchClass.endsWith('b')}
 			{@const absoluteLetterHeight = PitchConstituents.letterBasedHeight(
 				PitchClass.fromCanonicalPitchClass(item.pitch.pitchClass).letter,

@@ -1,16 +1,14 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
-	import { printingOptions } from '$lib/printingOptionsState.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
-	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
-	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
+	import { guessChord, guessChordNoInversions } from '$lib/chord/guessChord';
 	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
-	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
+	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/chord/categorizeChordNotes';
 	import { playback } from '$lib/Playback';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
@@ -18,6 +16,10 @@
 	import SubContainer from '$lib/SubContainer.svelte';
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
+	import { Chord } from '$lib/chord/chord';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
+	import { PitchClass } from '$lib/PitchClass';
+	import MusicDisplayOptionsEditorButton from '../MusicDisplayOptionsEditorButton.svelte';
 
 	let allowInversions = $state(true);
 
@@ -31,7 +33,7 @@
 		const pitchClasses = cpaState.selected.map((p) => p.pitchClass);
 		const guessedChord = allowInversions
 			? guessChord(pitchClasses)
-			: guessChordNoInversions(pitchClasses);
+			: guessChordNoInversions(pitchClasses, pitchClasses[0]);
 
 		return guessedChord;
 	});
@@ -76,10 +78,10 @@
 
 		<span class="grow"></span>
 
-		<ChordPrintingOptionsEditorButton
-			options={printingOptions.data}
+		<MusicDisplayOptionsEditorButton
+			options={musicDisplayOptions.data}
 			onChange={(v) => {
-				printingOptions.data = v;
+				musicDisplayOptions.data = v;
 			}}
 		/>
 		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
@@ -101,7 +103,7 @@
 				{#if foundNormalized}
 					<div class="flex flex-col">
 						<span>{ScaleDegree.print(foundNormalized.scaleDegree)}</span>
-						<span>{Pitch.print(foundNormalized.pitch)}</span>
+						<span>{Pitch.print(foundNormalized.pitch, musicDisplayOptions.data)}</span>
 					</div>
 				{/if}
 			{/snippet}
@@ -115,13 +117,13 @@
 
 		<SubContainer class="flex items-center justify-center">
 			<CircleOfFifths
-				highlighted={guessedChord?.root}
+				highlighted={guessedChord ? PitchClass.toCanonicalPitchClass(guessedChord.root) : undefined}
 				selected={normalized.map((n) => n.pitch.pitchClass)}
 			/>
 		</SubContainer>
 
 		<SubContainer el="p" class="flex items-center justify-center text-3xl">
-			&nbsp;{guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''}
+			&nbsp;{guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''}
 		</SubContainer>
 	</div>
 </Container>

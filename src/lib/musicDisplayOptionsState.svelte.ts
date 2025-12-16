@@ -1,5 +1,5 @@
-import { GuessedChord } from './guessChord';
-import { createLocalStorageState } from './localStorageState.svelte';
+import { createLocalStorageState } from '$lib/localStorageState.svelte';
+import { MusicDisplayOptions } from './musicDisplayOptions';
 
 type PrintingOptionsV1 = {
 	sixNine: boolean;
@@ -20,7 +20,7 @@ type PrintingOptionsV2 = {
 	slashNotation: boolean;
 };
 
-const convertOld = (old: { version: number; value: unknown }): GuessedChord.PrintingOptions => {
+const convertOld = (old: { version: number; value: unknown }): MusicDisplayOptions => {
 	if (old.version === 1) {
 		const v = old.value as PrintingOptionsV1;
 
@@ -35,7 +35,7 @@ const convertOld = (old: { version: number; value: unknown }): GuessedChord.Prin
 	if (old.version === 2) {
 		const v = old.value as PrintingOptionsV2;
 
-		const o: GuessedChord.PrintingOptions = {
+		const o: MusicDisplayOptions = {
 			sixNine: v.sixNine,
 			six: v.six,
 			flats: v.properFlats ? '♭' : 'b',
@@ -52,28 +52,15 @@ const convertOld = (old: { version: number; value: unknown }): GuessedChord.Prin
 	}
 
 	if (old.version === 3) {
-		return old.value as GuessedChord.PrintingOptions;
+		return old.value as MusicDisplayOptions;
 	}
 
-	return defaults;
+	return MusicDisplayOptions.defaultOptions;
 };
 
-const defaults: GuessedChord.PrintingOptions = {
-	six: true,
-	sixNine: true,
-	flats: '♭',
-	sharps: '♯',
-	diminished: 'dim',
-	augmented: 'aug',
-	minor: 'm',
-	major: 'maj',
-	halfDiminished: 'm7b5',
-	slashNotation: true
-};
-
-export const printingOptions = createLocalStorageState<GuessedChord.PrintingOptions>(
+export const musicDisplayOptions = createLocalStorageState<MusicDisplayOptions>(
 	'printingOptions',
 	3,
-	defaults,
+	MusicDisplayOptions.defaultOptions,
 	convertOld
 );

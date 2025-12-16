@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CanonicalPitchClass } from './CanonicalPitchClass';
+	import { musicDisplayOptions } from './musicDisplayOptionsState.svelte';
 	import { PitchClass } from './PitchClass';
 
 	const { highlighted, selected }: { highlighted?: CanonicalPitchClass; selected: PitchClass[] } =
@@ -32,7 +33,10 @@
 						class:bg-surface-1={!(highlighted === p) && !!foundSelected}
 						class:bg-primary={highlighted === p}
 					>
-						{PitchClass.print(foundSelected ?? PitchClass.fromCanonicalPitchClass(p))}
+						{PitchClass.print(
+							foundSelected ?? PitchClass.fromCanonicalPitchClass(p),
+							musicDisplayOptions.data
+						)}
 					</div>
 				</div>
 			</div>

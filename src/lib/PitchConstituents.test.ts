@@ -1,14 +1,27 @@
 import { describe, it, expect } from 'vitest';
 
 import { PitchConstituents } from './PitchConstituents';
+import { MusicDisplayOptions } from './musicDisplayOptions';
 
 describe('PitchConstituents', () => {
 	it('Should properly generate modifiers', () => {
-		expect(PitchConstituents.printModifiers(4)).toBe('𝄪𝄪');
-		expect(PitchConstituents.printModifiers(-4)).toBe('𝄫𝄫');
-		expect(PitchConstituents.printModifiers(-3)).toBe('𝄫♭');
-		expect(PitchConstituents.printModifiers(3)).toBe('𝄪♯');
-		expect(PitchConstituents.printModifiers(0)).toBe('');
+		const options = MusicDisplayOptions.defaultOptions;
+		expect(PitchConstituents.printModifiers(4, options)).toBe('𝄪𝄪');
+		expect(PitchConstituents.printModifiers(-4, options)).toBe('𝄫𝄫');
+		expect(PitchConstituents.printModifiers(-3, options)).toBe('𝄫♭');
+		expect(PitchConstituents.printModifiers(3, options)).toBe('𝄪♯');
+		expect(PitchConstituents.printModifiers(0, options)).toBe('');
+
+		const otherOptions: MusicDisplayOptions = {
+			...MusicDisplayOptions.defaultOptions,
+			flats: 'b',
+			sharps: '#'
+		};
+		expect(PitchConstituents.printModifiers(4, otherOptions)).toBe('####');
+		expect(PitchConstituents.printModifiers(-4, otherOptions)).toBe('bbbb');
+		expect(PitchConstituents.printModifiers(-3, otherOptions)).toBe('bbb');
+		expect(PitchConstituents.printModifiers(3, otherOptions)).toBe('###');
+		expect(PitchConstituents.printModifiers(0, otherOptions)).toBe('');
 	});
 
 	it('Should properly parse modifier strings', () => {

@@ -1,10 +1,8 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
-	import { printingOptions } from '$lib/printingOptionsState.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
-	import { guessChord, guessChordNoInversions, GuessedChord } from '$lib/guessChord';
+	import { guessChord, guessChordNoInversions } from '$lib/chord/guessChord';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
-	import ChordPrintingOptionsEditorButton from '../ChordPrintingOptionsEditorButton.svelte';
 	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import Toggle from '$lib/Toggle.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
@@ -14,8 +12,11 @@
 	import Button from '$lib/Button.svelte';
 	import { playback } from '$lib/Playback';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
-	import { normalizeChordPitchesWithOctaves } from '$lib/categorizeChordNotes';
+	import { normalizeChordPitchesWithOctaves } from '$lib/chord/categorizeChordNotes';
 	import SubContainer from '$lib/SubContainer.svelte';
+	import { Chord } from '$lib/chord/chord';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
+	import MusicDisplayOptionsEditorButton from '../MusicDisplayOptionsEditorButton.svelte';
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -84,11 +85,13 @@
 
 		const pitchClasses = pitches.map((pitch) => pitch.pitchClass);
 
-		return allowInversions ? guessChord(pitchClasses) : guessChordNoInversions(pitchClasses);
+		return allowInversions
+			? guessChord(pitchClasses)
+			: guessChordNoInversions(pitchClasses, pitchClasses[0]);
 	});
 
 	const chordString = $derived(
-		guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''
+		guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''
 	);
 
 	let vertical = $state(false);
@@ -136,10 +139,10 @@
 			}}
 		/>
 
-		<ChordPrintingOptionsEditorButton
-			options={printingOptions.data}
+		<MusicDisplayOptionsEditorButton
+			options={musicDisplayOptions.data}
 			onChange={(v) => {
-				printingOptions.data = v;
+				musicDisplayOptions.data = v;
 			}}
 		/>
 

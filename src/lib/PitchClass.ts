@@ -1,6 +1,7 @@
 import { PitchConstituents } from './PitchConstituents';
 import { CanonicalPitchClass } from './CanonicalPitchClass';
 import { modWithNegative } from './util';
+import { MusicDisplayOptions } from './musicDisplayOptions';
 
 export type PitchClass = {
 	letter: PitchConstituents.LetterName;
@@ -35,12 +36,7 @@ export namespace PitchClass {
 						? offsetNegative
 						: offsetPositive;
 
-		const pitch = create(`${letterName}${PitchConstituents.printModifiers(offset)}`);
-		if (pitch === null) {
-			throw new Error('Error creating pitch');
-		}
-
-		return pitch;
+		return { letter: letterName, modifier: offset };
 	};
 
 	export const create = (s: string): PitchClass | null => {
@@ -60,8 +56,12 @@ export namespace PitchClass {
 		return { letter, modifier };
 	};
 
-	export const print = (n: PitchClass) => {
-		return `${n.letter}${PitchConstituents.printModifiers(n.modifier)}`;
+	export const print = (n: PitchClass, options: MusicDisplayOptions) => {
+		return `${n.letter}${PitchConstituents.printModifiers(n.modifier, options)}`;
+	};
+
+	export const id = (n: PitchClass) => {
+		return `${n.letter}${PitchConstituents.printModifiers(n.modifier, { ...MusicDisplayOptions.defaultOptions, flats: 'b', sharps: '#' })}`;
 	};
 
 	export const toCanonicalPitchClass = (p: PitchClass): CanonicalPitchClass => {

@@ -6,9 +6,9 @@ import {
 	scaleDegreeToPitchClass,
 	type ScaleDegree
 } from './categorizeChordNotes';
-import type { CanonicalPitchClass } from './CanonicalPitchClass';
+import type { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 import { guessChord } from './guessChord';
-import { PitchClass } from './PitchClass';
+import { PitchClass } from '$lib/PitchClass';
 
 describe(categorizeChordNotes, () => {
 	it('should categorize chord notes', () => {

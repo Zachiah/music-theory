@@ -90,7 +90,7 @@ export const getVisibleLinePoses = (pitches: Pitch[]): StaffLine[] => {
 		: [];
 
 	const printedPitches = letters.map((p) =>
-		Pitch.print({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } })
+		Pitch.id({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } })
 	);
 	const showMiddle =
 		printedPitches.includes('C4') ||

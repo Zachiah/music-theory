@@ -15,6 +15,7 @@
 		TREBLE_BOTTOM_POS
 	} from './staffUtil';
 	import WholeNote from './WholeNote.svelte';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 
 	const { notes }: { notes: Pitch[] } = $props();
 
@@ -62,7 +63,7 @@
 			style="--pos: {letterHeight - STAFF_LOW_POS}; --alignment: {alignment};"
 		>
 			<div class="note-modifier">
-				{PitchConstituents.printModifiers(pitch.pitchClass.modifier)}
+				{PitchConstituents.printModifiers(pitch.pitchClass.modifier, musicDisplayOptions.data)}
 				{#if natural}♮{/if}
 			</div>
 			<WholeNote />

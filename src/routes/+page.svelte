@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
-	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/categorizeChordNotes';
+	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/chord/categorizeChordNotes';
 	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
 	import Container from '$lib/Container.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
-	import { guessChord, GuessedChord } from '$lib/guessChord';
+	import { guessChord } from '$lib/chord/guessChord';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import {
 		KEYBOARD_LENGTH,
@@ -17,10 +17,12 @@
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { Pitch } from '$lib/Pitch';
 	import { playback } from '$lib/Playback';
-	import { printingOptions } from '$lib/printingOptionsState.svelte';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
 	import SubContainer from '$lib/SubContainer.svelte';
 	import { onMount } from 'svelte';
+	import { Chord } from '$lib/chord/chord';
+	import { PitchClass } from '$lib/PitchClass';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaState = createCpaState({ onChange: cpaPlayState.onCpaChangePlay });
@@ -115,7 +117,7 @@
 				<div class="flex flex-col">
 					{#if foundNormalized}
 						<span class="font-serif">{ScaleDegree.print(foundNormalized.scaleDegree)}</span>
-						<span>{Pitch.print(foundNormalized.pitch)}</span>
+						<span>{Pitch.print(foundNormalized.pitch, musicDisplayOptions.data)}</span>
 					{/if}
 					<span class="font-mono">{keybind}</span>
 				</div>
@@ -130,13 +132,13 @@
 
 		<SubContainer class="flex items-center justify-center">
 			<CircleOfFifths
-				highlighted={guessedChord?.root}
+				highlighted={guessedChord ? PitchClass.toCanonicalPitchClass(guessedChord.root) : undefined}
 				selected={normalized.map((n) => n.pitch.pitchClass)}
 			/>
 		</SubContainer>
 
 		<SubContainer el="p" class="flex items-center justify-center text-3xl">
-			&nbsp;{guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''}
+			&nbsp;{guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''}
 		</SubContainer>
 	</div>
 </Container>

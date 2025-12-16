@@ -1,4 +1,5 @@
 import { CanonicalPitch } from './CanonicalPitch';
+import type { MusicDisplayOptions } from './musicDisplayOptions';
 import { PitchClass } from './PitchClass';
 
 export type Pitch = {
@@ -41,7 +42,11 @@ export namespace Pitch {
 		};
 	};
 
-	export const print = (p: Pitch) => {
-		return `${PitchClass.print(p.pitchClass)}${p.octave}`;
+	export const print = (p: Pitch, options: MusicDisplayOptions) => {
+		return `${PitchClass.print(p.pitchClass, options)}${p.octave}`;
+	};
+
+	export const id = (p: Pitch): string => {
+		return `${PitchClass.id(p.pitchClass)}${p.octave}`;
 	};
 }

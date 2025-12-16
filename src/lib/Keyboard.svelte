@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { CanonicalPitch } from './CanonicalPitch';
 	import { Pitch } from './Pitch';
+	import { musicDisplayOptions } from './musicDisplayOptionsState.svelte';
 
 	const {
 		start,
@@ -66,7 +67,7 @@
 
 	const highlightedStr = $derived(
 		highlighted
-			.map((hp) => Pitch.print(Pitch.fromCanonical(hp)))
+			.map((hp) => Pitch.id(Pitch.fromCanonical(hp)))
 			.sort()
 			.join(',')
 	);
@@ -75,7 +76,7 @@
 {#snippet whiteKey(props: KeySnippetProps)}
 	<!-- svelte-ignore a11y_mouse_events_have_key_events -->
 	<button
-		aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(props.pitch))}`}
+		aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(props.pitch), musicDisplayOptions.data)}`}
 		class="text-always-black border-always-gray-medium flex h-full w-full items-end justify-center rounded-b-md border pb-2"
 		class:bg-primary={props.highlighted}
 		class:bg-always-white={!props.highlighted}
@@ -92,7 +93,7 @@
 {#snippet blackKey(props: KeySnippetProps)}
 	<!-- svelte-ignore a11y_mouse_events_have_key_events -->
 	<button
-		aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(props.pitch))}`}
+		aria-label={`Toggle note ${Pitch.print(Pitch.fromCanonical(props.pitch), musicDisplayOptions.data)}`}
 		class="text-always-white border-always-gray-medium absolute top-0 right-0 z-20 flex h-[calc(9*var(--h))] w-[calc(7/12*var(--w))] translate-x-1/2 transform items-end justify-center rounded-b-md border-2 pb-2"
 		class:bg-primary={props.highlighted}
 		class:bg-always-black={!props.highlighted}
@@ -107,16 +108,16 @@
 {/snippet}
 
 <div class="flex w-min" style="--w: {whiteKeyWidth}px; --h: {(5 / 16) * whiteKeyWidth}px">
-	{#each noteData as nd (Pitch.print(Pitch.fromCanonical(nd.white)))}
+	{#each noteData as nd (Pitch.id(Pitch.fromCanonical(nd.white)))}
 		<div class="relative h-[calc(15*var(--h))] w-(--w) shrink-0 grow-0">
 			{@render whiteKey({
 				pitch: nd.white,
-				highlighted: highlightedStr.includes(Pitch.print(Pitch.fromCanonical(nd.white)))
+				highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.white)))
 			})}
 			{#if nd.black}
 				{@render blackKey({
 					pitch: nd.black,
-					highlighted: highlightedStr.includes(Pitch.print(Pitch.fromCanonical(nd.black)))
+					highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.black)))
 				})}
 			{/if}
 		</div>

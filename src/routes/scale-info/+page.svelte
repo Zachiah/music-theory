@@ -10,6 +10,7 @@
 	import FancyInput from '$lib/FancyInput.svelte';
 	import { playback } from '$lib/Playback';
 	import SubContainer from '$lib/SubContainer.svelte';
+	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 
 	let typedPitchString = $state('C');
 	const typedPitch = $derived(PitchClass.create(typedPitchString));
@@ -51,7 +52,7 @@
 	<SubContainer el="article" padding="text" class="flex flex-col gap-2">
 		<div class="flex items-center gap-2">
 			<h2 class="text-2xl">
-				{PitchClass.print(pitch)}
+				{PitchClass.print(pitch, musicDisplayOptions.data)}
 				{ScaleName.print(scale.names[0])}
 			</h2>
 			{#if scale.names.length > 1}
@@ -90,7 +91,7 @@
 
 			<span
 				>{Intervals.getPitches(scale.intervals, pitch)
-					.map((n) => PitchClass.print(n))
+					.map((n) => PitchClass.print(n, musicDisplayOptions.data))
 					.join(', ')}</span
 			>
 		</div>

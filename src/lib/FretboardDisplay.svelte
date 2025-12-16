@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CanonicalPitch } from './CanonicalPitch';
 	import type { Fretboard } from './Fretboard';
+	import { musicDisplayOptions } from './musicDisplayOptionsState.svelte';
 	import { Pitch } from './Pitch';
 	import SubContainer from './SubContainer.svelte';
 
@@ -100,7 +101,7 @@
 									class:text-text-disabled={fretActivation === 'disabled'}
 									class:bg-primary={fretActivation === 'active'}
 								>
-									{Pitch.print(Pitch.fromCanonical(pitch))}
+									{Pitch.print(Pitch.fromCanonical(pitch), musicDisplayOptions.data)}
 								</div>
 							{/if}
 						</button>
