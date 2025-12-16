@@ -103,7 +103,8 @@ export namespace Chord {
 		].filter((m) => m);
 
 		const slashModifier =
-			options.slashNotation && c.originalRoot !== c.root
+			options.slashNotation &&
+			PitchClass.toCanonicalPitchClass(c.originalRoot) !== PitchClass.toCanonicalPitchClass(c.root)
 				? ` / ${PitchClass.print(c.originalRoot, options)}`
 				: ``;
 
