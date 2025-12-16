@@ -36,10 +36,6 @@
 		return guessedChord;
 	});
 
-	const chordString = $derived(
-		guessedChord === null ? '' : GuessedChord.print(guessedChord, printingOptions.data)
-	);
-
 	const onMIDIMessage = (event: MIDIMessageEvent) => {
 		const message = decodeMIDIMessage(event);
 
@@ -112,20 +108,20 @@
 		</Keyboard>
 	</SubContainer>
 
-	<div class="flex gap-4">
-		<SubContainer>
-			<GrandStaff notes={guessedChord ? normalized.map((n) => n.pitch) : []} />
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+		<SubContainer class="flex items-center justify-center">
+			<GrandStaff notes={cpaState.selected.map((p) => Pitch.fromCanonical(p))} />
 		</SubContainer>
 
-		<SubContainer>
+		<SubContainer class="flex items-center justify-center">
 			<CircleOfFifths
 				highlighted={guessedChord?.root}
 				selected={normalized.map((n) => n.pitch.pitchClass)}
 			/>
 		</SubContainer>
 
-		<SubContainer el="p" class="grow text-3xl">
-			&nbsp;{chordString}
+		<SubContainer el="p" class="flex items-center justify-center text-3xl">
+			&nbsp;{guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''}
 		</SubContainer>
 	</div>
 </Container>

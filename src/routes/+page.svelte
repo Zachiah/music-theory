@@ -123,19 +123,19 @@
 		</Keyboard>
 	</SubContainer>
 
-	<div class="flex gap-4">
-		<SubContainer>
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+		<SubContainer class="flex items-center justify-center">
 			<GrandStaff notes={cpaState.selected.map((p) => Pitch.fromCanonical(p))} />
 		</SubContainer>
 
-		<SubContainer>
+		<SubContainer class="flex items-center justify-center">
 			<CircleOfFifths
 				highlighted={guessedChord?.root}
 				selected={normalized.map((n) => n.pitch.pitchClass)}
 			/>
 		</SubContainer>
 
-		<SubContainer el="p" class="grow text-3xl">
+		<SubContainer el="p" class="flex items-center justify-center text-3xl">
 			&nbsp;{guessedChord ? GuessedChord.print(guessedChord, printingOptions.data) : ''}
 		</SubContainer>
 	</div>

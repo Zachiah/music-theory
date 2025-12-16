@@ -22,7 +22,7 @@
 </script>
 
 <div class="relative size-[150px]" style="--n: {circle.length}">
-	<div class="inner-wrapper relative">
+	<div class="inner-wrapper">
 		{#each circle as p, i (p)}
 			{@const foundSelected = selected.find((s) => PitchClass.toCanonicalPitchClass(s) === p)}
 			<div class="item" style="--i: {i}">
@@ -47,7 +47,7 @@
 		left: 50%;
 		translate: -50% -50%;
 
-		--size: 140px;
+		--size: 130px;
 
 		width: var(--size);
 		height: var(--size);
