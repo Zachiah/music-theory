@@ -125,7 +125,7 @@
 
 	<div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
 		<SubContainer class="flex items-center justify-center">
-			<GrandStaff notes={cpaState.selected.map((p) => Pitch.fromCanonical(p))} />
+			<GrandStaff notes={normalized.map((p) => p.pitch)} />
 		</SubContainer>
 
 		<SubContainer class="flex items-center justify-center">
