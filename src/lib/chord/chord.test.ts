@@ -87,5 +87,14 @@ describe(Chord, () => {
 				pitch('Cbb', 5)
 			]);
 		});
+
+		it('works with very weird bases', () => {
+			expect(chord('Cbbbbbbb', ['7', '2', '5', '1']).getPitchesFromOctave(3)).toEqual([
+				pitch('Bbbbbbbb', 3),
+				pitch('Dbbbbbbb', 4),
+				pitch('Gbbbbbbb', 4),
+				pitch('Cbbbbbbb', 5)
+			]);
+		});
 	});
 });

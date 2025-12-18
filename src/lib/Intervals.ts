@@ -6,11 +6,13 @@ import { rotateArray } from './util';
 export type Interval = { semitones: number; letters: number };
 export namespace Interval {
 	export const getPitchOffset = (interval: Interval, pitch: PitchClass): PitchClass => {
-		return PitchClass.withLetterName(
-			CanonicalPitchClass.applyOffset(PitchClass.toCanonicalPitchClass(pitch), interval.semitones),
+		const withoutExtraMods = PitchClass.withLetterName(
+			CanonicalPitchClass.applyOffset(pitch.letter, interval.semitones),
 			PitchConstituents.nextLetter(pitch.letter, interval.letters),
 			'closest'
 		);
+
+		return { ...withoutExtraMods, modifier: withoutExtraMods.modifier + pitch.modifier };
 	};
 
 	export const print = (interval: Interval): string => {
