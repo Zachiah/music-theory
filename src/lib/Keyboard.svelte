@@ -86,7 +86,9 @@
 		onmouseout={() => onMouseOut?.(props.pitch)}
 		onmouseenter={(e) => onMouseEnter?.(props.pitch, (e.buttons & 1) !== 0)}
 	>
-		{@render renderKeyText(props.pitch)}
+		<div class="pointer-events-none">
+			{@render renderKeyText(props.pitch)}
+		</div>
 	</button>
 {/snippet}
 
@@ -103,7 +105,9 @@
 		onmouseout={() => onMouseOut?.(props.pitch)}
 		onmouseenter={(e) => onMouseEnter?.(props.pitch, (e.buttons & 1) !== 0)}
 	>
-		{@render renderKeyText(props.pitch)}
+		<div class="pointer-events-none">
+			{@render renderKeyText(props.pitch)}
+		</div>
 	</button>
 {/snippet}
 
