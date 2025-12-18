@@ -1,5 +1,5 @@
 import { PitchClass } from '$lib/PitchClass';
-import type { Chord } from './chord';
+import { Chord } from './chord';
 
 const readParts = (
 	input: string
@@ -43,44 +43,7 @@ export const getChordFromName = (name: string): Chord | null => {
 		return null;
 	}
 
-	const { root, originalRoot, rest } = res;
+	const { root, rest } = res;
 
-	return {
-		root,
-		originalRoot,
-		major: false,
-		minor: rest === '-',
-		diminished: rest === 'dim',
-		augmented: rest === '+' || rest === '#5',
-		halfDiminished: false,
-		sus4: rest === 'sus4',
-		sus2: rest === 'sus2',
-		five: false,
-		flat5: false,
-		seven: false,
-		maj7: false,
-		flat9: false,
-		nine: false,
-		sharp9: false,
-		addFlat9: false,
-		addSharp9: false,
-		add9: false,
-		eleven: false,
-		sharp11: false,
-		add11: false,
-		addSharp11: false,
-		thirteen: false,
-		add13: false,
-		flat13: false,
-		addFlat13: false,
-		six: false,
-		flatSix: false,
-		sixNine: false,
-		hasThreeish: true,
-		hasFivish: true,
-		hasMiddlish: false,
-		hasFive: false,
-		hasSevenish: false,
-		highestDegree: null
-	};
+	return new Chord(root, ['1', rest === '-' ? 'flat3' : '3', '5']);
 };

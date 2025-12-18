@@ -44,4 +44,48 @@ describe(Chord, () => {
 		t2('C', ['C', 'D', 'E', 'G', 'A'], ['1', '2', '3', '5', '6']);
 		t2('C', ['C', 'D', 'Eb', 'G', 'A'], ['1', '2', 'flat3', '5', '6']);
 	});
+
+	describe('getPitchesFromOctave', () => {
+		const chord = (root: string, degrees: ScaleDegree[]) =>
+			new Chord(PitchClass.create(root)!, degrees);
+
+		const pitch = (pc: string, octave: number) => ({
+			pitchClass: PitchClass.create(pc)!,
+			octave
+		});
+
+		it('keeps octaves steady when scale degrees stay within the same span', () => {
+			expect(chord('C', ['1', '3', '5']).getPitchesFromOctave(3)).toEqual([
+				pitch('C', 3),
+				pitch('E', 3),
+				pitch('G', 3)
+			]);
+		});
+
+		it('increments the octave after wrapping past C', () => {
+			expect(chord('C', ['5', '7', '2']).getPitchesFromOctave(3)).toEqual([
+				pitch('G', 3),
+				pitch('B', 3),
+				pitch('D', 4)
+			]);
+		});
+
+		it('handles multiple wraps across the chord tones', () => {
+			expect(chord('C', ['7', '2', '5', '1']).getPitchesFromOctave(3)).toEqual([
+				pitch('B', 3),
+				pitch('D', 4),
+				pitch('G', 4),
+				pitch('C', 5)
+			]);
+		});
+
+		it('works with weird bases', () => {
+			expect(chord('Cbb', ['7', '2', '5', '1']).getPitchesFromOctave(3)).toEqual([
+				pitch('Bbb', 3),
+				pitch('Dbb', 4),
+				pitch('Gbb', 4),
+				pitch('Cbb', 5)
+			]);
+		});
+	});
 });

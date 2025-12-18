@@ -36,8 +36,6 @@ const convertOld = (old: { version: number; value: unknown }): MusicDisplayOptio
 		const v = old.value as PrintingOptionsV2;
 
 		const o: MusicDisplayOptions = {
-			sixNine: v.sixNine,
-			six: v.six,
 			flats: v.properFlats ? '♭' : 'b',
 			sharps: v.properSharps ? '♯' : '#',
 			major: 'maj',

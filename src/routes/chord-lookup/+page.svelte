@@ -3,7 +3,9 @@
 	import { printChord } from '$lib/chord/printChord';
 	import Container from '$lib/Container.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
+	import Keyboard from '$lib/Keyboard.svelte';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
+	import { Pitch } from '$lib/Pitch';
 	import SubContainer from '$lib/SubContainer.svelte';
 
 	let typedChordName = $state('');
@@ -21,6 +23,16 @@
 	<div class="flex gap-4">
 		<SubContainer>
 			Standardized: &nbsp;{chord ? printChord(chord, musicDisplayOptions.data) : chord}
+		</SubContainer>
+
+		<SubContainer>
+			<Keyboard
+				start={{ pitchClass: 'C', octave: 3 }}
+				noteNumber={37}
+				highlighted={chord?.getPitchesFromOctave(3).map((p) => Pitch.toCanonical(p)) ?? []}
+			>
+				{#snippet renderKeyText()}{/snippet}
+			</Keyboard>
 		</SubContainer>
 	</div>
 </Container>

@@ -231,6 +231,27 @@ export class Chord {
 		return originalOctave;
 	}
 
+	getPitchesFromOctave(startOctave: number): Pitch[] {
+		let currentOctave = startOctave;
+		let previousDistance: number | null = null;
+
+		return this.scaleDegrees.map((scaleDegree) => {
+			const pitchClass = ScaleDegree.getPitchFromRoot(scaleDegree, this.root);
+			const distance = CanonicalPitchClass.distanceFromC(pitchClass.letter);
+
+			if (previousDistance !== null && distance < previousDistance) {
+				currentOctave += 1;
+			}
+
+			previousDistance = distance;
+
+			return {
+				pitchClass,
+				octave: currentOctave
+			};
+		});
+	}
+
 	getNormalizedPitchesWithOctaves(
 		pitches: CanonicalPitch[]
 	): { pitch: Pitch; scaleDegree: ScaleDegree }[] {
