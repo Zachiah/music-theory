@@ -3,7 +3,56 @@ import { PitchClass } from './PitchClass';
 import { PitchConstituents } from './PitchConstituents';
 import { rotateArray } from './util';
 
-export type Intervals = { semitones: number; letters: number }[];
+export type Interval = { semitones: number; letters: number };
+export namespace Interval {
+	export const getPitchOffset = (interval: Interval, pitch: PitchClass): PitchClass => {
+		return PitchClass.withLetterName(
+			CanonicalPitchClass.applyOffset(PitchClass.toCanonicalPitchClass(pitch), interval.semitones),
+			PitchConstituents.nextLetter(pitch.letter, interval.letters),
+			'closest'
+		);
+	};
+
+	export const print = (interval: Interval): string => {
+		if (interval.letters > 7) {
+			throw new Error('Letters too high');
+		}
+
+		const types: [string, 'p' | 'm', number][] = [
+			['unison', 'p', 0],
+			['2', 'm', 2],
+			['3', 'm', 4],
+			['4', 'p', 5],
+			['5', 'p', 7],
+			['6', 'm', 9],
+			['7', 'm', 11]
+		];
+
+		const type = types[interval.letters];
+
+		const modifier = (() => {
+			const diff = interval.semitones - type[2];
+
+			if (type[1] === 'm') {
+				if (diff > 1 || diff < -2) {
+					throw new Error('diff not printable');
+				}
+
+				return ['d', 'm', 'M', 'A'][diff + 2];
+			}
+
+			if (diff > 1 || diff < -1) {
+				throw new Error('diff not printable');
+			}
+
+			return ['d', 'P', 'A'][diff + 1];
+		})();
+
+		return `${modifier}${type[0]}`;
+	};
+}
+
+export type Intervals = Interval[];
 export namespace Intervals {
 	export const rotate = (scale: Intervals, modeNumber: number): Intervals => {
 		const withLastInterval = [

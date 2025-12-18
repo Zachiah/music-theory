@@ -1,10 +1,8 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
-	import { guessChord, guessChordNoInversions } from '$lib/chord/guessChord';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
 	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
-	import Toggle from '$lib/Toggle.svelte';
 	import type { Fretboard } from '$lib/Fretboard';
 	import { createLocalStorageState } from '$lib/localStorageState.svelte';
 	import FretboardSelector from '$lib/FretboardSelector.svelte';
@@ -12,11 +10,11 @@
 	import Button from '$lib/Button.svelte';
 	import { playback } from '$lib/Playback';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
-	import { normalizeChordPitchesWithOctaves } from '$lib/chord/categorizeChordNotes';
 	import SubContainer from '$lib/SubContainer.svelte';
 	import { Chord } from '$lib/chord/chord';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 	import MusicDisplayOptionsEditorButton from '../MusicDisplayOptionsEditorButton.svelte';
+	import { printChord } from '$lib/chord/printChord';
 
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
@@ -75,7 +73,6 @@
 		return CanonicalPitchArray.sort(canonicalPitches);
 	});
 
-	let allowInversions = $state(true);
 	let variableFretSize = $state(true);
 
 	const guessedChord = $derived.by(() => {
@@ -85,13 +82,11 @@
 
 		const pitchClasses = pitches.map((pitch) => pitch.pitchClass);
 
-		return allowInversions
-			? guessChord(pitchClasses)
-			: guessChordNoInversions(pitchClasses, pitchClasses[0]);
+		return Chord.guessFromPitches(pitchClasses);
 	});
 
 	const chordString = $derived(
-		guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''
+		guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : ''
 	);
 
 	let vertical = $state(false);
@@ -145,10 +140,6 @@
 				musicDisplayOptions.data = v;
 			}}
 		/>
-
-		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
-			>Allow Inversions</Toggle
-		>
 	</div>
 
 	<div class="flex gap-4" class:flex-col={!vertical} class:flex-col-reverse={vertical}>
@@ -170,7 +161,7 @@
 			<SubContainer>
 				<GrandStaff
 					notes={guessedChord
-						? normalizeChordPitchesWithOctaves(pitches, guessedChord).map((p) => p.pitch)
+						? guessedChord.getNormalizedPitchesWithOctaves(pitches).map((p) => p.pitch)
 						: []}
 				/>
 			</SubContainer>
