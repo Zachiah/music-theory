@@ -14,17 +14,25 @@
 </script>
 
 <Container>
-	<h1 class="text-2xl">
-		Chord Lookup (very early, doesn't work with most chords, please check back later)
-	</h1>
-
-	<FancyInput placeholder="Type a Chord Name" bind:value={typedChordName} />
+	<h1 class="text-2xl">Chord Lookup</h1>
+	<p>
+		(still very early, doesn't work with a lot of chords, please <a
+			class="text-primary"
+			href="https://github.com/Zachiah/music-theory/issues/new">make a GitHub issue</a
+		> if you find something broken)
+	</p>
 
 	<div class="flex gap-4">
-		<SubContainer>
-			Standardized: &nbsp;{chord ? printChord(chord, musicDisplayOptions.data) : chord}
-		</SubContainer>
+		<FancyInput placeholder="Type a Chord Name" bind:value={typedChordName} />
 
+		{#if chord}
+			<SubContainer>
+				Resolved: &nbsp;{chord ? printChord(chord, musicDisplayOptions.data) : chord}
+			</SubContainer>
+		{/if}
+	</div>
+
+	<div class="flex gap-4">
 		<SubContainer>
 			<Keyboard
 				start={{ pitchClass: 'C', octave: 3 }}

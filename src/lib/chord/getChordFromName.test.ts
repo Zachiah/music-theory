@@ -23,23 +23,24 @@ describe(getChordFromName, () => {
 		t('D -', new Chord(n('D'), ['1', 'flat3', '5']));
 		t('Bb -', new Chord(n('Bb'), ['1', 'flat3', '5']));
 
-		// t('C+', { augmented: true });
-		// t('C +', { augmented: true });
-		// t('Caug', { augmented: true });
-		// t('D #5', { root: n('D'), originalRoot: n('D'), augmented: true });
-		// t('D ♯5', { root: n('D'), originalRoot: n('D'), augmented: true });
+		t('C+', new Chord(n('C'), ['1', '3', 'sharp5']));
+		t('C +', new Chord(n('C'), ['1', '3', 'sharp5']));
+		t('Caug', new Chord(n('C'), ['1', '3', 'sharp5']));
+		t('C #5', new Chord(n('C'), ['1', '3', 'sharp5']));
+		t('C #5', new Chord(n('C'), ['1', '3', 'sharp5']));
 
-		// t('Cdim', { diminished: true });
-		// t('C°', { diminished: true });
+		t('Cdim', new Chord(n('C'), ['1', 'flat3', 'flat5']));
+		t('C°', new Chord(n('C'), ['1', 'flat3', 'flat5']));
 
-		// t('Csus2', { sus2: true });
-		// t('C suspended2', { sus2: true });
-		// t('Csus4', { sus4: true });
+		t('Csus2', new Chord(n('C'), ['1', '2', '5']));
+		t('C suspended2', new Chord(n('C'), ['1', '2', '5']));
+		t('Csus4', new Chord(n('C'), ['1', '4', '5']));
 
-		// // TODO:
-		// // t('C7', { highestDegree: 7 });
-
-		// t('C / E', { originalRoot: n('E') });
-		// t('Caug/E', { augmented: true, originalRoot: n('E') });
+		t('C7', new Chord(n('C'), ['1', '3', '5', 'flat7']));
+		t('Cmaj7', new Chord(n('C'), ['1', '3', '5', '7']));
+		t('Cmmaj7', new Chord(n('C'), ['1', 'flat3', '5', '7']));
+		t('Cm7', new Chord(n('C'), ['1', 'flat3', '5', 'flat7']));
+		t('Cdim7', new Chord(n('C'), ['1', 'flat3', 'flat5', 'flatflat7']));
+		t('Cm7b5', new Chord(n('C'), ['1', 'flat3', 'flat5', 'flat7']));
 	});
 });

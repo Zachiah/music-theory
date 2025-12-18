@@ -1,5 +1,6 @@
 import { PitchClass } from '$lib/PitchClass';
 import { Chord } from './chord';
+import type { ScaleDegree } from './scaleDegree';
 
 const readParts = (
 	input: string
@@ -26,16 +27,22 @@ export const getChordFromName = (name: string): Chord | null => {
 		.replaceAll('𝄫', 'bb')
 		.replaceAll('♯', '#')
 		.replaceAll('𝄪', '##')
+		.replaceAll('flat', 'b')
+		.replaceAll('sharp', '#')
 		.replaceAll('augmented', '+')
 		.replaceAll('aug', '+')
+		.replaceAll('major', 'maj')
+		.replaceAll('maj', 'MAJ')
+		.replaceAll('#5', '+')
 		.replaceAll('diminished', 'DIM')
 		.replaceAll('dim', 'DIM')
 		.replaceAll('°', 'DIM')
 		.replaceAll('minor', '-')
 		.replaceAll('min', '-')
 		.replaceAll('m', '-')
+		.replaceAll('suspended', 'sus')
 		.replaceAll('DIM', 'dim')
-		.replaceAll('suspended', 'sus');
+		.replaceAll('MAJ', 'maj');
 
 	const res = readParts(normalized);
 
@@ -45,5 +52,48 @@ export const getChordFromName = (name: string): Chord | null => {
 
 	const { root, rest } = res;
 
-	return new Chord(root, ['1', rest === '-' ? 'flat3' : '3', '5']);
+	const middle: ScaleDegree[] = (() => {
+		if (rest.includes('-') || rest.includes('dim')) {
+			return ['flat3'];
+		}
+
+		if (rest === 'sus2') {
+			return ['2'];
+		}
+
+		if (rest === 'sus4' || rest === 'sus') {
+			return ['4'];
+		}
+
+		return ['3'];
+	})();
+
+	const five: ScaleDegree[] = (() => {
+		if (rest.includes('dim') || rest.includes('b5')) {
+			return ['flat5'];
+		}
+
+		if (rest.includes('+')) {
+			return ['sharp5'];
+		}
+
+		return ['5'];
+	})();
+
+	const seven: ScaleDegree[] = (() => {
+		if (rest.includes('dim') && rest.includes('7')) {
+			return ['flatflat7'];
+		}
+		if (rest.includes('maj7')) {
+			return ['7'];
+		}
+
+		if (rest.includes('7')) {
+			return ['flat7'];
+		}
+
+		return [];
+	})();
+
+	return new Chord(root, ['1', ...middle, ...five, ...seven]);
 };
