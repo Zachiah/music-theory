@@ -88,12 +88,20 @@ export const getChordFromName = (name: string): Chord | null => {
 			return ['7'];
 		}
 
-		if (rest.includes('7')) {
+		if (rest.includes('7') || rest.includes('9')) {
 			return ['flat7'];
 		}
 
 		return [];
 	})();
 
-	return new Chord(root, ['1', ...middle, ...five, ...seven]);
+	const nine: ScaleDegree[] = (() => {
+		if (rest.includes('9')) {
+			return ['2'];
+		}
+
+		return [];
+	})();
+
+	return new Chord(root, ['1', ...middle, ...five, ...seven, ...nine]);
 };
