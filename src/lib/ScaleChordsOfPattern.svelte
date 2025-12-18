@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { CanonicalPitchArray } from './CanonicalPitch';
-	import { guessChord } from './chord/guessChord';
 	import { Intervals } from './Intervals';
 	import { PitchClass } from './PitchClass';
 	import { playback } from './Playback';
 	import { Chord } from './chord/chord';
+	import { printChord } from './chord/printChord';
 	import { musicDisplayOptions } from './musicDisplayOptionsState.svelte';
 
 	const {
@@ -28,7 +28,10 @@
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>
-			{Chord.print(guessChord(canonicalPitchClasses, triad), musicDisplayOptions.data)}
+			{printChord(
+				Chord.guessFromPitchesWithRoot(triad[0], canonicalPitchClasses),
+				musicDisplayOptions.data
+			)}
 		</Button>
 	{/each}
 </div>

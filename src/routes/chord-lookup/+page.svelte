@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Chord } from '$lib/chord/chord';
 	import { getChordFromName } from '$lib/chord/getChordFromName';
+	import { printChord } from '$lib/chord/printChord';
 	import Container from '$lib/Container.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
@@ -20,7 +20,7 @@
 
 	<div class="flex gap-4">
 		<SubContainer>
-			Standardized: &nbsp;{chord ? Chord.print(chord, musicDisplayOptions.data) : chord}
+			Standardized: &nbsp;{chord ? printChord(chord, musicDisplayOptions.data) : chord}
 		</SubContainer>
 	</div>
 </Container>

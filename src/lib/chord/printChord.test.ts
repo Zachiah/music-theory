@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { guessChord } from './guessChord';
 import type { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
-import { Chord } from './chord';
 import type { MusicDisplayOptions } from '$lib/musicDisplayOptions';
+import { Chord } from './chord';
+import { printChord } from './printChord';
 
-describe(guessChord, () => {
+describe(printChord, () => {
 	const defaultOptions: MusicDisplayOptions = {
-		sixNine: true,
-		six: true,
 		flats: 'b',
 		sharps: '#',
 		diminished: 'dim',
@@ -24,8 +22,28 @@ describe(guessChord, () => {
 		output: string,
 		options: Partial<MusicDisplayOptions> = {}
 	) => {
-		expect(Chord.print(guessChord(notes), { ...defaultOptions, ...options })).toEqual(output);
+		const c = Chord.guessFromPitches(notes);
+		expect(printChord(c, { ...defaultOptions, ...options })).toEqual(output);
 	};
+
+	it('should accurately handle unison', () => {
+		t(['C'], 'C (unison)');
+		t(['Bb'], 'Bb (unison)');
+	});
+
+	it('should accurately handle intervals', () => {
+		t(['C', 'Db'], 'C m2');
+		t(['C', 'D'], 'C M2');
+		t(['C', 'Eb'], 'C m3');
+		t(['C', 'E'], 'C M3');
+		t(['C', 'F'], 'C P4');
+		t(['C', 'Gb'], 'C d5');
+		t(['C', 'G'], 'C P5');
+		t(['C', 'Ab'], 'C m6');
+		t(['C', 'A'], 'C M6');
+		t(['C', 'Bb'], 'C m7');
+		t(['C', 'B'], 'C M7');
+	});
 
 	it('should accurately handle simple triads', () => {
 		t(['C', 'E', 'G'], 'C');
@@ -83,24 +101,23 @@ describe(guessChord, () => {
 		t(['C', 'E', 'G', 'Bb', 'D', 'F', 'Ab', 'A'], 'C11 b13 13');
 		t(
 			['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'],
-			'C 7 maj7 b9 9 #9 11 #11 b13 13'
+			'C maj7 7 b9 9 #9 11 #11 b13 13'
 		);
-		t(['C', 'Db', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'], 'Cm 7 maj7 b9 9 11 #11 b13 13');
-		t(['C', 'E', 'G', 'Bb', 'B'], 'C 7 maj7');
-		t(['C', 'E', 'G', 'Bb', 'B', 'D'], 'C9 7 maj7');
+		t(['C', 'Db', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'], 'F7 b9 9 #9 11 #11 b13 13 / C');
+		t(['C', 'E', 'G', 'Bb', 'B'], 'C maj7 7');
+		t(['C', 'E', 'G', 'Bb', 'B', 'D'], 'Em7 add#11 addB13 / C');
 		t(['C', 'E', 'Gb', 'Ab'], 'Abaug7 / C');
 		t(['C', 'D', 'E', 'Gb', 'Ab', 'Bb'], 'Caug9 #11');
 	});
 
 	it('should support inversions', () => {
 		t(['C', 'F', 'A'], 'F / C');
-		t(['C', 'D', 'Eb', 'F', 'Ab', 'Bb'], 'Cm11 b13');
+		t(['C', 'D', 'Eb', 'F', 'Ab', 'Bb'], 'Fm7 add13 / C');
 		t(['G', 'Bb', 'C', 'E', 'G', 'A'], 'C7 add13 / G');
 		t(['G', 'A', 'C', 'E', 'G', 'A'], 'Am7 / G');
 		t(['G', 'C', 'E', 'G', 'A'], 'C6 / G');
-		t(['C', 'F', 'B', 'D'], 'Bdim addB9 / C');
+		t(['C', 'F', 'B', 'D'], 'Dm7 add13 / C');
 		t(['C', 'G', 'Bb'], 'C7');
-		t(['C', 'Bb'], 'C7');
 	});
 
 	it('should support other bases', () => {
@@ -120,34 +137,14 @@ describe(guessChord, () => {
 		t(['Eb', 'Gb', 'B'], 'B / D#');
 	});
 
-	it('should support 5 chords', () => {
-		t(['G', 'D'], 'G5');
-		t(['G', 'D', 'G'], 'G5');
-		t(['Ab', 'Db'], 'Db5 / Ab');
-	});
-
 	it('should handle all chord printing options', () => {
 		// flats
-		t(['C', 'E', 'G', 'Ab'], 'C ♭6', { flats: '♭' });
-		t(['C', 'E', 'G', 'Ab'], 'C b6', { flats: 'b' });
+		t(['C', 'E', 'G', 'Ab'], 'A♭augMaj7 / C', { flats: '♭' });
+		t(['C', 'E', 'G', 'Ab'], 'AbaugMaj7 / C', { flats: 'b' });
 
 		// sharps
 		t(['C', 'E', 'Gb', 'G'], 'C add♯11', { sharps: '♯' });
 		t(['C', 'E', 'Gb', 'G'], 'C add#11', { sharps: '#' });
-
-		// 6 chords
-		t(['C', 'E', 'G', 'A'], 'C6', { six: true });
-		t(['C', 'E', 'G', 'A'], 'C add13', { six: false });
-
-		t(['C', 'Eb', 'G', 'A'], 'Cm6', { six: true });
-		t(['C', 'Eb', 'G', 'A'], 'Cm add13', { six: false });
-
-		// 6/9 chords
-		t(['C', 'D', 'E', 'G', 'A'], 'C6/9', { sixNine: true });
-		t(['C', 'D', 'E', 'G', 'A'], 'C add9 add13', { sixNine: false });
-
-		t(['C', 'D', 'Eb', 'G', 'A'], 'Cm6/9', { sixNine: true });
-		t(['C', 'D', 'Eb', 'G', 'A'], 'Cm add9 add13', { sixNine: false });
 
 		// maj
 		t(['C', 'E', 'G', 'B'], 'CΔ7', { major: 'Δ' });

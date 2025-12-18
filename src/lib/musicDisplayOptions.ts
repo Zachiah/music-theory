@@ -1,6 +1,4 @@
 export type MusicDisplayOptions = {
-	sixNine: boolean;
-	six: boolean;
 	flats: '♭' | 'b';
 	sharps: '♯' | '#';
 	major: 'Δ' | 'maj';
@@ -13,8 +11,6 @@ export type MusicDisplayOptions = {
 
 export namespace MusicDisplayOptions {
 	export const defaultOptions: MusicDisplayOptions = {
-		six: true,
-		sixNine: true,
 		flats: '♭',
 		sharps: '♯',
 		diminished: 'dim',
@@ -43,18 +39,6 @@ export namespace MusicDisplayOptions {
 
 	export const doubleSharp = (options: MusicDisplayOptions): string => {
 		return options.sharps === '♯' ? '𝄪' : '##';
-	};
-
-	export const six = (options: MusicDisplayOptions): string => {
-		return options.six ? '6' : ' add13';
-	};
-
-	export const flatSix = (options: MusicDisplayOptions): string => {
-		return options.six ? `${lowerFlat(options)}6` : ' add13';
-	};
-
-	export const sixNine = (options: MusicDisplayOptions): string => {
-		return options.sixNine ? '6/9' : ' add9 add13';
 	};
 
 	export const lowerMaj = (options: MusicDisplayOptions): string => {

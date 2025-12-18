@@ -24,29 +24,6 @@
 
 		<div class="flex flex-wrap gap-2">
 			<FancySelect
-				placeholder="6 Chords"
-				bind:value={
-					() => (options.six ? 'true' : 'false'), (v) => onChange({ ...options, six: v === 'true' })
-				}
-				options={[
-					{ value: 'true', label: 'Yes' },
-					{ value: 'false', label: 'No (add13)' }
-				]}
-			/>
-
-			<FancySelect
-				placeholder="6/9 Chords"
-				bind:value={
-					() => (options.sixNine ? 'true' : 'false'),
-					(v) => onChange({ ...options, sixNine: v === 'true' })
-				}
-				options={[
-					{ value: 'true', label: 'Yes' },
-					{ value: 'false', label: 'No (add9add13)' }
-				]}
-			/>
-
-			<FancySelect
 				placeholder="Flats"
 				bind:value={
 					() => options.flats,

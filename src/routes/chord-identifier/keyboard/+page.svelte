@@ -2,13 +2,10 @@
 	import Container from '$lib/Container.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
-	import { guessChord, guessChordNoInversions } from '$lib/chord/guessChord';
-	import Toggle from '$lib/Toggle.svelte';
 	import Button from '$lib/Button.svelte';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
-	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/chord/categorizeChordNotes';
 	import { playback } from '$lib/Playback';
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
@@ -20,8 +17,8 @@
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 	import { PitchClass } from '$lib/PitchClass';
 	import MusicDisplayOptionsEditorButton from '../MusicDisplayOptionsEditorButton.svelte';
-
-	let allowInversions = $state(true);
+	import { ScaleDegree } from '$lib/chord/scaleDegree';
+	import { printChord } from '$lib/chord/printChord';
 
 	const cpaState = createCpaState();
 
@@ -31,9 +28,7 @@
 		}
 
 		const pitchClasses = cpaState.selected.map((p) => p.pitchClass);
-		const guessedChord = allowInversions
-			? guessChord(pitchClasses)
-			: guessChordNoInversions(pitchClasses, pitchClasses[0]);
+		const guessedChord = Chord.guessFromPitches(pitchClasses);
 
 		return guessedChord;
 	});
@@ -58,7 +53,7 @@
 	});
 
 	const normalized = $derived(
-		!guessedChord ? [] : normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord)
+		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected)
 	);
 </script>
 
@@ -84,9 +79,6 @@
 				musicDisplayOptions.data = v;
 			}}
 		/>
-		<Toggle active={allowInversions} onToggle={() => (allowInversions = !allowInversions)}
-			>Allow Inversions</Toggle
-		>
 	</div>
 
 	<SubContainer>
@@ -123,7 +115,7 @@
 		</SubContainer>
 
 		<SubContainer el="p" class="flex items-center justify-center text-3xl">
-			&nbsp;{guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''}
+			&nbsp;{guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : ''}
 		</SubContainer>
 	</div>
 </Container>

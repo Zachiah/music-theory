@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
-	import { normalizeChordPitchesWithOctaves, ScaleDegree } from '$lib/chord/categorizeChordNotes';
 	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
 	import Container from '$lib/Container.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
-	import { guessChord } from '$lib/chord/guessChord';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import {
 		KEYBOARD_LENGTH,
@@ -23,6 +21,8 @@
 	import { Chord } from '$lib/chord/chord';
 	import { PitchClass } from '$lib/PitchClass';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
+	import { ScaleDegree } from '$lib/chord/scaleDegree';
+	import { printChord } from '$lib/chord/printChord';
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaState = createCpaState({ onChange: cpaPlayState.onCpaChangePlay });
@@ -33,13 +33,13 @@
 		}
 
 		const pitchClasses = cpaState.selected.map((p) => p.pitchClass);
-		const guessedChord = guessChord(pitchClasses);
+		const guessedChord = Chord.guessFromPitches(pitchClasses);
 
 		return guessedChord;
 	});
 
 	const normalized = $derived(
-		!guessedChord ? [] : normalizeChordPitchesWithOctaves(cpaState.selected, guessedChord)
+		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected)
 	);
 
 	onMount(() => {
@@ -138,7 +138,7 @@
 		</SubContainer>
 
 		<SubContainer el="p" class="flex items-center justify-center text-3xl">
-			&nbsp;{guessedChord ? Chord.print(guessedChord, musicDisplayOptions.data) : ''}
+			&nbsp;{guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : ''}
 		</SubContainer>
 	</div>
 </Container>
