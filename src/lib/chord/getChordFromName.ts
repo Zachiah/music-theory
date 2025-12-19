@@ -81,14 +81,14 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const seven: ScaleDegree[] = (() => {
-		if (rest.includes('dim') && rest.includes('7')) {
-			return ['flatflat7'];
-		}
-		if (rest.includes('maj7')) {
-			return ['7'];
-		}
+		if (rest.includes('7') || rest.includes('9') || rest.includes('11') || rest.includes('13')) {
+			if (rest.includes('dim')) {
+				return ['flatflat7'];
+			}
+			if (rest.includes('maj')) {
+				return ['7'];
+			}
 
-		if (rest.includes('7') || rest.includes('9')) {
 			return ['flat7'];
 		}
 
@@ -96,12 +96,28 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const nine: ScaleDegree[] = (() => {
-		if (rest.includes('9')) {
+		if (rest.includes('9') || rest.includes('11') || rest.includes('13')) {
 			return ['2'];
 		}
 
 		return [];
 	})();
 
-	return new Chord(root, ['1', ...middle, ...five, ...seven, ...nine]);
+	const eleven: ScaleDegree[] = (() => {
+		if (rest.includes('11') || rest.includes('13')) {
+			return ['4'];
+		}
+
+		return [];
+	})();
+
+	const thirteen: ScaleDegree[] = (() => {
+		if (rest.includes('13')) {
+			return ['6'];
+		}
+
+		return [];
+	})();
+
+	return new Chord(root, ['1', ...middle, ...five, ...seven, ...nine, ...eleven, ...thirteen]);
 };
