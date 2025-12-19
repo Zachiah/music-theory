@@ -40,7 +40,7 @@
 		> if you find something broken)
 	</p>
 
-	<div class="flex gap-4">
+	<div class="flex flex-wrap gap-4">
 		<FancyInput placeholder="Type a Chord Name" bind:value={typedChordName} />
 
 		{#if chord}
@@ -48,7 +48,7 @@
 				Resolved: {printChord(chord, musicDisplayOptions.data)}
 			</SubContainer>
 
-			<SubContainer>
+			<SubContainer class="text-nowrap">
 				Notes: {pitches
 					.map((p) => p.pitchClass)
 					.map((p) => PitchClass.print(p, musicDisplayOptions.data))
