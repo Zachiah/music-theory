@@ -51,5 +51,7 @@ describe(getChordFromName, () => {
 
 		t('C13', new Chord(n('C'), ['1', '3', '5', 'flat7', '2', '4', '6']));
 		t('Cmaj13', new Chord(n('C'), ['1', '3', '5', '7', '2', '4', '6']));
+
+		t('C11 b9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'flat2', '4']));
 	});
 });

@@ -96,6 +96,10 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const nine: ScaleDegree[] = (() => {
+		if (rest.includes('b9')) {
+			return ['flat2'];
+		}
+
 		if (rest.includes('9') || rest.includes('11') || rest.includes('13')) {
 			return ['2'];
 		}
