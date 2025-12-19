@@ -45,7 +45,14 @@
 
 		{#if chord}
 			<SubContainer>
-				Resolved: &nbsp;{chord ? printChord(chord, musicDisplayOptions.data) : chord}
+				Resolved: {printChord(chord, musicDisplayOptions.data)}
+			</SubContainer>
+
+			<SubContainer>
+				Notes: {pitches
+					.map((p) => p.pitchClass)
+					.map((p) => PitchClass.print(p, musicDisplayOptions.data))
+					.join(', ')}
 			</SubContainer>
 		{/if}
 	</div>
