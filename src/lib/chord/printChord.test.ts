@@ -79,6 +79,7 @@ describe(printChord, () => {
 		t(['C', 'Eb', 'G', 'Bb', 'Db'], 'Cm7 b9');
 		t(['C', 'Eb', 'G', 'B', 'D'], 'CmMaj9');
 		t(['C', 'Eb', 'G', 'B', 'Db'], 'CmMaj7 b9');
+		t(['C', 'E', 'G', 'Bb', 'Eb', 'F'], 'C11 #9');
 	});
 
 	it('should handle 6 and 6/9 shords', () => {

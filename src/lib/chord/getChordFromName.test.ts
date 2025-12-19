@@ -36,6 +36,8 @@ describe(getChordFromName, () => {
 		t('C suspended2', new Chord(n('C'), ['1', '2', '5']));
 		t('Csus4', new Chord(n('C'), ['1', '4', '5']));
 
+		t('C6', new Chord(n('C'), ['1', '3', '5', '6']));
+
 		t('C7', new Chord(n('C'), ['1', '3', '5', 'flat7']));
 		t('Cmaj7', new Chord(n('C'), ['1', '3', '5', '7']));
 		t('Cmmaj7', new Chord(n('C'), ['1', 'flat3', '5', '7']));
@@ -53,5 +55,6 @@ describe(getChordFromName, () => {
 		t('Cmaj13', new Chord(n('C'), ['1', '3', '5', '7', '2', '4', '6']));
 
 		t('C11 b9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'flat2', '4']));
+		t('C11 #9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'sharp2', '4']));
 	});
 });
