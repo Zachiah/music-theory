@@ -76,6 +76,7 @@ MODIFICATIONS.setPattern(
 				TSP.tok(TokenKind.Degree),
 				TSP.tok(TokenKind.FlatDegree),
 				TSP.tok(TokenKind.SharpDegree),
+				TSP.apply(TSP.seq(TSP.tok(TokenKind.Major), TSP.str('7')), () => ({ text: 'maj7' })),
 			),
 		),
 		(items) => items.map((item) => item.text),
@@ -201,54 +202,121 @@ const getBaseDegrees = (
 	})();
 
 	const seven: ScaleDegree[] = (() => {
-		if (highestNormalDegree && highestNormalDegree.highestDegree >= 7) {
-			if (highestNormalDegree.maj) {
-				return ['7'];
+		const res: ScaleDegree[] = [];
+
+		const defaultSeven: ScaleDegree = (() => {
+			if (highestNormalDegree?.maj) {
+				return '7';
 			}
 
 			if (baseType === 'dim') {
-				return ['flatflat7'];
+				return 'flatflat7';
 			}
 
-			return ['flat7'];
+			return 'flat7';
+		})();
+
+		if ((highestNormalDegree?.highestDegree || 0) === 7) {
+			res.push(defaultSeven);
 		}
 
-		return [];
+		if (
+			(highestNormalDegree?.highestDegree || 0) > 7 &&
+			!mods.includes('7') &&
+			!mods.includes('maj7')
+		) {
+			res.push(defaultSeven);
+		}
+
+		if (mods.includes('7')) {
+			res.push('flat7');
+		}
+
+		if (mods.includes('maj7')) {
+			res.push('7');
+		}
+
+		return res;
 	})();
 
 	const nine: ScaleDegree[] = (() => {
-		if (highestNormalDegree && highestNormalDegree.highestDegree >= 9) {
-			if (mods.includes('b9')) {
-				return ['flat2'];
-			}
+		const res: ScaleDegree[] = [];
 
-			if (mods.includes('#9')) {
-				return ['sharp2'];
-			}
-
-			return ['2'];
+		if ((highestNormalDegree?.highestDegree || 0) === 9) {
+			res.push('2');
 		}
 
-		return [];
+		if (
+			(highestNormalDegree?.highestDegree || 0) > 9 &&
+			!mods.includes('9') &&
+			!mods.includes('b9') &&
+			!mods.includes('#9')
+		) {
+			res.push('2');
+		}
+
+		if (mods.includes('b9')) {
+			res.push('flat2');
+		}
+
+		if (mods.includes('9')) {
+			res.push('2');
+		}
+
+		if (mods.includes('#9')) {
+			res.push('sharp2');
+		}
+
+		return res;
 	})();
 
 	const eleven: ScaleDegree[] = (() => {
-		if (highestNormalDegree && highestNormalDegree.highestDegree >= 11) {
-			return ['4'];
+		const res: ScaleDegree[] = [];
+
+		if ((highestNormalDegree?.highestDegree || 0) === 11) {
+			res.push('4');
 		}
 
-		return [];
+		if (
+			(highestNormalDegree?.highestDegree || 0) > 11 &&
+			!mods.includes('11') &&
+			!mods.includes('#11')
+		) {
+			res.push('4');
+		}
+
+		if (mods.includes('11')) {
+			res.push('4');
+		}
+
+		if (mods.includes('#11')) {
+			res.push('sharp4');
+		}
+
+		return res;
 	})();
 
 	const thirteen: ScaleDegree[] = (() => {
-		if (
-			(highestNormalDegree && highestNormalDegree.highestDegree >= 13) ||
-			highestNormalDegree?.highestDegree === 6
-		) {
-			return ['6'];
+		const res: ScaleDegree[] = [];
+
+		const h = highestNormalDegree?.highestDegree || 0;
+		if (h === 13 || h === 6) {
+			res.push('6');
 		}
 
-		return [];
+		if (h > 13 && !mods.includes('13') && !mods.includes('b13')) {
+			res.push('6');
+		}
+
+		if (mods.includes('b13')) {
+			res.push('flat6');
+		}
+
+		if (mods.includes('13')) {
+			res.push('6');
+		}
+
+		return res;
 	})();
 
 	return ['1', ...middle, ...five, ...seven, ...nine, ...eleven, ...thirteen];

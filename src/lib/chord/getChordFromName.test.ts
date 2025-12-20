@@ -83,4 +83,24 @@ describe(getChordFromName, () => {
 		t('C11 b9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'flat2', '4']));
 		t('C11 #9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'sharp2', '4']));
 	});
+
+	it('supports insanity', () => {
+		t(
+			'C maj7 7 b9 9 #9 11 #11 b13 13',
+			new Chord(n('C'), [
+				'1',
+				'3',
+				'5',
+				'7',
+				'flat7',
+				'flat2',
+				'2',
+				'sharp2',
+				'4',
+				'sharp4',
+				'flat6',
+				'6',
+			]),
+		);
+	});
 });
