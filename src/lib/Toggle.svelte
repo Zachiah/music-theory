@@ -5,7 +5,7 @@
 		title = '',
 		active,
 		onToggle,
-		children
+		children,
 	}: {
 		title?: string;
 		active: boolean;

@@ -5,7 +5,7 @@
 	const {
 		children,
 		onClose,
-		open
+		open,
 	}: {
 		children: Snippet<[]>;
 		onClose(): void;

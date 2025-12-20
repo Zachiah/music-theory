@@ -8,7 +8,7 @@
 		onClick,
 		style = 'primary',
 		disabled = false,
-		attrs = {}
+		attrs = {},
 	}: {
 		children?: Snippet<[]>;
 		icon?: string;
@@ -22,13 +22,13 @@
 		primary: 'cursor-pointer bg-primary',
 		danger: 'cursor-pointer bg-danger',
 		warning: 'cursor-pointer bg-warning',
-		neutral: 'cursor-pointer bg-surface-2'
+		neutral: 'cursor-pointer bg-surface-2',
 	};
 	const disabledClassStyles = {
 		primary: 'bg-primary/80 cursor-not-allowed text-text-disabled',
 		danger: 'bg-danger/80 cursor-not-allowed text-text-disabled',
 		warning: 'bg-warning/80 cursor-not-allowed text-text-disabled',
-		neutral: 'bg-surface-2/80 cursor-not-allowed text-text-disabled'
+		neutral: 'bg-surface-2/80 cursor-not-allowed text-text-disabled',
 	};
 </script>
 

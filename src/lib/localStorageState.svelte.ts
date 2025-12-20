@@ -2,7 +2,7 @@ export const createLocalStorageState = <T>(
 	key: string,
 	version: number,
 	defaultValue: T,
-	convertOldValues: null | ((oldValue: { version: number; value: unknown }) => T) = null
+	convertOldValues: null | ((oldValue: { version: number; value: unknown }) => T) = null,
 ) => {
 	const initialValue = (() => {
 		if (typeof localStorage === 'undefined') {
@@ -36,6 +36,6 @@ export const createLocalStorageState = <T>(
 		set data(newV: T) {
 			state = newV;
 			localStorage.setItem(key, JSON.stringify({ version, value: state }));
-		}
+		},
 	};
 };

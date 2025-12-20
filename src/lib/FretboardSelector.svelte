@@ -17,7 +17,7 @@
 		presets,
 		onCreate,
 		onDelete,
-		onUpdate
+		onUpdate,
 	}: {
 		verticalFretboard: boolean;
 		onToggleVerticalFretboard(): void;

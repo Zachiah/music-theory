@@ -14,7 +14,7 @@
 		onMouseEnter,
 		renderKeyText,
 		highlighted,
-		whiteKeyWidth = 48
+		whiteKeyWidth = 48,
 	}: {
 		start: CanonicalPitch;
 		noteNumber: number;
@@ -46,18 +46,18 @@
 					...acc.slice(0, acc.length - 1),
 					{
 						white: acc[acc.length - 1].white,
-						black: canonicalPitch
-					}
+						black: canonicalPitch,
+					},
 				];
 			}
 
 			return [
 				...acc,
 				{
-					white: canonicalPitch
-				}
+					white: canonicalPitch,
+				},
 			];
-		}, [])
+		}, []),
 	);
 
 	type KeySnippetProps = {
@@ -69,7 +69,7 @@
 		highlighted
 			.map((hp) => Pitch.id(Pitch.fromCanonical(hp)))
 			.sort()
-			.join(',')
+			.join(','),
 	);
 </script>
 
@@ -116,12 +116,12 @@
 		<div class="relative h-[calc(15*var(--h))] w-(--w) shrink-0 grow-0">
 			{@render whiteKey({
 				pitch: nd.white,
-				highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.white)))
+				highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.white))),
 			})}
 			{#if nd.black}
 				{@render blackKey({
 					pitch: nd.black,
-					highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.black)))
+					highlighted: highlightedStr.includes(Pitch.id(Pitch.fromCanonical(nd.black))),
 				})}
 			{/if}
 		</div>

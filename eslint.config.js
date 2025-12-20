@@ -21,13 +21,13 @@ export default defineConfig(
 		languageOptions: {
 			globals: {
 				...globals.browser,
-				...globals.node
-			}
+				...globals.node,
+			},
 		},
 		rules: {
 			// Allow TypeScript namespaces
-			'@typescript-eslint/no-namespace': 'off'
-		}
+			'@typescript-eslint/no-namespace': 'off',
+		},
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
@@ -38,8 +38,8 @@ export default defineConfig(
 				projectService: true,
 				extraFileExtensions: ['.svelte'],
 				parser: ts.parser,
-				svelteConfig
-			}
-		}
-	}
+				svelteConfig,
+			},
+		},
+	},
 );

@@ -24,7 +24,7 @@
 		padding = 'square',
 		class: className = '',
 		el = 'div',
-		attrs
+		attrs,
 	}: Props = $props();
 </script>
 

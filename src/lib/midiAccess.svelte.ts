@@ -36,6 +36,6 @@ export const midiAccess = (() => {
 			return () => {
 				listeners.delete(cb);
 			};
-		}
+		},
 	};
 })();

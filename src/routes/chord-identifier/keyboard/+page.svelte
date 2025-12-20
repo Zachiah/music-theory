@@ -53,7 +53,7 @@
 	});
 
 	const normalized = $derived(
-		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected)
+		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected),
 	);
 </script>
 
@@ -90,7 +90,7 @@
 		>
 			{#snippet renderKeyText(cp)}
 				{@const foundNormalized = normalized.find((n) =>
-					CanonicalPitch.equal(Pitch.toCanonical(n.pitch), cp)
+					CanonicalPitch.equal(Pitch.toCanonical(n.pitch), cp),
 				)}
 				{#if foundNormalized}
 					<div class="flex flex-col">

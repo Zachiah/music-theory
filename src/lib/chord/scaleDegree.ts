@@ -37,7 +37,7 @@ export namespace ScaleDegree {
 			'6': 'VI',
 			flatflat7: '♭♭VII',
 			flat7: '♭VII',
-			'7': 'VII'
+			'7': 'VII',
 		};
 
 		if (!mapping[s]) {
@@ -64,7 +64,7 @@ export namespace ScaleDegree {
 			'6': { letters: 5, semitones: 9 },
 			flatflat7: { letters: 6, semitones: 9 },
 			flat7: { letters: 6, semitones: 10 },
-			'7': { letters: 6, semitones: 11 }
+			'7': { letters: 6, semitones: 11 },
 		};
 
 		if (!mapping[s]) {

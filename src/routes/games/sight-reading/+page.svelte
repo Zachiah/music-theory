@@ -22,7 +22,7 @@
 	const KEYBOARD_END = CanonicalPitch.applyOffset(KEYBOARD_START, KEYBOARD_LENGTH - 1);
 
 	const cpaState = createCpaState({
-		onChange: () => checkValid()
+		onChange: () => checkValid(),
 	});
 
 	onMount(() => {
@@ -110,7 +110,7 @@
 			...gameState,
 			correctPitches: getRandomPitches(gameState.notesAtATime),
 			completed: gameState.completed + 1,
-			startedRoundAt: +new Date()
+			startedRoundAt: +new Date(),
 		};
 		cpaState.clear();
 	};
@@ -133,7 +133,7 @@
 						gameState = {
 							tag: 'paused',
 							pausedAt: +new Date(),
-							prev: gameState as typeof gameState & { tag: 'playing' }
+							prev: gameState as typeof gameState & { tag: 'playing' },
 						};
 					}}><span class="icon-[heroicons--pause]"></span></Button
 				>
@@ -163,7 +163,7 @@
 							correctPitches: getRandomPitches(parsed!),
 							completed: 0,
 							startedAt: +new Date(),
-							startedRoundAt: +new Date()
+							startedRoundAt: +new Date(),
 						};
 					}
 				}}>Start</Button
@@ -207,7 +207,7 @@
 				gameState = {
 					...g.prev,
 					startedAt: g.prev.startedAt + pausedFor,
-					startedRoundAt: g.prev.startedRoundAt + pausedFor
+					startedRoundAt: g.prev.startedRoundAt + pausedFor,
 				};
 			}}
 		>

@@ -7,7 +7,7 @@
 		first,
 		second,
 		firstHref,
-		secondHref
+		secondHref,
 	}: {
 		checked: boolean;
 		first: string;

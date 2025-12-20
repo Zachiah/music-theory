@@ -7,13 +7,13 @@ export type CpaStateChange =
 export const createCpaState = (
 	options: {
 		onChange?: (change: CpaStateChange) => void;
-	} = {}
+	} = {},
 ) => {
 	const selectedPitches: CanonicalPitchArray = $state([]);
 
 	const getPitchIndex = (pitch: CanonicalPitch) => {
 		return selectedPitches.findIndex(
-			(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave
+			(p) => p.pitchClass === pitch.pitchClass && p.octave === pitch.octave,
 		);
 	};
 
@@ -53,6 +53,6 @@ export const createCpaState = (
 		clear() {
 			selectedPitches.length = 0;
 			options.onChange?.({ tag: 'clear' });
-		}
+		},
 	};
 };

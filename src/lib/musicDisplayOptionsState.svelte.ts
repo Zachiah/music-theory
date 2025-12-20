@@ -26,7 +26,7 @@ const convertOld = (old: { version: number; value: unknown }): MusicDisplayOptio
 
 		const o: PrintingOptionsV2 = {
 			...v,
-			slashNotation: true
+			slashNotation: true,
 		};
 
 		return convertOld({ version: 2, value: o });
@@ -43,7 +43,7 @@ const convertOld = (old: { version: number; value: unknown }): MusicDisplayOptio
 			diminished: v.properDiminished ? '°' : 'dim',
 			augmented: v.properAugmented ? '+' : 'aug',
 			halfDiminished: 'ø',
-			slashNotation: v.slashNotation
+			slashNotation: v.slashNotation,
 		};
 
 		return convertOld({ version: 3, value: o });
@@ -60,5 +60,5 @@ export const musicDisplayOptions = createLocalStorageState<MusicDisplayOptions>(
 	'printingOptions',
 	3,
 	MusicDisplayOptions.defaultOptions,
-	convertOld
+	convertOld,
 );

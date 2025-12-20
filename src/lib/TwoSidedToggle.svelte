@@ -3,7 +3,7 @@
 		checked,
 		onChange,
 		first,
-		second
+		second,
 	}: {
 		checked: boolean;
 		onChange: (c: boolean) => void;

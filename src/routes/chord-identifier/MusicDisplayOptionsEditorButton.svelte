@@ -7,7 +7,7 @@
 
 	const {
 		options,
-		onChange
+		onChange,
 	}: {
 		options: MusicDisplayOptions;
 		onChange(o: MusicDisplayOptions): void;
@@ -31,7 +31,7 @@
 				}
 				options={[
 					{ value: 'b', label: 'b' },
-					{ value: '♭', label: '♭' }
+					{ value: '♭', label: '♭' },
 				]}
 			/>
 
@@ -43,7 +43,7 @@
 				}
 				options={[
 					{ value: '#', label: '#' },
-					{ value: '♯', label: '♯' }
+					{ value: '♯', label: '♯' },
 				]}
 			/>
 
@@ -55,7 +55,7 @@
 				}
 				options={[
 					{ value: 'maj', label: 'maj' },
-					{ value: 'Δ', label: 'Δ' }
+					{ value: 'Δ', label: 'Δ' },
 				]}
 			/>
 
@@ -67,7 +67,7 @@
 				}
 				options={[
 					{ value: 'm', label: 'm' },
-					{ value: '-', label: '-' }
+					{ value: '-', label: '-' },
 				]}
 			/>
 
@@ -79,7 +79,7 @@
 				}
 				options={[
 					{ value: 'dim', label: 'dim' },
-					{ value: '°', label: '°' }
+					{ value: '°', label: '°' },
 				]}
 			/>
 
@@ -92,7 +92,7 @@
 				options={[
 					{ value: 'aug', label: 'aug' },
 					{ value: '+', label: '+' },
-					{ value: '#5', label: '#5' }
+					{ value: '#5', label: '#5' },
 				]}
 			/>
 
@@ -103,12 +103,12 @@
 					(v) =>
 						onChange({
 							...options,
-							halfDiminished: v as MusicDisplayOptions['halfDiminished']
+							halfDiminished: v as MusicDisplayOptions['halfDiminished'],
 						})
 				}
 				options={[
 					{ value: 'ø', label: 'ø' },
-					{ value: 'm7b5', label: 'm7b5' }
+					{ value: 'm7b5', label: 'm7b5' },
 				]}
 			/>
 
@@ -120,7 +120,7 @@
 				}
 				options={[
 					{ value: 'true', label: 'Yes' },
-					{ value: 'false', label: 'No' }
+					{ value: 'false', label: 'No' },
 				]}
 			/>
 		</div>

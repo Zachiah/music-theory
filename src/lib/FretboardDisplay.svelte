@@ -12,7 +12,7 @@
 		vertical,
 		fretboard,
 		stringDecorations,
-		variableFretSize
+		variableFretSize,
 	}: {
 		onClick: (string: number, fret: number) => void;
 		vertical: boolean;

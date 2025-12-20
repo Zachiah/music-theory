@@ -1,67 +1,183 @@
+import { CanonicalPitchClass } from '$lib/CanonicalPitchClass';
 import { PitchClass } from '$lib/PitchClass';
+import { minByIndex, modWithNegative, rotateArray } from '$lib/util';
 import { Chord } from './chord';
-import type { ScaleDegree } from './scaleDegree';
+import { ScaleDegree } from './scaleDegree';
+import * as TSP from 'typescript-parsec';
 
-const readParts = (
-	input: string
-): { root: PitchClass; originalRoot: PitchClass; rest: string } | null => {
-	const m = input.match(/^(?<root>[a-g][b#]*)(?<other>[^/]*)(\/\s*(?<originalRoot>[a-g][b#]*))?$/);
-	if (!m) {
-		return null;
-	}
+enum TokenKind {
+	PitchClass,
+	Slash,
+	Space,
+	Minor,
+	Major,
+	Augmented,
+	Diminished,
+	Sus2,
+	Sus4,
+	Degree,
+	FlatDegree,
+	SharpDegree,
+	Add,
+}
 
-	const g = m.groups!;
+const lexer = TSP.buildLexer([
+	[true, /^[A-Ga-g][b♭𝄫#♯𝄪]*/gu, TokenKind.PitchClass],
+	[true, /^\//g, TokenKind.Slash],
+	[true, /^[-m]/g, TokenKind.Minor],
+	[true, /^(maj|Δ)/g, TokenKind.Major],
+	[true, /^(aug|\+)/g, TokenKind.Augmented],
+	[true, /^(dim|°)/g, TokenKind.Diminished],
+	[true, /^sus2/g, TokenKind.Sus2],
+	[true, /^sus4?/g, TokenKind.Sus4],
+	[true, /^(2|5|6|7|9|11|13)/g, TokenKind.Degree],
+	[true, /^[b♭](2|5|6|7|9|11|13)/g, TokenKind.FlatDegree],
+	[true, /^[#♯](2|5|6|7|9|11|13)/g, TokenKind.SharpDegree],
+	[true, /^add/g, TokenKind.Add],
+	[false, /^\s+/g, TokenKind.Space],
+]);
 
-	return {
-		root: PitchClass.create(g.root)!,
-		originalRoot: PitchClass.create(g.originalRoot || g.root)!,
-		rest: g.other.trim()
-	};
+const PITCH_CLASS = TSP.rule<TokenKind, PitchClass>();
+PITCH_CLASS.setPattern(
+	TSP.apply(TSP.tok(TokenKind.PitchClass), (ptc) => {
+		return PitchClass.create(ptc.text)!;
+	}),
+);
+
+type BaseType = '-' | '+' | 'dim' | 'sus2' | 'sus4' | '-+';
+
+const BASE_TYPE = TSP.rule<TokenKind, BaseType>();
+BASE_TYPE.setPattern(
+	TSP.alt(
+		TSP.apply(TSP.seq(TSP.tok(TokenKind.Minor), TSP.tok(TokenKind.Augmented)), () => '-+'),
+		TSP.apply(TSP.tok(TokenKind.Minor), () => '-' as const),
+		TSP.apply(TSP.tok(TokenKind.Augmented), () => '+' as const),
+		TSP.apply(TSP.tok(TokenKind.Diminished), () => 'dim' as const),
+		TSP.apply(TSP.tok(TokenKind.Sus2), () => 'sus2' as const),
+		TSP.apply(TSP.tok(TokenKind.Sus4), () => 'sus4' as const),
+	),
+);
+
+type HighestNormalDegree = { maj: boolean; highestDegree: number };
+const HIGHEST_NORMAL_DEGREE = TSP.rule<TokenKind, HighestNormalDegree>();
+HIGHEST_NORMAL_DEGREE.setPattern(
+	TSP.apply(TSP.seq(TSP.opt(TSP.tok(TokenKind.Major)), TSP.tok(TokenKind.Degree)), (v) => ({
+		maj: v[0] !== undefined,
+		highestDegree: +v[1].text,
+	})),
+);
+
+type Modifications = string[];
+const MODIFICATIONS = TSP.rule<TokenKind, Modifications>();
+MODIFICATIONS.setPattern(
+	TSP.apply(
+		TSP.rep(
+			TSP.alt(
+				TSP.tok(TokenKind.Degree),
+				TSP.tok(TokenKind.FlatDegree),
+				TSP.tok(TokenKind.SharpDegree),
+			),
+		),
+		(items) => items.map((item) => item.text),
+	),
+);
+
+const SLASH_NOTATION = TSP.rule<TokenKind, PitchClass>();
+SLASH_NOTATION.setPattern(TSP.kright(TSP.tok(TokenKind.Slash), PITCH_CLASS));
+
+const EXP = TSP.rule<TokenKind, Chord>();
+EXP.setPattern(
+	TSP.apply(
+		TSP.seq(
+			PITCH_CLASS,
+			TSP.opt(BASE_TYPE),
+			TSP.opt_sc(HIGHEST_NORMAL_DEGREE),
+			MODIFICATIONS,
+			TSP.opt(SLASH_NOTATION),
+		),
+		([root, baseType, highestNormalDeg, mods, over]) => {
+			const overHalfSteps = (() => {
+				if (!over) {
+					return null;
+				}
+
+				const rootCanonical = PitchClass.toCanonicalPitchClass(root);
+				const overCanonical = PitchClass.toCanonicalPitchClass(over);
+
+				const rootDist = CanonicalPitchClass.distanceFromC(rootCanonical);
+				const overDist = CanonicalPitchClass.distanceFromC(overCanonical);
+
+				const halfStepsAboveRoot = modWithNegative(
+					overDist - rootDist,
+					CanonicalPitchClass.pitches.length,
+				);
+
+				return halfStepsAboveRoot;
+			})();
+
+			const baseScaleDegrees = getBaseDegrees(baseType, highestNormalDeg, mods);
+
+			if (overHalfSteps === null) {
+				return new Chord(root, baseScaleDegrees);
+			}
+
+			const foundExistingIndex = baseScaleDegrees.findIndex((sd) => {
+				return ScaleDegree.toInterval(sd).semitones === overHalfSteps;
+			});
+
+			if (foundExistingIndex !== -1) {
+				return new Chord(root, rotateArray(baseScaleDegrees, foundExistingIndex));
+			}
+
+			const overScaleDegree = Chord.halfStepToScaleDegree(
+				overHalfSteps,
+				baseScaleDegrees.map((s) => ScaleDegree.toInterval(s).semitones),
+				baseScaleDegrees.length,
+			);
+
+			const closestExistingIndex = minByIndex(baseScaleDegrees, (sd) => {
+				return modWithNegative(
+					ScaleDegree.toInterval(sd).semitones - ScaleDegree.toInterval(overScaleDegree).semitones,
+					CanonicalPitchClass.pitches.length,
+				);
+			});
+
+			return new Chord(root, [
+				overScaleDegree,
+				...rotateArray(baseScaleDegrees, closestExistingIndex),
+			]);
+		},
+	),
+);
+
+const parse = (expr: string) => {
+	return TSP.expectSingleResult(TSP.expectEOF(EXP.parse(lexer.parse(expr))));
 };
 
 export const getChordFromName = (name: string): Chord | null => {
-	const normalized = name
-		.toLowerCase()
-		.trim()
-		.replaceAll('♭', 'b')
-		.replaceAll('𝄫', 'bb')
-		.replaceAll('♯', '#')
-		.replaceAll('𝄪', '##')
-		.replaceAll('flat', 'b')
-		.replaceAll('sharp', '#')
-		.replaceAll('augmented', '+')
-		.replaceAll('aug', '+')
-		.replaceAll('major', 'maj')
-		.replaceAll('maj', 'MAJ')
-		.replaceAll('#5', '+')
-		.replaceAll('diminished', 'DIM')
-		.replaceAll('dim', 'DIM')
-		.replaceAll('°', 'DIM')
-		.replaceAll('minor', '-')
-		.replaceAll('min', '-')
-		.replaceAll('m', '-')
-		.replaceAll('suspended', 'sus')
-		.replaceAll('DIM', 'dim')
-		.replaceAll('MAJ', 'maj');
-
-	const res = readParts(normalized);
-
-	if (!res) {
+	try {
+		return parse(name);
+	} catch (e) {
+		console.log(e);
 		return null;
 	}
+};
 
-	const { root, rest } = res;
-
+const getBaseDegrees = (
+	baseType: BaseType | undefined,
+	highestNormalDegree: HighestNormalDegree | undefined,
+	mods: Modifications,
+): ScaleDegree[] => {
 	const middle: ScaleDegree[] = (() => {
-		if (rest.includes('-') || rest.includes('dim')) {
+		if (baseType === '-' || baseType === 'dim' || baseType === '-+') {
 			return ['flat3'];
 		}
 
-		if (rest === 'sus2') {
+		if (baseType === 'sus2') {
 			return ['2'];
 		}
 
-		if (rest === 'sus4' || rest === 'sus') {
+		if (baseType === 'sus4') {
 			return ['4'];
 		}
 
@@ -69,11 +185,15 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const five: ScaleDegree[] = (() => {
-		if (rest.includes('dim') || rest.includes('b5')) {
+		if (baseType === 'dim' || mods.includes('b5')) {
+			if (baseType === '+' || mods.includes('#5')) {
+				throw new Error('Cannot have a flat and sharp 5');
+			}
+
 			return ['flat5'];
 		}
 
-		if (rest.includes('+')) {
+		if (baseType === '+' || mods.includes('#5')) {
 			return ['sharp5'];
 		}
 
@@ -81,12 +201,13 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const seven: ScaleDegree[] = (() => {
-		if (rest.includes('7') || rest.includes('9') || rest.includes('11') || rest.includes('13')) {
-			if (rest.includes('dim')) {
-				return ['flatflat7'];
-			}
-			if (rest.includes('maj')) {
+		if (highestNormalDegree && highestNormalDegree.highestDegree >= 7) {
+			if (highestNormalDegree.maj) {
 				return ['7'];
+			}
+
+			if (baseType === 'dim') {
+				return ['flatflat7'];
 			}
 
 			return ['flat7'];
@@ -96,15 +217,15 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const nine: ScaleDegree[] = (() => {
-		if (rest.includes('b9')) {
-			return ['flat2'];
-		}
+		if (highestNormalDegree && highestNormalDegree.highestDegree >= 9) {
+			if (mods.includes('b9')) {
+				return ['flat2'];
+			}
 
-		if (rest.includes('#9')) {
-			return ['sharp2'];
-		}
+			if (mods.includes('#9')) {
+				return ['sharp2'];
+			}
 
-		if (rest.includes('9') || rest.includes('11') || rest.includes('13')) {
 			return ['2'];
 		}
 
@@ -112,7 +233,7 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const eleven: ScaleDegree[] = (() => {
-		if (rest.includes('11') || rest.includes('13')) {
+		if (highestNormalDegree && highestNormalDegree.highestDegree >= 11) {
 			return ['4'];
 		}
 
@@ -120,12 +241,15 @@ export const getChordFromName = (name: string): Chord | null => {
 	})();
 
 	const thirteen: ScaleDegree[] = (() => {
-		if (rest.includes('13') || rest.includes('6')) {
+		if (
+			(highestNormalDegree && highestNormalDegree.highestDegree >= 13) ||
+			highestNormalDegree?.highestDegree === 6
+		) {
 			return ['6'];
 		}
 
 		return [];
 	})();
 
-	return new Chord(root, ['1', ...middle, ...five, ...seven, ...nine, ...eleven, ...thirteen]);
+	return ['1', ...middle, ...five, ...seven, ...nine, ...eleven, ...thirteen];
 };

@@ -10,7 +10,7 @@
 		presets,
 		editing,
 		onDelete,
-		onUpdate
+		onUpdate,
 	}: {
 		activeFretboard: Fretboard;
 		onSelect(id: string): void;

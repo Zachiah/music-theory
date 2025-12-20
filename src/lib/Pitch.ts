@@ -11,14 +11,14 @@ export namespace Pitch {
 	export const toCanonical = (p: Pitch): CanonicalPitch => {
 		return CanonicalPitch.applyOffset(
 			{ pitchClass: p.pitchClass.letter, octave: p.octave },
-			p.pitchClass.modifier
+			p.pitchClass.modifier,
 		);
 	};
 
 	export const fromCanonical = (p: CanonicalPitch): Pitch => {
 		return {
 			octave: p.octave,
-			pitchClass: PitchClass.fromCanonicalPitchClass(p.pitchClass)
+			pitchClass: PitchClass.fromCanonicalPitchClass(p.pitchClass),
 		};
 	};
 
@@ -38,7 +38,7 @@ export namespace Pitch {
 		const negative = match[2] === '-' ? -1 : 1;
 		return {
 			octave: negative * +match[3],
-			pitchClass: pitchClass
+			pitchClass: pitchClass,
 		};
 	};
 

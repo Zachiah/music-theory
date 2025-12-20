@@ -12,7 +12,7 @@
 		onSave,
 		open,
 		onClose,
-		baseFretboard
+		baseFretboard,
 	}: {
 		onSave(f: Fretboard): void;
 		open: boolean;
@@ -26,7 +26,7 @@
 		currentFretboard.strings = [
 			...currentFretboard.strings.slice(0, idx),
 			newString,
-			...currentFretboard.strings.slice(idx + 1)
+			...currentFretboard.strings.slice(idx + 1),
 		];
 	};
 
@@ -40,10 +40,10 @@
 			? 'Frets cannot be 0'
 			: isNaN(currentFretboard.frets)
 				? 'Please enter a valid fret number'
-				: ''
+				: '',
 	);
 	const stringsError = $derived(
-		currentFretboard.strings.length === 0 ? 'Add at least 1 string' : ''
+		currentFretboard.strings.length === 0 ? 'Add at least 1 string' : '',
 	);
 
 	let triedSubmit = $state(false);
@@ -86,7 +86,7 @@
 						bind:value={() => '' + dotData.fretNumber, (v) => (dotData.fretNumber = +v)}
 						options={Array.from({ length: currentFretboard.frets }).map((_, f) => ({
 							value: '' + f,
-							label: '' + f
+							label: '' + f,
 						}))}
 					/>
 
@@ -95,7 +95,7 @@
 						bind:value={() => '' + dotData.dots, (v) => (dotData.dots = +v)}
 						options={Array.from({ length: 2 }).map((_, f) => ({
 							value: '' + (f + 1),
-							label: '' + (f + 1)
+							label: '' + (f + 1),
 						}))}
 					/>
 
@@ -104,7 +104,7 @@
 						onClick={() => {
 							currentFretboard.dots = [
 								...currentFretboard.dots.slice(0, idx),
-								...currentFretboard.dots.slice(idx + 1)
+								...currentFretboard.dots.slice(idx + 1),
 							];
 						}}
 					>
@@ -150,7 +150,7 @@
 						}
 						options={Array.from({ length: 8 }).map((_, o) => ({
 							value: '' + (o + 1),
-							label: '' + (o + 1)
+							label: '' + (o + 1),
 						}))}
 					/>
 
@@ -159,7 +159,7 @@
 						onClick={() => {
 							currentFretboard.strings = [
 								...currentFretboard.strings.slice(0, idx),
-								...currentFretboard.strings.slice(idx + 1)
+								...currentFretboard.strings.slice(idx + 1),
 							];
 						}}
 					>
@@ -172,7 +172,7 @@
 					onClick={() =>
 						(currentFretboard.strings = [
 							...currentFretboard.strings,
-							{ octave: 4, pitchClass: 'C' }
+							{ octave: 4, pitchClass: 'C' },
 						])}>Add string</Button
 				>
 			</div>

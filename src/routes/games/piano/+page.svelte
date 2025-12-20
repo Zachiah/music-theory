@@ -7,7 +7,7 @@
 		findPitchForEventByKeybind,
 		getFormattedKeybindForPitch,
 		KEYBOARD_LENGTH,
-		KEYBOARD_START
+		KEYBOARD_START,
 	} from '$lib/keyboardKeybinds';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
@@ -17,7 +17,7 @@
 
 	const cpaPlayState = createCpaPlayState(playback);
 	const cpaState = createCpaState({
-		onChange: cpaPlayState.onCpaChangePlay
+		onChange: cpaPlayState.onCpaChangePlay,
 	});
 
 	onMount(() => {

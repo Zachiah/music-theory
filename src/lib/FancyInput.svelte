@@ -3,7 +3,7 @@
 		value = $bindable(),
 		placeholder,
 		error,
-		forceShowError
+		forceShowError,
 	}: { value: string; placeholder: string; error?: string; forceShowError?: boolean } = $props();
 
 	let blurred = $state(false);

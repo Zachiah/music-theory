@@ -17,20 +17,20 @@ export const TREBLE_FIRST_EXTENSION_ABOVE: CanonicalPitchLetter = { pitchClass: 
 
 export const STAFF_LOW_POS = PitchConstituents.letterBasedHeight(
 	STAFF_LOW.pitchClass,
-	STAFF_LOW.octave
+	STAFF_LOW.octave,
 );
 export const STAFF_HIGH_POS = PitchConstituents.letterBasedHeight(
 	STAFF_HIGH.pitchClass,
-	STAFF_HIGH.octave
+	STAFF_HIGH.octave,
 );
 export const STAFF_SIZE = STAFF_HIGH_POS - STAFF_LOW_POS;
 export const BASS_BOTTOM_POS = PitchConstituents.letterBasedHeight(
 	BASS_BOTTOM.pitchClass,
-	BASS_BOTTOM.octave
+	BASS_BOTTOM.octave,
 );
 export const TREBLE_BOTTOM_POS = PitchConstituents.letterBasedHeight(
 	TREBLE_BOTTOM.pitchClass,
-	TREBLE_BOTTOM.octave
+	TREBLE_BOTTOM.octave,
 );
 
 export type StaffLine = { pos: number; full: boolean };
@@ -38,7 +38,7 @@ export type StaffLine = { pos: number; full: boolean };
 export const filterPitchesInRange = (
 	pitches: Pitch[],
 	low: CanonicalPitch,
-	high: CanonicalPitch
+	high: CanonicalPitch,
 ) => {
 	const l = CanonicalPitch.height(low);
 	const h = CanonicalPitch.height(high);
@@ -83,14 +83,14 @@ export const getVisibleLinePoses = (pitches: Pitch[]): StaffLine[] => {
 	const trebleExtensionsRaw = filterPitchesInRange(
 		letters,
 		TREBLE_FIRST_EXTENSION_ABOVE,
-		STAFF_HIGH
+		STAFF_HIGH,
 	);
 	const trebleExtensions: Pitch[] = trebleExtensionsRaw.length
 		? [...trebleExtensionsRaw, Pitch.fromCanonical(TREBLE_FIRST_EXTENSION_ABOVE)]
 		: [];
 
 	const printedPitches = letters.map((p) =>
-		Pitch.id({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } })
+		Pitch.id({ ...p, pitchClass: { ...p.pitchClass, modifier: 0 } }),
 	);
 	const showMiddle =
 		printedPitches.includes('C4') ||
@@ -100,14 +100,14 @@ export const getVisibleLinePoses = (pitches: Pitch[]): StaffLine[] => {
 		...getLinePosesForRange(bassExtensions, false),
 		...getLinePosesForRange(
 			[Pitch.fromCanonical(BASS_BOTTOM), Pitch.fromCanonical(BASS_TOP)],
-			true
+			true,
 		),
 		...(showMiddle ? [{ pos: PitchConstituents.letterBasedHeight('C', 4), full: false }] : []),
 		...getLinePosesForRange(
 			[Pitch.fromCanonical(TREBLE_BOTTOM), Pitch.fromCanonical(TREBLE_TOP)],
-			true
+			true,
 		),
-		...getLinePosesForRange(trebleExtensions, false)
+		...getLinePosesForRange(trebleExtensions, false),
 	];
 };
 
@@ -137,7 +137,7 @@ const getTakenSpaces = (data: PitchWithAlignment[]) => {
 
 		return Array.from(
 			{ length: modifiersSpaceTaken + 1 },
-			(_, idx) => item.alignment - idx
+			(_, idx) => item.alignment - idx,
 		).toReversed();
 	});
 };
@@ -148,7 +148,7 @@ const getFirstAvailableSpace = (data: number[], needed: number): number => {
 	}
 
 	const compliment = Array.from({ length: Math.max(...data) }, (_, idx) => idx).filter(
-		(num) => !data.includes(num)
+		(num) => !data.includes(num),
 	);
 
 	const grouped = breakApartArray(compliment, (a, b) => b - a <= 1);
@@ -213,7 +213,7 @@ const getLineGroupAlignment = (lineGroup: Pitch[], previouslyTaken: number[], of
 		res.push({
 			pitch,
 			alignment: start === 0 ? 0 : start + size - 1,
-			natural
+			natural,
 		});
 	}
 

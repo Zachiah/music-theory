@@ -14,13 +14,13 @@ describe(printChord, () => {
 		major: 'maj',
 		minor: 'm',
 		halfDiminished: 'ø',
-		slashNotation: true
+		slashNotation: true,
 	};
 
 	const t = (
 		notes: CanonicalPitchClass[],
 		output: string,
-		options: Partial<MusicDisplayOptions> = {}
+		options: Partial<MusicDisplayOptions> = {},
 	) => {
 		const c = Chord.guessFromPitches(notes);
 		expect(printChord(c, { ...defaultOptions, ...options })).toEqual(output);
@@ -102,7 +102,7 @@ describe(printChord, () => {
 		t(['C', 'E', 'G', 'Bb', 'D', 'F', 'Ab', 'A'], 'C11 b13 13');
 		t(
 			['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'],
-			'C maj7 7 b9 9 #9 11 #11 b13 13'
+			'C maj7 7 b9 9 #9 11 #11 b13 13',
 		);
 		t(['C', 'Db', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'], 'F7 b9 9 #9 11 #11 b13 13 / C');
 		t(['C', 'E', 'G', 'Bb', 'B'], 'C maj7 7');

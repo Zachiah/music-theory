@@ -18,7 +18,7 @@
 		'Ab',
 		'Eb',
 		'Bb',
-		'F'
+		'F',
 	]);
 </script>
 
@@ -35,7 +35,7 @@
 					>
 						{PitchClass.print(
 							foundSelected ?? PitchClass.fromCanonicalPitchClass(p),
-							musicDisplayOptions.data
+							musicDisplayOptions.data,
 						)}
 					</div>
 				</div>

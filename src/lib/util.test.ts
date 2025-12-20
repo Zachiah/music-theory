@@ -14,12 +14,12 @@ describe(breakApartArray, () => {
 	it('should work', () => {
 		expect(breakApartArray([1, 2, 3, 4, 5, 7, 8, 9, 10], (a, b) => b - a === 1)).toEqual([
 			[1, 2, 3, 4, 5],
-			[7, 8, 9, 10]
+			[7, 8, 9, 10],
 		]);
 		expect(breakApartArray([1, 3, 4, 5, 7, 8], (a, b) => b - a === 1)).toEqual([
 			[1],
 			[3, 4, 5],
-			[7, 8]
+			[7, 8],
 		]);
 	});
 });

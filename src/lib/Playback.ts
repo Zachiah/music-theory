@@ -11,7 +11,7 @@ export class Playback {
 
 	async init() {
 		this.#engine = await Soundfont.instrument(this.#audioContext, 'acoustic_grand_piano', {
-			from: '/samples/sf2/000_Florestan_Piano.sf2'
+			from: '/samples/sf2/000_Florestan_Piano.sf2',
 		});
 	}
 

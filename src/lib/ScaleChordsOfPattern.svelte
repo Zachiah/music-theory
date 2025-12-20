@@ -11,7 +11,7 @@
 	const {
 		pattern,
 		intervals,
-		pitchClass
+		pitchClass,
 	}: { pattern: number[]; intervals: Intervals; pitchClass: PitchClass } = $props();
 </script>
 
@@ -23,14 +23,14 @@
 			onClick={() => {
 				playback.demoChord(
 					CanonicalPitchArray.fromCanonicalPitchClasses(canonicalPitchClasses, 4),
-					playback.now()
+					playback.now(),
 				);
 			}}
 		>
 			<span class="icon-[heroicons--speaker-wave]"></span>
 			{printChord(
 				Chord.guessFromPitchesWithRoot(triad[0], canonicalPitchClasses),
-				musicDisplayOptions.data
+				musicDisplayOptions.data,
 			)}
 		</Button>
 	{/each}

@@ -2,7 +2,7 @@
 	let {
 		value = $bindable(),
 		options,
-		placeholder
+		placeholder,
 	}: { value: string; options: { value: string; label: string }[]; placeholder: string } = $props();
 
 	let search: string = $state('');
@@ -11,7 +11,7 @@
 		options.filter((option) => {
 			const searchWords = search.toLowerCase().split(' ');
 			return searchWords.every((word) => option.label.toLowerCase().includes(word));
-		})
+		}),
 	);
 
 	const selectedIdx = $derived(filteredOptions.findIndex((o) => o.value === value));

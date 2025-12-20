@@ -54,15 +54,24 @@
 					.map((p) => PitchClass.print(p, musicDisplayOptions.data))
 					.join(', ')}
 			</SubContainer>
+		{:else if typedChordName}
+			<div class="bg-warning rounded-md p-4">
+				Unable to resolve chord: <span class="font-bold">{typedChordName}</span>. If it is valid
+				please
+				<a
+					class="text-primary bg-surface-1"
+					href="https://github.com/Zachiah/music-theory/issues/new">make a GitHub issue</a
+				> talking about it. Thanks!
+			</div>
 		{/if}
 	</div>
 
 	{#if chord}
 		{@const keyboardStart = whiteNoteBelow(
-			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[0]), -6)
+			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[0]), -6),
 		)}
 		{@const keyboardEnd = whiteNoteAbove(
-			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[pitches.length - 1]), +6)
+			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[pitches.length - 1]), +6),
 		)}
 		{@const keyboardLength =
 			CanonicalPitch.height(keyboardEnd) - CanonicalPitch.height(keyboardStart) + 1}

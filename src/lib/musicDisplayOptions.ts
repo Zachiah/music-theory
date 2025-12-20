@@ -18,7 +18,7 @@ export namespace MusicDisplayOptions {
 		minor: 'm',
 		major: 'maj',
 		halfDiminished: 'm7b5',
-		slashNotation: true
+		slashNotation: true,
 	};
 
 	export const lowerFlat = (options: MusicDisplayOptions): string => {

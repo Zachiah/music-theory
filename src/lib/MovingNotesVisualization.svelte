@@ -18,7 +18,7 @@
 		history,
 		start: startNote,
 		whiteKeyWidth,
-		themeName
+		themeName,
 	}: {
 		history: CpaHistoryItem[];
 		start: CanonicalPitch;
@@ -42,7 +42,7 @@
 
 			return {
 				classes: `${flatBased} to-transparent bg-linear-to-tr border border-always-white`,
-				styles: ''
+				styles: '',
 			};
 		},
 		rainbow: (item) => {
@@ -53,20 +53,20 @@
 				'#00FF00',
 				'#0000FF',
 				'#4B0082',
-				'#8B00FF'
+				'#8B00FF',
 			];
 			return {
 				classes: 'from-(--b) to-always-white bg-linear-to-tr',
-				styles: `--b: ${rainbowColors[item.start % rainbowColors.length]}`
+				styles: `--b: ${rainbowColors[item.start % rainbowColors.length]}`,
 			};
 		},
 		fire: (item) => {
 			const fireColors = ['#FF4500', '#FF8C00', '#FFFF00'];
 			return {
 				classes: 'from-warning via-danger via-30% to-transparent bg-linear-to-tr',
-				styles: `--b: ${fireColors[item.start % fireColors.length]}`
+				styles: `--b: ${fireColors[item.start % fireColors.length]}`,
 			};
-		}
+		},
 	};
 </script>
 
@@ -79,11 +79,11 @@
 			{@const flat = item.pitch.pitchClass.endsWith('b')}
 			{@const absoluteLetterHeight = PitchConstituents.letterBasedHeight(
 				PitchClass.fromCanonicalPitchClass(item.pitch.pitchClass).letter,
-				item.pitch.octave
+				item.pitch.octave,
 			)}
 			{@const c2LetterHeight = PitchConstituents.letterBasedHeight(
 				startNote.pitchClass as PitchConstituents.LetterName,
-				startNote.octave
+				startNote.octave,
 			)}
 			{@const letterHeight = absoluteLetterHeight - c2LetterHeight}
 

@@ -10,7 +10,7 @@
 	import { midiAccess } from '$lib/midiAccess.svelte';
 	import MovingNotesVisualization, {
 		vizThemes,
-		type VizThemeName
+		type VizThemeName,
 	} from '$lib/MovingNotesVisualization.svelte';
 	import { PitchConstituents } from '$lib/PitchConstituents';
 	import { playback } from '$lib/Playback';
@@ -30,7 +30,7 @@
 				cpaPlayState.onCpaChangePlay(change);
 			}
 			cpaHistoryState.onCpaChangeHistory(change);
-		}
+		},
 	});
 
 	onMount(() => {

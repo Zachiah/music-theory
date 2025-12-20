@@ -19,28 +19,28 @@ describe('CP', () => {
 			n('C2'),
 			n('D2'),
 			n('B2'),
-			n('A4')
+			n('A4'),
 		]);
 	});
 
 	it('Can convert to height and back losslessly', () => {
 		expect(CP.fromHeight(CP.height({ pitchClass: 'C', octave: 0 }))).toEqual({
 			pitchClass: 'C',
-			octave: 0
+			octave: 0,
 		});
 		expect(CP.fromHeight(CP.height({ pitchClass: 'F', octave: 4 }))).toEqual({
 			pitchClass: 'F',
-			octave: 4
+			octave: 4,
 		});
 		expect(CP.fromHeight(CP.height({ pitchClass: 'Gb', octave: 8 }))).toEqual({
 			pitchClass: 'Gb',
-			octave: 8
+			octave: 8,
 		});
 	});
 
 	it('Can get ranges', () => {
 		expect(
-			CP.getRangeInclusive({ pitchClass: 'F', octave: 3 }, { pitchClass: 'A', octave: 3 })
+			CP.getRangeInclusive({ pitchClass: 'F', octave: 3 }, { pitchClass: 'A', octave: 3 }),
 		).toEqual(['F3', 'Gb3', 'G3', 'Ab3', 'A3'].map((p) => Pitch.parse(p)!).map(Pitch.toCanonical));
 	});
 });

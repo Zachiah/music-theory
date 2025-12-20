@@ -9,7 +9,7 @@ export namespace Interval {
 		const withoutExtraMods = PitchClass.withLetterName(
 			CanonicalPitchClass.applyOffset(pitch.letter, interval.semitones),
 			PitchConstituents.nextLetter(pitch.letter, interval.letters),
-			'closest'
+			'closest',
 		);
 
 		return { ...withoutExtraMods, modifier: withoutExtraMods.modifier + pitch.modifier };
@@ -27,7 +27,7 @@ export namespace Interval {
 			['4', 'p', 5],
 			['5', 'p', 7],
 			['6', 'm', 9],
-			['7', 'm', 11]
+			['7', 'm', 11],
 		];
 
 		const type = types[interval.letters];
@@ -65,8 +65,8 @@ export namespace Intervals {
 					scale.map((i) => i.semitones).reduce((a, b) => a + b, 0),
 				letters:
 					PitchConstituents.letterNames.length -
-					scale.map((i) => i.letters).reduce((a, b) => a + b, 0)
-			}
+					scale.map((i) => i.letters).reduce((a, b) => a + b, 0),
+			},
 		];
 		const offset = modeNumber - (1 % withLastInterval.length);
 
@@ -77,7 +77,7 @@ export namespace Intervals {
 		if (startingPitch.modifier !== 0) {
 			return getPitches(scale, { ...startingPitch, modifier: 0 }).map((p) => ({
 				...p,
-				modifier: p.modifier + startingPitch.modifier
+				modifier: p.modifier + startingPitch.modifier,
 			}));
 		}
 
@@ -88,12 +88,12 @@ export namespace Intervals {
 		const nextLetterName = PitchConstituents.nextLetter(startingPitch.letter, scale[0].letters);
 		const secondPitchResolved = CanonicalPitchClass.applyOffset(
 			PitchClass.resolve(startingPitch),
-			scale[0].semitones
+			scale[0].semitones,
 		);
 		const secondPitchProper = PitchClass.withLetterName(
 			secondPitchResolved,
 			nextLetterName,
-			'closest'
+			'closest',
 		);
 
 		return [startingPitch].concat(getPitches(scale.slice(1), secondPitchProper));
@@ -102,7 +102,7 @@ export namespace Intervals {
 	export const getAllOfChordPattern = (
 		scale: Intervals,
 		startingPitch: PitchClass,
-		pattern: number[]
+		pattern: number[],
 	): PitchClass[][] => {
 		const pitches = getPitches(scale, startingPitch);
 		return pitches

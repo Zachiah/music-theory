@@ -19,7 +19,7 @@
 	let fretboardPresets = createLocalStorageState<Fretboard[]>(
 		'fretboardPresets',
 		3,
-		defaultPresets
+		defaultPresets,
 	);
 
 	let fretboardId = createLocalStorageState<string>('fretboardId', 1, fretboardPresets.data[0].id);
@@ -39,7 +39,7 @@
 			},
 			set pluggedAt(n: (number | null)[]) {
 				pluggedAt = n;
-			}
+			},
 		};
 	});
 
@@ -55,8 +55,8 @@
 				}
 
 				return 'none';
-			})
-		)
+			}),
+		),
 	);
 
 	const pitches = $derived.by(() => {
@@ -86,7 +86,7 @@
 	});
 
 	const chordString = $derived(
-		guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : ''
+		guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : '',
 	);
 
 	let vertical = $state(false);

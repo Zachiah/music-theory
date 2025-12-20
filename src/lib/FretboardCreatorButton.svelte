@@ -13,7 +13,7 @@
 		name: '',
 		strings: [],
 		dots: [],
-		frets: 24
+		frets: 24,
 	});
 </script>
 

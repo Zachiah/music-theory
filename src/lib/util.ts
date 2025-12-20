@@ -41,40 +41,48 @@ export const chooseRandom = <T>(arr: T[]): T => {
 	return arr[idx];
 };
 
-export const minBy = <T>(arr: T[], by: (a: T) => number) => {
+export const minByIndex = <T>(arr: T[], by: (a: T) => number) => {
 	if (arr.length === 0) {
 		throw new Error('minBy does not work on empty arrays');
 	}
-	let best = arr[0];
+	let bestIndex = 0;
 	let bestBy = by(arr[0]);
-	for (const item of arr) {
-		const itemBy = by(item);
+	for (let i = 1; i < arr.length; i++) {
+		const itemBy = by(arr[i]);
 
 		if (itemBy < bestBy) {
-			best = item;
+			bestIndex = i;
 			bestBy = itemBy;
 		}
 	}
 
-	return best;
+	return bestIndex;
 };
 
-export const maxBy = <T>(arr: T[], by: (a: T) => number) => {
+export const minBy = <T>(arr: T[], by: (a: T) => number) => {
+	return arr[minByIndex(arr, by)];
+};
+
+export const maxByIndex = <T>(arr: T[], by: (a: T) => number) => {
 	if (arr.length === 0) {
 		throw new Error('maxBy does not work on empty arrays');
 	}
-	let best = arr[0];
+	let bestIndex = 0;
 	let bestBy = by(arr[0]);
-	for (const item of arr) {
-		const itemBy = by(item);
+	for (let i = 1; i < arr.length; i++) {
+		const itemBy = by(arr[i]);
 
 		if (itemBy > bestBy) {
-			best = item;
+			bestIndex = i;
 			bestBy = itemBy;
 		}
 	}
 
-	return best;
+	return bestIndex;
+};
+
+export const maxBy = <T>(arr: T[], by: (a: T) => number) => {
+	return arr[maxByIndex(arr, by)];
 };
 
 export const inclusiveRange = (low: number, high: number) => {

@@ -15,7 +15,7 @@ describe('PitchConstituents', () => {
 		const otherOptions: MusicDisplayOptions = {
 			...MusicDisplayOptions.defaultOptions,
 			flats: 'b',
-			sharps: '#'
+			sharps: '#',
 		};
 		expect(PitchConstituents.printModifiers(4, otherOptions)).toBe('####');
 		expect(PitchConstituents.printModifiers(-4, otherOptions)).toBe('bbbb');

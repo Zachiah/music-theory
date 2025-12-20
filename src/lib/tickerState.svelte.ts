@@ -14,6 +14,6 @@ export const createTickerState = (interval: number) => {
 	return {
 		get tick() {
 			return tick;
-		}
+		},
 	};
 };

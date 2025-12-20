@@ -111,7 +111,7 @@
 			<Button
 				style="neutral"
 				attrs={{
-					'aria-label': isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
+					'aria-label': isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen',
 				}}
 				onClick={toggleFullscreen}
 				icon={isFullscreen

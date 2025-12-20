@@ -11,7 +11,7 @@ const guitarDots: Fretboard['dots'] = [
 	{ fretNumber: 15, dots: 1 },
 	{ fretNumber: 17, dots: 1 },
 	{ fretNumber: 19, dots: 1 },
-	{ fretNumber: 21, dots: 1 }
+	{ fretNumber: 21, dots: 1 },
 ];
 
 const ukeleleDots: Fretboard['dots'] = [
@@ -19,14 +19,14 @@ const ukeleleDots: Fretboard['dots'] = [
 	{ fretNumber: 5, dots: 1 },
 	{ fretNumber: 7, dots: 1 },
 	{ fretNumber: 10, dots: 1 },
-	{ fretNumber: 11, dots: 1 }
+	{ fretNumber: 11, dots: 1 },
 ];
 
 export const defaultPresets: Fretboard[] = [
 	{
 		name: 'Guitar',
 		strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
-		dots: guitarDots
+		dots: guitarDots,
 	},
 	{ name: 'Drop D Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E2'], dots: guitarDots },
 	{ name: 'DADGAD Guitar', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'], dots: guitarDots },
@@ -34,10 +34,10 @@ export const defaultPresets: Fretboard[] = [
 		name: 'Ukelele (reentrant)',
 		strings: ['G4', 'C4', 'E4', 'A4'],
 		frets: 18,
-		dots: ukeleleDots
+		dots: ukeleleDots,
 	},
 	{ name: 'Bass', strings: ['E1', 'A1', 'D2', 'G2'], dots: guitarDots },
-	{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'], frets: 18, dots: ukeleleDots }
+	{ name: 'Ukelele (low G)', strings: ['G3', 'C4', 'E4', 'A4'], frets: 18, dots: ukeleleDots },
 ].map((row) => ({
 	id: generateId(),
 	frets: 24,
@@ -49,5 +49,5 @@ export const defaultPresets: Fretboard[] = [
 		}
 
 		return Pitch.toCanonical(parsed);
-	})
+	}),
 }));

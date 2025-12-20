@@ -9,7 +9,7 @@
 		KEYBOARD_LENGTH,
 		KEYBOARD_START,
 		findPitchForEventByKeybind,
-		getFormattedKeybindForPitch
+		getFormattedKeybindForPitch,
 	} from '$lib/keyboardKeybinds';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import { midiAccess } from '$lib/midiAccess.svelte';
@@ -39,7 +39,7 @@
 	});
 
 	const normalized = $derived(
-		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected)
+		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected),
 	);
 
 	onMount(() => {
@@ -111,7 +111,7 @@
 			{#snippet renderKeyText(cp)}
 				{@const keybind = getFormattedKeybindForPitch(cp)}
 				{@const foundNormalized = normalized.find((n) =>
-					CanonicalPitch.equal(Pitch.toCanonical(n.pitch), cp)
+					CanonicalPitch.equal(Pitch.toCanonical(n.pitch), cp),
 				)}
 
 				<div class="flex flex-col">

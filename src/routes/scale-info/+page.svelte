@@ -27,7 +27,7 @@
 		'7ths': [0, 2, 4, 6],
 		'9ths': [0, 2, 4, 6, 8],
 		'11ths': [0, 2, 4, 6, 8, 10],
-		'13ths': [0, 2, 4, 6, 8, 10, 12]
+		'13ths': [0, 2, 4, 6, 8, 10, 12],
 	};
 </script>
 
@@ -43,7 +43,7 @@
 				bind:value={selectedScaleSlug}
 				options={scales.map((scale) => ({
 					label: ScaleName.print(scale.names[0]),
-					value: scale.slug
+					value: scale.slug,
 				}))}
 			/>
 		</form>
@@ -73,16 +73,16 @@
 						[
 							...CanonicalPitchArray.fromCanonicalPitchClasses(
 								Intervals.getPitches(scale.intervals, pitch).map((p) =>
-									PitchClass.toCanonicalPitchClass(p)
+									PitchClass.toCanonicalPitchClass(p),
 								),
-								4
+								4,
 							),
 							{
 								pitchClass: PitchClass.toCanonicalPitchClass(pitch),
-								octave: 5
-							}
+								octave: 5,
+							},
 						],
-						playback.now()
+						playback.now(),
 					);
 				}}
 			>

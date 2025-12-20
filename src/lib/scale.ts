@@ -23,7 +23,7 @@ export type ScaleDescription = {
 export namespace ScaleDescription {
 	const generateModeDescriptions = (
 		base: ScaleDescription,
-		modes: { name: string | string[]; description: string }[]
+		modes: { name: string | string[]; description: string }[],
 	): ScaleDescription[] => {
 		return [
 			base,
@@ -39,12 +39,12 @@ export namespace ScaleDescription {
 						{
 							tag: 'mode',
 							name: base.names[0].name,
-							number: idx + 2 + (base.names[0].tag === 'mode' ? base.names[0].number : 0)
-						}
+							number: idx + 2 + (base.names[0].tag === 'mode' ? base.names[0].number : 0),
+						},
 					],
-					description: mode.description
+					description: mode.description,
 				};
-			})
+			}),
 		];
 	};
 
@@ -57,8 +57,8 @@ export namespace ScaleDescription {
 				intervals: Intervals.createWithSemitones(1, [2, 2, 1, 2, 2, 2]),
 				names: [
 					{ tag: 'plain', name: 'major' },
-					{ tag: 'plain', name: 'ionian' }
-				]
+					{ tag: 'plain', name: 'ionian' },
+				],
 			},
 			[
 				{ name: 'dorian', description: '' },
@@ -66,15 +66,15 @@ export namespace ScaleDescription {
 				{ name: 'lydian', description: '' },
 				{ name: 'mixolydian', description: '' },
 				{ name: ['minor', 'aeolian'], description: '' },
-				{ name: 'locrian', description: '' }
-			]
+				{ name: 'locrian', description: '' },
+			],
 		),
 		...generateModeDescriptions(
 			{
 				slug: 'harmonic-minor',
 				names: [{ tag: 'plain', name: 'harmonic minor' }],
 				intervals: Intervals.createWithSemitones(1, [2, 1, 2, 2, 1, 3]),
-				description: ''
+				description: '',
 			},
 			[
 				{ name: 'locrian ♮6', description: '' },
@@ -82,15 +82,15 @@ export namespace ScaleDescription {
 				{ name: ['ukranian dorian', 'dorian ♯4'], description: '' },
 				{ name: 'phrygian Dominant', description: '' },
 				{ name: ['lydian ♯2', 'lydian ♯9'], description: '' },
-				{ name: ['altered diminished', 'locrian ♭4 ♭♭7'], description: '' }
-			]
+				{ name: ['altered diminished', 'locrian ♭4 ♭♭7'], description: '' },
+			],
 		),
 		...generateModeDescriptions(
 			{
 				slug: 'melodic-minor',
 				names: [{ tag: 'plain', name: 'melodic minor' }],
 				intervals: Intervals.createWithSemitones(1, [2, 1, 2, 2, 2, 2]),
-				description: ''
+				description: '',
 			},
 			[
 				{ name: ['dorian ♭2', 'phrygian ♮6'], description: '' },
@@ -98,23 +98,23 @@ export namespace ScaleDescription {
 				{ name: ['lydian dominant', 'mixolydian ♯4', 'mixolydian ♯11'], description: '' },
 				{ name: ['aeolian dominant', 'mixolydian ♭6'], description: '' },
 				{ name: ['aeolian ♭5', 'locrian ♮2', 'locrian ♮9'], description: '' },
-				{ name: ['altered', 'altered dominant', 'super-locrian', 'locrian ♭4'], description: '' }
-			]
+				{ name: ['altered', 'altered dominant', 'super-locrian', 'locrian ♭4'], description: '' },
+			],
 		),
 		{
 			slug: 'blues',
 			names: [
 				{ tag: 'plain', name: 'blues' },
-				{ tag: 'plain', name: 'minor blues' }
+				{ tag: 'plain', name: 'minor blues' },
 			],
 			intervals: [
 				{ semitones: 3, letters: 2 },
 				{ semitones: 2, letters: 1 },
 				{ semitones: 1, letters: 0 },
 				{ semitones: 1, letters: 1 },
-				{ semitones: 3, letters: 2 }
+				{ semitones: 3, letters: 2 },
 			],
-			description: ''
+			description: '',
 		},
 		{
 			slug: 'major-blues',
@@ -124,32 +124,32 @@ export namespace ScaleDescription {
 				{ semitones: 1, letters: 1 },
 				{ semitones: 1, letters: 0 },
 				{ semitones: 3, letters: 2 },
-				{ semitones: 2, letters: 1 }
+				{ semitones: 2, letters: 1 },
 			],
-			description: ''
+			description: '',
 		},
 		...generateModeDescriptions(
 			{
 				slug: 'pentatonic',
 				names: [
 					{ tag: 'plain', name: 'pentatonic' },
-					{ tag: 'plain', name: 'major pentatonic' }
+					{ tag: 'plain', name: 'major pentatonic' },
 				],
 				intervals: [
 					{ semitones: 2, letters: 1 },
 					{ semitones: 2, letters: 1 },
 					{ semitones: 3, letters: 2 },
-					{ semitones: 2, letters: 1 }
+					{ semitones: 2, letters: 1 },
 				],
-				description: ''
+				description: '',
 			},
 			[
 				{ name: 'suspended egyptian pentatonic', description: '' },
 				{ name: 'blues minor pentatonic', description: '' },
 				{ name: 'blues major pentatonic', description: '' },
-				{ name: 'minor pentatonic', description: '' }
-			]
-		)
+				{ name: 'minor pentatonic', description: '' },
+			],
+		),
 		// TODO: Modes of double harm major
 		// TODO: Modes of harm major
 	];

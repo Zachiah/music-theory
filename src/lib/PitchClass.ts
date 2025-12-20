@@ -16,14 +16,14 @@ export namespace PitchClass {
 	export const withLetterName = (
 		resolvedPitch: CanonicalPitchClass,
 		letterName: PitchConstituents.LetterName,
-		direction: 'down' | 'up' | 'closest'
+		direction: 'down' | 'up' | 'closest',
 	): PitchClass => {
 		const letterNameIdx = CanonicalPitchClass.pitches.indexOf(letterName);
 		const resolvedPitchIdx = CanonicalPitchClass.pitches.indexOf(resolvedPitch);
 
 		const offsetPositive = modWithNegative(
 			resolvedPitchIdx - letterNameIdx,
-			CanonicalPitchClass.pitches.length
+			CanonicalPitchClass.pitches.length,
 		);
 		const offsetNegative = offsetPositive === 0 ? 0 : offsetPositive - 12;
 
@@ -81,7 +81,7 @@ export namespace PitchClass {
 			E: { letter: 'E', modifier: 0 },
 			F: { letter: 'F', modifier: 0 },
 			Gb: { letter: 'G', modifier: -1 },
-			G: { letter: 'G', modifier: 0 }
+			G: { letter: 'G', modifier: 0 },
 		};
 
 		return mapping[p];

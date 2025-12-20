@@ -45,7 +45,7 @@ export namespace CanonicalPitch {
 
 		return {
 			octave: p.octave + octaves * direction + octaveModifier,
-			pitchClass: newPitchClass
+			pitchClass: newPitchClass,
 		};
 	};
 
@@ -82,7 +82,7 @@ export namespace CanonicalPitchArray {
 
 	export const fromCanonicalPitchClasses = (
 		canonicalPitchClasses: CanonicalPitchClass[],
-		startOctave: number
+		startOctave: number,
 	): CanonicalPitchArray => {
 		const [head, ...tail] = canonicalPitchClasses;
 
@@ -101,7 +101,7 @@ export namespace CanonicalPitchArray {
 
 	export const includes = (pitches: CanonicalPitchArray, p: CanonicalPitch): boolean => {
 		return !!pitches.find(
-			(pitch) => pitch.pitchClass === p.pitchClass && pitch.octave === p.octave
+			(pitch) => pitch.pitchClass === p.pitchClass && pitch.octave === p.octave,
 		);
 	};
 }

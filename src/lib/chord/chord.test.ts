@@ -51,14 +51,14 @@ describe(Chord, () => {
 
 		const pitch = (pc: string, octave: number) => ({
 			pitchClass: PitchClass.create(pc)!,
-			octave
+			octave,
 		});
 
 		it('keeps octaves steady when scale degrees stay within the same span', () => {
 			expect(chord('C', ['1', '3', '5']).getPitchesFromOctave(3)).toEqual([
 				pitch('C', 3),
 				pitch('E', 3),
-				pitch('G', 3)
+				pitch('G', 3),
 			]);
 		});
 
@@ -66,7 +66,7 @@ describe(Chord, () => {
 			expect(chord('C', ['5', '7', '2']).getPitchesFromOctave(3)).toEqual([
 				pitch('G', 3),
 				pitch('B', 3),
-				pitch('D', 4)
+				pitch('D', 4),
 			]);
 		});
 
@@ -75,7 +75,7 @@ describe(Chord, () => {
 				pitch('B', 3),
 				pitch('D', 4),
 				pitch('G', 4),
-				pitch('C', 5)
+				pitch('C', 5),
 			]);
 		});
 
@@ -84,7 +84,7 @@ describe(Chord, () => {
 				pitch('Bbb', 3),
 				pitch('Dbb', 4),
 				pitch('Gbb', 4),
-				pitch('Cbb', 5)
+				pitch('Cbb', 5),
 			]);
 		});
 
@@ -93,7 +93,7 @@ describe(Chord, () => {
 				pitch('Bbbbbbbb', 3),
 				pitch('Dbbbbbbb', 4),
 				pitch('Gbbbbbbb', 4),
-				pitch('Cbbbbbbb', 5)
+				pitch('Cbbbbbbb', 5),
 			]);
 		});
 	});

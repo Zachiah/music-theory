@@ -14,7 +14,7 @@ export namespace PitchConstituents {
 	export const letterBasedHeight = (letter: LetterName, octave: number) => {
 		const letterHeight = modWithNegative(
 			letterNames.indexOf(letter) - letterNames.indexOf('C'),
-			letterNames.length
+			letterNames.length,
 		);
 		return letterNames.length * octave + letterHeight;
 	};

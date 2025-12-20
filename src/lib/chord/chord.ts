@@ -8,7 +8,7 @@ import { ScaleDegree } from './scaleDegree';
 export class Chord {
 	constructor(
 		public root: PitchClass,
-		public scaleDegrees: ScaleDegree[]
+		public scaleDegrees: ScaleDegree[],
 	) {}
 
 	static guessFromPitchesWithRoot(root: PitchClass, pitches: CanonicalPitchClass[]): Chord {
@@ -24,52 +24,13 @@ export class Chord {
 
 		return new Chord(
 			root,
-			halfSteps.map((h) => {
-				if (h === 0) return '1';
-				if (h === 1) return 'flat2';
-				if (h === 2) return '2';
-				if (h === 3) {
-					if (
-						!halfSteps.includes(4) ||
-						(halfSteps.includes(2) && !halfSteps.includes(10) && !halfSteps.includes(11))
-					) {
-						return 'flat3';
-					}
-
-					return 'sharp2';
-				}
-				if (h === 4) return '3';
-				if (h === 5) return '4';
-				if (h === 6) {
-					return halfSteps.includes(7) || halfSteps.includes(8) ? 'sharp4' : 'flat5';
-				}
-				if (h === 7) return '5';
-				if (h === 8) {
-					return halfSteps.includes(7) || l === 2 ? 'flat6' : 'sharp5';
-				}
-				if (h === 9) {
-					if (
-						halfSteps.includes(3) &&
-						halfSteps.includes(6) &&
-						!halfSteps.includes(7) &&
-						!halfSteps.includes(4) &&
-						!halfSteps.includes(10) &&
-						!halfSteps.includes(11)
-					) {
-						return 'flatflat7';
-					}
-					return '6';
-				}
-				if (h === 10) return 'flat7';
-				if (h === 11) return '7';
-				throw new Error('Should never hit this');
-			})
+			halfSteps.map((h) => this.halfStepToScaleDegree(h, halfSteps, l)),
 		);
 	}
 
 	static guessFromPitches(pitches: CanonicalPitchClass[]): Chord {
 		const possible = pitches.map((p) =>
-			this.guessFromPitchesWithRoot(PitchClass.fromCanonicalPitchClass(p), pitches)
+			this.guessFromPitchesWithRoot(PitchClass.fromCanonicalPitchClass(p), pitches),
 		);
 
 		console.group('Chord');
@@ -84,6 +45,51 @@ export class Chord {
 		console.groupEnd();
 
 		return res;
+	}
+
+	public static halfStepToScaleDegree(
+		h: number,
+		halfSteps: number[],
+		uniquePitchCount: number,
+	): ScaleDegree {
+		if (h === 0) return '1';
+		if (h === 1) return 'flat2';
+		if (h === 2) return '2';
+		if (h === 3) {
+			if (
+				!halfSteps.includes(4) ||
+				(halfSteps.includes(2) && !halfSteps.includes(10) && !halfSteps.includes(11))
+			) {
+				return 'flat3';
+			}
+
+			return 'sharp2';
+		}
+		if (h === 4) return '3';
+		if (h === 5) return '4';
+		if (h === 6) {
+			return halfSteps.includes(7) || halfSteps.includes(8) ? 'sharp4' : 'flat5';
+		}
+		if (h === 7) return '5';
+		if (h === 8) {
+			return halfSteps.includes(7) || uniquePitchCount === 2 ? 'flat6' : 'sharp5';
+		}
+		if (h === 9) {
+			if (
+				halfSteps.includes(3) &&
+				halfSteps.includes(6) &&
+				!halfSteps.includes(7) &&
+				!halfSteps.includes(4) &&
+				!halfSteps.includes(10) &&
+				!halfSteps.includes(11)
+			) {
+				return 'flatflat7';
+			}
+			return '6';
+		}
+		if (h === 10) return 'flat7';
+		if (h === 11) return '7';
+		throw new Error('Should never hit this');
 	}
 
 	private getComplexity(): number {
@@ -218,7 +224,7 @@ export class Chord {
 	private static getModifiedOctave(
 		originalOctave: number,
 		originalPitchClass: PitchClass,
-		newPitchClass: PitchClass
+		newPitchClass: PitchClass,
 	): number {
 		if (originalPitchClass.letter === 'C' && newPitchClass.letter === 'B') {
 			return originalOctave - 1;
@@ -247,13 +253,13 @@ export class Chord {
 
 			return {
 				pitchClass,
-				octave: currentOctave
+				octave: currentOctave,
 			};
 		});
 	}
 
 	getNormalizedPitchesWithOctaves(
-		pitches: CanonicalPitch[]
+		pitches: CanonicalPitch[],
 	): { pitch: Pitch; scaleDegree: ScaleDegree }[] {
 		return this.scaleDegrees.map((c, idx) => {
 			const p = ScaleDegree.getPitchFromRoot(c, this.root);
@@ -263,8 +269,8 @@ export class Chord {
 				octave: Chord.getModifiedOctave(
 					pitches[idx].octave,
 					PitchClass.fromCanonicalPitchClass(pitches[idx].pitchClass),
-					p
-				)
+					p,
+				),
 			};
 
 			return { pitch, scaleDegree: c };

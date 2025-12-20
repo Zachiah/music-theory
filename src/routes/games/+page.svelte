@@ -8,13 +8,13 @@
 		{
 			href: '/games/sight-reading',
 			title: 'Sight Reading',
-			description: 'Practice reading clusters of random notes to sharpen your sight reading.'
+			description: 'Practice reading clusters of random notes to sharpen your sight reading.',
 		},
 		{
 			href: '/games/piano',
 			title: 'Piano',
-			description: 'Play a virtual piano using your keyboard or MIDI'
-		}
+			description: 'Play a virtual piano using your keyboard or MIDI',
+		},
 	] as const satisfies Game[];
 </script>
 
@@ -27,7 +27,7 @@
 				el="a"
 				class="flex flex-col gap-2"
 				attrs={{
-					href: resolve(game.href)
+					href: resolve(game.href),
 				}}
 			>
 				<h2 class="text-2xl">{game.title}</h2>

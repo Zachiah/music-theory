@@ -12,7 +12,7 @@
 		STAFF_LOW,
 		STAFF_LOW_POS,
 		STAFF_SIZE,
-		TREBLE_BOTTOM_POS
+		TREBLE_BOTTOM_POS,
 	} from './staffUtil';
 	import WholeNote from './WholeNote.svelte';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
@@ -27,11 +27,11 @@
 		pitchesWithAlignment.map(({ pitch, alignment, natural }) => {
 			const letterHeight = PitchConstituents.letterBasedHeight(
 				pitch.pitchClass.letter,
-				pitch.octave
+				pitch.octave,
 			);
 
 			return { letterHeight, pitch, natural, alignment };
-		})
+		}),
 	);
 
 	const linePoses = $derived(getVisibleLinePoses(notes));

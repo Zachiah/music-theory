@@ -48,7 +48,7 @@ const KEYBINDS_RAW = [
 	['.', '>'],
 	['/', '?'],
 	["'", '"'],
-	['ShiftRight', 'ShiftRight']
+	['ShiftRight', 'ShiftRight'],
 ];
 
 export const KEYBINDS = KEYBINDS_RAW.map(([key, shifted], keyIdx) => {
