@@ -54,6 +54,7 @@ BASE_TYPE.setPattern(
 		TSP.apply(TSP.tok(TokenKind.Augmented), () => '+' as const),
 		TSP.apply(TSP.tok(TokenKind.Diminished), () => 'dim' as const),
 		TSP.apply(TSP.tok(TokenKind.Sus2), () => 'sus2' as const),
+		TSP.apply(TSP.str('2'), () => 'sus2' as const),
 		TSP.apply(TSP.tok(TokenKind.Sus4), () => 'sus4' as const),
 	),
 );
@@ -98,7 +99,7 @@ EXP.setPattern(
 	TSP.apply(
 		TSP.seq(
 			PITCH_CLASS,
-			TSP.opt(BASE_TYPE),
+			TSP.opt_sc(BASE_TYPE),
 			TSP.opt_sc(HIGHEST_NORMAL_DEGREE),
 			MODIFICATIONS,
 			TSP.opt(SLASH_NOTATION),
@@ -249,16 +250,13 @@ const getBaseDegrees = (
 	const nine: ScaleDegree[] = (() => {
 		const res: ScaleDegree[] = [];
 
-		if ((highestNormalDegree?.highestDegree || 0) === 9) {
+		const h = highestNormalDegree?.highestDegree || 0;
+
+		if (h === 9) {
 			res.push('2');
 		}
 
-		if (
-			(highestNormalDegree?.highestDegree || 0) > 9 &&
-			!mods.includes('9') &&
-			!mods.includes('b9') &&
-			!mods.includes('#9')
-		) {
+		if (h > 9 && !mods.includes('9') && !mods.includes('b9') && !mods.includes('#9')) {
 			res.push('2');
 		}
 

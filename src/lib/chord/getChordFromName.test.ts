@@ -55,6 +55,10 @@ describe(getChordFromName, () => {
 		t('C6', new Chord(n('C'), ['1', '3', '5', '6']));
 	});
 
+	it('supports 2 chords', () => {
+		t('C2', new Chord(n('C'), ['1', '2', '5']));
+	});
+
 	it('supports seventh chords', () => {
 		t('C7', new Chord(n('C'), ['1', '3', '5', 'flat7']));
 		t('Cmaj7', new Chord(n('C'), ['1', '3', '5', '7']));
