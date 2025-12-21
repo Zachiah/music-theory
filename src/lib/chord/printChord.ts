@@ -101,7 +101,10 @@ export const printChord = (chord: Chord, o: MusicDisplayOptions): string => {
 			[` ${M.lowerFlat(o)}9`, y('flat2')],
 			[' 9', (y('flat2') || y('sharp2')) && y('2')],
 			[` ${M.sharp(o)}9`, (y('2') || y('flat2') || highestNormal >= 7) && y('sharp2')],
-			[` ${highestAllPresent < 9 ? 'add' : ''}11`, y('4') && y('sharp4')],
+			[
+				` ${highestAllPresent < 9 ? 'add' : ''}11`,
+				y('4') && (y('sharp4') || (highestAllPresent < 9 && y(normal3))),
+			],
 			[` ${highestAllPresent < 9 ? 'add' : ''}${M.sharp(o)}11`, y('sharp4')],
 			[
 				` ${highestAllPresent < 11 ? 'add' : ''}${highestAllPresent < 11 ? M.upperFlat(o) : M.lowerFlat(o)}13`,

@@ -110,11 +110,12 @@ describe(printChord, () => {
 		t(['C', 'E', 'Gb', 'Ab'], 'Abaug7 / C');
 		t(['C', 'D', 'E', 'Gb', 'Ab', 'Bb'], 'Caug9 #11');
 		t(['C', 'E', 'G', 'Bb', 'Eb', 'A'], 'C7 #9 add13');
+		t(['C', 'E', 'G', 'Bb', 'F'], 'C7 add11');
 	});
 
 	it('should support inversions', () => {
 		t(['C', 'F', 'A'], 'F / C');
-		t(['C', 'D', 'Eb', 'F', 'Ab', 'Bb'], 'Fm7 add13 / C');
+		t(['C', 'D', 'Eb', 'F', 'Ab', 'Bb'], 'Fm7 add11 add13 / C');
 		t(['G', 'Bb', 'C', 'E', 'G', 'A'], 'C7 add13 / G');
 		t(['G', 'A', 'C', 'E', 'G', 'A'], 'Am7 / G');
 		t(['G', 'C', 'E', 'G', 'A'], 'C6 / G');
