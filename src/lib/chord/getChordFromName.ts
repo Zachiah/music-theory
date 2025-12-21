@@ -72,14 +72,21 @@ const MODIFICATIONS = TSP.rule<TokenKind, Modifications>();
 MODIFICATIONS.setPattern(
 	TSP.apply(
 		TSP.rep(
-			TSP.alt(
-				TSP.tok(TokenKind.Degree),
-				TSP.tok(TokenKind.FlatDegree),
-				TSP.tok(TokenKind.SharpDegree),
-				TSP.apply(TSP.seq(TSP.tok(TokenKind.Major), TSP.str('7')), () => ({ text: 'maj7' })),
+			TSP.seq(
+				TSP.opt(TSP.tok(TokenKind.Add)),
+				TSP.alt(
+					TSP.tok(TokenKind.Degree),
+					TSP.tok(TokenKind.FlatDegree),
+					TSP.tok(TokenKind.SharpDegree),
+					TSP.apply(TSP.seq(TSP.tok(TokenKind.Major), TSP.str('7')), () => ({ text: 'maj7' })),
+				),
 			),
 		),
-		(items) => items.map((item) => item.text),
+		(items) =>
+			items.map(
+				([add, item]) =>
+					`${add ? 'add' : ''}${item.text.replaceAll('♭', 'b').replaceAll('♯', '#')}`,
+			),
 	),
 );
 
@@ -255,15 +262,15 @@ const getBaseDegrees = (
 			res.push('2');
 		}
 
-		if (mods.includes('b9')) {
+		if (mods.includes('b9') || mods.includes('addb9')) {
 			res.push('flat2');
 		}
 
-		if (mods.includes('9')) {
+		if (mods.includes('9') || mods.includes('add9')) {
 			res.push('2');
 		}
 
-		if (mods.includes('#9')) {
+		if (mods.includes('#9') || mods.includes('add#9')) {
 			res.push('sharp2');
 		}
 
@@ -285,11 +292,11 @@ const getBaseDegrees = (
 			res.push('4');
 		}
 
-		if (mods.includes('11')) {
+		if (mods.includes('11') || mods.includes('add11')) {
 			res.push('4');
 		}
 
-		if (mods.includes('#11')) {
+		if (mods.includes('#11') || mods.includes('add#11')) {
 			res.push('sharp4');
 		}
 
@@ -308,11 +315,11 @@ const getBaseDegrees = (
 			res.push('6');
 		}
 
-		if (mods.includes('b13')) {
+		if (mods.includes('b13') || mods.includes('addb13')) {
 			res.push('flat6');
 		}
 
-		if (mods.includes('13')) {
+		if (mods.includes('13') || mods.includes('add13')) {
 			res.push('6');
 		}
 

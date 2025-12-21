@@ -84,6 +84,11 @@ describe(getChordFromName, () => {
 		t('C11 #9', new Chord(n('C'), ['1', '3', '5', 'flat7', 'sharp2', '4']));
 	});
 
+	it('supports other flat and sharp symbols', () => {
+		t('C ♯5', new Chord(n('C'), ['1', '3', 'sharp5']));
+		t('C ♭5', new Chord(n('C'), ['1', '3', 'flat5']));
+	});
+
 	it('supports insanity', () => {
 		t(
 			'C maj7 7 b9 9 #9 11 #11 b13 13',
@@ -102,5 +107,7 @@ describe(getChordFromName, () => {
 				'6',
 			]),
 		);
+		t('C add9', new Chord(n('C'), ['1', '3', '5', '2']));
+		t('C13 add#11', new Chord(n('C'), ['1', '3', '5', 'flat7', '2', '4', 'sharp4', '6']));
 	});
 });
