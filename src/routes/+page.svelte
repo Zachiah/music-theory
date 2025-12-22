@@ -23,9 +23,17 @@
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
 	import { ScaleDegree } from '$lib/chord/scaleDegree';
 	import { printChord } from '$lib/chord/printChord';
+	import Button from '$lib/Button.svelte';
 
+	let audible = $state(true);
 	const cpaPlayState = createCpaPlayState(playback);
-	const cpaState = createCpaState({ onChange: cpaPlayState.onCpaChangePlay });
+	const cpaState = createCpaState({
+		onChange: (c) => {
+			if (audible) {
+				cpaPlayState.onCpaChangePlay(c);
+			}
+		},
+	});
 
 	const guessedChord = $derived.by(() => {
 		if (cpaState.selected.length === 0) {
@@ -93,7 +101,17 @@
 	}}
 />
 <Container>
-	<h2 class="mr-auto text-2xl">Keyboard + Chord Identifier (midi enabled)</h2>
+	<h2 class="flex text-2xl">
+		<span>Keyboard + Chord Identifier (midi enabled)</span>
+		<span class="grow"></span>
+		<Button
+			style={audible ? 'primary' : 'neutral'}
+			onClick={() => {
+				audible = !audible;
+			}}
+			icon="icon-[heroicons--speaker-wave]"
+		/>
+	</h2>
 	<SubContainer>
 		<Keyboard
 			onMouseDown={(p) => cpaState.enable(p)}
