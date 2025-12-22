@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
+	import Button from '$lib/Button.svelte';
 	import { getChordFromName } from '$lib/chord/getChordFromName';
 	import { printChord } from '$lib/chord/printChord';
 	import { ScaleDegree } from '$lib/chord/scaleDegree';
@@ -7,6 +8,7 @@
 	import FancyInput from '$lib/FancyInput.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import { musicDisplayOptions } from '$lib/musicDisplayOptionsState.svelte';
+	import { playback } from '$lib/Playback';
 	import { Pitch } from '$lib/Pitch';
 	import { PitchClass } from '$lib/PitchClass';
 	import SubContainer from '$lib/SubContainer.svelte';
@@ -15,6 +17,7 @@
 
 	const chord = $derived(getChordFromName(typedChordName));
 	const pitches = $derived(chord?.getPitchesFromOctave(3) ?? []);
+	const canonicalPitches = $derived(pitches.map((pitch) => Pitch.toCanonical(pitch)));
 
 	const whiteNoteBelow = (pitch: CanonicalPitch) => {
 		if (pitch.pitchClass.endsWith('b')) {
@@ -54,6 +57,15 @@
 					.map((p) => PitchClass.print(p, musicDisplayOptions.data))
 					.join(', ')}
 			</SubContainer>
+
+			<Button
+				style="primary"
+				icon="icon-[heroicons--speaker-wave]"
+				disabled={canonicalPitches.length === 0}
+				onClick={() => {
+					playback.demoChord(canonicalPitches, playback.now());
+				}}
+			/>
 		{:else if typedChordName}
 			<div class="bg-warning rounded-md p-4">
 				Unable to resolve chord: <span class="font-bold">{typedChordName}</span>. If it is valid
@@ -77,13 +89,9 @@
 			CanonicalPitch.height(keyboardEnd) - CanonicalPitch.height(keyboardStart) + 1}
 		<div class="flex gap-4">
 			<SubContainer>
-				<Keyboard
-					start={keyboardStart}
-					noteNumber={keyboardLength}
-					highlighted={pitches.map((p) => Pitch.toCanonical(p))}
-				>
+				<Keyboard start={keyboardStart} noteNumber={keyboardLength} highlighted={canonicalPitches}>
 					{#snippet renderKeyText(cp)}
-						{@const pIdx = pitches.findIndex((p) => CanonicalPitch.equal(Pitch.toCanonical(p), cp))}
+						{@const pIdx = canonicalPitches.findIndex((p) => CanonicalPitch.equal(p, cp))}
 
 						{#if pIdx !== -1}
 							<div class="flex flex-col">
