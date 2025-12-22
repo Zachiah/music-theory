@@ -44,7 +44,7 @@ PITCH_CLASS.setPattern(
 	}),
 );
 
-type BaseType = '-' | '+' | 'dim' | 'sus2' | 'sus4' | '-+';
+type BaseType = '-' | '+' | 'dim' | '-+';
 
 const BASE_TYPE = TSP.rule<TokenKind, BaseType>();
 BASE_TYPE.setPattern(
@@ -53,9 +53,6 @@ BASE_TYPE.setPattern(
 		TSP.apply(TSP.tok(TokenKind.Minor), () => '-' as const),
 		TSP.apply(TSP.tok(TokenKind.Augmented), () => '+' as const),
 		TSP.apply(TSP.tok(TokenKind.Diminished), () => 'dim' as const),
-		TSP.apply(TSP.tok(TokenKind.Sus2), () => 'sus2' as const),
-		TSP.apply(TSP.str('2'), () => 'sus2' as const),
-		TSP.apply(TSP.tok(TokenKind.Sus4), () => 'sus4' as const),
 	),
 );
 
@@ -76,18 +73,17 @@ MODIFICATIONS.setPattern(
 			TSP.seq(
 				TSP.opt(TSP.tok(TokenKind.Add)),
 				TSP.alt(
-					TSP.tok(TokenKind.Degree),
-					TSP.tok(TokenKind.FlatDegree),
-					TSP.tok(TokenKind.SharpDegree),
-					TSP.apply(TSP.seq(TSP.tok(TokenKind.Major), TSP.str('7')), () => ({ text: 'maj7' })),
+					TSP.apply(TSP.tok(TokenKind.Degree), (i) => i.text),
+					TSP.apply(TSP.tok(TokenKind.FlatDegree), (i) => i.text.replaceAll('♭', 'b')),
+					TSP.apply(TSP.tok(TokenKind.SharpDegree), (i) => i.text.replaceAll('♯', '#')),
+					TSP.apply(TSP.tok(TokenKind.Sus2), () => 'sus2' as const),
+					TSP.apply(TSP.str('2'), () => 'sus2' as const),
+					TSP.apply(TSP.tok(TokenKind.Sus4), () => 'sus4' as const),
+					TSP.apply(TSP.seq(TSP.tok(TokenKind.Major), TSP.str('7')), () => 'maj7'),
 				),
 			),
 		),
-		(items) =>
-			items.map(
-				([add, item]) =>
-					`${add ? 'add' : ''}${item.text.replaceAll('♭', 'b').replaceAll('♯', '#')}`,
-			),
+		(items) => items.map(([add, item]) => `${add ? 'add' : ''}${item}`),
 	),
 );
 
@@ -105,6 +101,7 @@ EXP.setPattern(
 			TSP.opt(SLASH_NOTATION),
 		),
 		([root, baseType, highestNormalDeg, mods, over]) => {
+			console.log(root, baseType, highestNormalDeg, mods, over);
 			const overHalfSteps = (() => {
 				if (!over) {
 					return null;
@@ -177,16 +174,19 @@ const getBaseDegrees = (
 	highestNormalDegree: HighestNormalDegree | undefined,
 	mods: Modifications,
 ): ScaleDegree[] => {
+	if ((mods.includes('sus2') || mods.includes('sus4')) && baseType) {
+		throw new Error("Can't specify base type and have sus");
+	}
 	const middle: ScaleDegree[] = (() => {
 		if (baseType === '-' || baseType === 'dim' || baseType === '-+') {
 			return ['flat3'];
 		}
 
-		if (baseType === 'sus2') {
+		if (mods.includes('sus2') || highestNormalDegree?.highestDegree === 2) {
 			return ['2'];
 		}
 
-		if (baseType === 'sus4') {
+		if (mods.includes('sus4')) {
 			return ['4'];
 		}
 

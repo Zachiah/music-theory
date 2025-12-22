@@ -99,7 +99,10 @@ export const printChord = (chord: Chord, o: MusicDisplayOptions): string => {
 			[' maj7', y('flat7') && y('7')],
 			[` 7`, y('flat7') && y('7')],
 			[` ${M.lowerFlat(o)}9`, y('flat2')],
-			[' 9', (y('flat2') || y('sharp2')) && y('2')],
+			[
+				` ${highestAllPresent < 7 ? 'add' : ''}9`,
+				y('2') && (y('flat2') || y('sharp2') || (highestAllPresent < 7 && y(normal3) && n('6'))),
+			],
 			[` ${M.sharp(o)}9`, (y('2') || y('flat2') || highestNormal >= 7) && y('sharp2')],
 			[
 				` ${highestAllPresent < 9 ? 'add' : ''}11`,

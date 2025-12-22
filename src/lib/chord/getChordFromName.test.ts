@@ -49,6 +49,8 @@ describe(getChordFromName, () => {
 		t('Csus2', new Chord(n('C'), ['1', '2', '5']));
 		t('C sus', new Chord(n('C'), ['1', '4', '5']));
 		t('Csus4', new Chord(n('C'), ['1', '4', '5']));
+		t('C7sus4', new Chord(n('C'), ['1', '4', '5', 'flat7']));
+		t('C7sus2', new Chord(n('C'), ['1', '2', '5', 'flat7']));
 	});
 
 	it('supports sixth chords', () => {

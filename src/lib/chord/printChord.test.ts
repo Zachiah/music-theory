@@ -91,6 +91,10 @@ describe(printChord, () => {
 		t(['C', 'E', 'G', 'Bb', 'Ab'], 'C7 addB13');
 	});
 
+	it('should handle add9 chords', () => {
+		t(['C', 'E', 'G', 'D'], 'C add9');
+	});
+
 	it('should handle modifications', () => {
 		t(['C', 'E', 'G', 'Bb', 'Db', 'D', 'F', 'A'], 'C13 b9 9');
 		t(['C', 'E', 'G', 'Bb', 'Db', 'D'], 'C7 b9 9');
