@@ -165,8 +165,11 @@
 		</SubContainer>
 	</div>
 
-	{#if chordName}
-		{@const standardizedChord = getChordFromName(chordName)}
+	{#if guessedChord}
+		{@const rootedChord = new Chord(guessedChord.root, ['1', ...guessedChord.scaleDegrees])}
+		{@const rootedChordName = printChord(rootedChord, musicDisplayOptions.data)}
+
+		{@const standardizedChord = getChordFromName(rootedChordName)}
 		{#if standardizedChord}
 			{@const gcp = standardizedChord.getPitchesFromOctave(3) ?? []}
 			{@const keyboardStart = CanonicalPitch.whiteNoteBelow(
@@ -178,7 +181,7 @@
 			{@const keyboardLength =
 				CanonicalPitch.height(keyboardEnd) - CanonicalPitch.height(keyboardStart) + 1}
 			<SubContainer class="flex flex-col gap-2">
-				<p class="text-2xl">Standard Voicing</p>
+				<p class="text-2xl">Standard Root Voicing</p>
 				<Keyboard
 					start={keyboardStart}
 					noteNumber={keyboardLength}
