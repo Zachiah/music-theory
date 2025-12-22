@@ -18,20 +18,6 @@
 	const chord = $derived(getChordFromName(typedChordName));
 	const pitches = $derived(chord?.getPitchesFromOctave(3) ?? []);
 	const canonicalPitches = $derived(pitches.map((pitch) => Pitch.toCanonical(pitch)));
-
-	const whiteNoteBelow = (pitch: CanonicalPitch) => {
-		if (pitch.pitchClass.endsWith('b')) {
-			return CanonicalPitch.applyOffset(pitch, -1);
-		}
-		return pitch;
-	};
-
-	const whiteNoteAbove = (pitch: CanonicalPitch) => {
-		if (pitch.pitchClass.endsWith('b')) {
-			return CanonicalPitch.applyOffset(pitch, 1);
-		}
-		return pitch;
-	};
 </script>
 
 <Container>
@@ -79,10 +65,10 @@
 	</div>
 
 	{#if chord}
-		{@const keyboardStart = whiteNoteBelow(
+		{@const keyboardStart = CanonicalPitch.whiteNoteBelow(
 			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[0]), -6),
 		)}
-		{@const keyboardEnd = whiteNoteAbove(
+		{@const keyboardEnd = CanonicalPitch.whiteNoteAbove(
 			CanonicalPitch.applyOffset(Pitch.toCanonical(pitches[pitches.length - 1]), +6),
 		)}
 		{@const keyboardLength =

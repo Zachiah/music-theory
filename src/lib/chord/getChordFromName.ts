@@ -25,7 +25,7 @@ const lexer = TSP.buildLexer([
 	[true, /^[A-Ga-g][b♭𝄫#♯𝄪]*/gu, TokenKind.PitchClass],
 	[true, /^\//g, TokenKind.Slash],
 	[true, /^[-m]/g, TokenKind.Minor],
-	[true, /^(maj|Δ)/g, TokenKind.Major],
+	[true, /^([Mm]aj|Δ)/g, TokenKind.Major],
 	[true, /^(aug|\+)/g, TokenKind.Augmented],
 	[true, /^(dim|°)/g, TokenKind.Diminished],
 	[true, /^sus2/g, TokenKind.Sus2],

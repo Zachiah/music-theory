@@ -66,6 +66,7 @@ describe(getChordFromName, () => {
 		t('Cm7', new Chord(n('C'), ['1', 'flat3', '5', 'flat7']));
 		t('Cdim7', new Chord(n('C'), ['1', 'flat3', 'flat5', 'flatflat7']));
 		t('Cm7b5', new Chord(n('C'), ['1', 'flat3', 'flat5', 'flat7']));
+		t('CMaj7', new Chord(n('C'), ['1', '3', '5', '7']));
 	});
 
 	it('supports ninth chords', () => {

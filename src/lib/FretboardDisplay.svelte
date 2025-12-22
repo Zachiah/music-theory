@@ -98,7 +98,7 @@
 									class={`absolute top-1/2 left-1/2 z-30 flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 ${bridge ? 'scale-70' : ''} transform items-center justify-center rounded-full text-xs`}
 									class:bg-always-light-gray={fretActivation === 'neutral' ||
 										fretActivation === 'disabled'}
-									class:text-text-disabled={fretActivation === 'disabled'}
+									class:text-always-black={fretActivation === 'disabled'}
 									class:bg-primary={fretActivation === 'active'}
 								>
 									{Pitch.print(Pitch.fromCanonical(pitch), musicDisplayOptions.data)}

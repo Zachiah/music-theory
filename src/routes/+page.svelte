@@ -24,6 +24,7 @@
 	import { ScaleDegree } from '$lib/chord/scaleDegree';
 	import { printChord } from '$lib/chord/printChord';
 	import Button from '$lib/Button.svelte';
+	import { getChordFromName } from '$lib/chord/getChordFromName';
 
 	let audible = $state(true);
 	const cpaPlayState = createCpaPlayState(playback);
@@ -45,6 +46,10 @@
 
 		return guessedChord;
 	});
+
+	const chordName = $derived(
+		guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : '',
+	);
 
 	const normalized = $derived(
 		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected),
@@ -156,7 +161,41 @@
 		</SubContainer>
 
 		<SubContainer el="p" class="flex items-center justify-center text-3xl">
-			&nbsp;{guessedChord ? printChord(guessedChord, musicDisplayOptions.data) : ''}
+			&nbsp;{chordName}
 		</SubContainer>
 	</div>
+
+	{#if chordName}
+		{@const standardizedChord = getChordFromName(chordName)}
+		{#if standardizedChord}
+			{@const gcp = standardizedChord.getPitchesFromOctave(3) ?? []}
+			{@const keyboardStart = CanonicalPitch.whiteNoteBelow(
+				CanonicalPitch.applyOffset(Pitch.toCanonical(gcp[0]), -6),
+			)}
+			{@const keyboardEnd = CanonicalPitch.whiteNoteAbove(
+				CanonicalPitch.applyOffset(Pitch.toCanonical(gcp[gcp.length - 1]), +6),
+			)}
+			{@const keyboardLength =
+				CanonicalPitch.height(keyboardEnd) - CanonicalPitch.height(keyboardStart) + 1}
+			<SubContainer class="flex flex-col gap-2">
+				<p class="text-2xl">Standard Voicing</p>
+				<Keyboard
+					start={keyboardStart}
+					noteNumber={keyboardLength}
+					highlighted={gcp.map((g) => Pitch.toCanonical(g))}
+				>
+					{#snippet renderKeyText(cp)}
+						{@const pIdx = gcp.findIndex((p) => CanonicalPitch.equal(Pitch.toCanonical(p), cp))}
+
+						{#if pIdx !== -1}
+							<div class="flex flex-col">
+								<span>{PitchClass.print(gcp[pIdx].pitchClass, musicDisplayOptions.data)}</span>
+								<span>{ScaleDegree.print(standardizedChord.scaleDegrees[pIdx])}</span>
+							</div>
+						{/if}
+					{/snippet}
+				</Keyboard>
+			</SubContainer>
+		{/if}
+	{/if}
 </Container>

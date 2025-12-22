@@ -69,6 +69,20 @@ export namespace CanonicalPitch {
 	export const equal = (a: CanonicalPitch, b: CanonicalPitch) => {
 		return a.octave === b.octave && a.pitchClass === b.pitchClass;
 	};
+
+	export const whiteNoteBelow = (pitch: CanonicalPitch) => {
+		if (pitch.pitchClass.endsWith('b')) {
+			return CanonicalPitch.applyOffset(pitch, -1);
+		}
+		return pitch;
+	};
+
+	export const whiteNoteAbove = (pitch: CanonicalPitch) => {
+		if (pitch.pitchClass.endsWith('b')) {
+			return CanonicalPitch.applyOffset(pitch, 1);
+		}
+		return pitch;
+	};
 }
 
 export type CanonicalPitchArray = CanonicalPitch[];
