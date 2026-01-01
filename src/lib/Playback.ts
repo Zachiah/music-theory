@@ -19,30 +19,48 @@ export class Playback {
 		return this.#audioContext.currentTime;
 	}
 
-	playPitch(pitch: CanonicalPitch, time: number): (stopAt: number) => void {
+	playPitch({
+		pitch,
+		velocity,
+		time,
+	}: {
+		pitch: CanonicalPitch;
+		velocity: number;
+		time: number;
+	}): (stopAt: number) => void {
 		if (!this.#engine) {
 			throw new Error('Playback engine not initialized');
 		}
-		const node = this.#engine.play(CanonicalPitch.id(pitch), time, { gain: 1 });
+		const node = this.#engine.play(CanonicalPitch.id(pitch), time, { gain: velocity });
 		return (stopAt) => {
 			node.stop(stopAt);
 		};
 	}
 
-	playPitchForLength(pitch: CanonicalPitch, time: number, length: number) {
-		this.playPitch(pitch, time)(time + length);
+	playPitchForLength({
+		pitch,
+		velocity,
+		time,
+		length,
+	}: {
+		pitch: CanonicalPitch;
+		velocity: number;
+		time: number;
+		length: number;
+	}) {
+		this.playPitch({ pitch, velocity, time })(time + length);
 	}
 
 	demoScale(pitches: CanonicalPitch[], time: number) {
 		for (const [idx, p] of [...pitches, ...pitches.toReversed().slice(1)].entries()) {
-			this.playPitchForLength(p, time + idx * 0.25, 0.25);
+			this.playPitchForLength({ pitch: p, velocity: 1, time: time + idx * 0.25, length: 0.25 });
 		}
 	}
 
 	async demoChord(pitches: CanonicalPitch[], time: number) {
 		await this.#audioContext.resume();
 		for (const p of [...pitches]) {
-			this.playPitchForLength(p, time, 2);
+			this.playPitchForLength({ pitch: p, velocity: 1, time, length: 2 });
 		}
 	}
 }

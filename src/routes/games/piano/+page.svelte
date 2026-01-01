@@ -26,7 +26,7 @@
 			const m = decodeMIDIMessage(e);
 
 			if (m.tag === 'note-down') {
-				cpaState.enable(m.pitch);
+				cpaState.enable(m.pitch, m.velocity);
 			}
 
 			if (m.tag === 'note-up') {

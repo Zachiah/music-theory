@@ -1,7 +1,8 @@
 import { CanonicalPitchArray, type CanonicalPitch } from './CanonicalPitch';
 
 export type CpaStateChange =
-	| { tag: 'enable' | 'disable' | 'toggle'; pitch: CanonicalPitch }
+	| { tag: 'enable'; pitch: CanonicalPitch; velocity?: number }
+	| { tag: 'disable' | 'toggle'; pitch: CanonicalPitch }
 	| { tag: 'clear' };
 
 export const createCpaState = (
@@ -30,14 +31,14 @@ export const createCpaState = (
 			CanonicalPitchArray.sort(selectedPitches);
 			options.onChange?.({ tag: 'disable', pitch });
 		},
-		enable(pitch: CanonicalPitch) {
+		enable(pitch: CanonicalPitch, velocity?: number) {
 			const foundIndex = getPitchIndex(pitch);
 			if (foundIndex === -1) {
 				selectedPitches.push(pitch);
 			}
 
 			CanonicalPitchArray.sort(selectedPitches);
-			options.onChange?.({ tag: 'enable', pitch });
+			options.onChange?.({ tag: 'enable', pitch, velocity });
 		},
 		toggle(pitch: CanonicalPitch) {
 			const foundIndex = getPitchIndex(pitch);

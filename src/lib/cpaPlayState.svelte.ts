@@ -8,7 +8,11 @@ export const createCpaPlayState = (playback: Playback) => {
 
 	const onCpaChangePlay = (change: CpaStateChange) => {
 		if (change.tag === 'enable') {
-			const disable = playback.playPitch(change.pitch, playback.now());
+			const disable = playback.playPitch({
+				pitch: change.pitch,
+				velocity: change.velocity ?? 1,
+				time: playback.now(),
+			});
 
 			const id = Pitch.id(Pitch.fromCanonical(change.pitch));
 

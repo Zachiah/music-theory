@@ -37,7 +37,7 @@
 		const message = decodeMIDIMessage(event);
 
 		if (message.tag === 'note-down') {
-			cpaState.enable(message.pitch);
+			cpaState.enable(message.pitch, message.velocity);
 			return;
 		}
 

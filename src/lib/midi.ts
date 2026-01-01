@@ -1,8 +1,8 @@
 import { CanonicalPitch } from './CanonicalPitch';
 
 export type MidiMessage =
-	| { tag: 'note-down'; pitch: CanonicalPitch }
-	| { tag: 'note-up'; pitch: CanonicalPitch }
+	| { tag: 'note-down'; pitch: CanonicalPitch; velocity: number }
+	| { tag: 'note-up'; pitch: CanonicalPitch; velocity: number }
 	| { tag: 'unknown' };
 
 export const decodeMIDIMessage = (event: MIDIMessageEvent): MidiMessage => {
@@ -17,11 +17,15 @@ export const decodeMIDIMessage = (event: MIDIMessageEvent): MidiMessage => {
 	const isProperNoteUp = (event.data[0] & 0xf0) === 0x80;
 	const isNoteDownWithVelocity0 = (event.data[0] & 0xf0) === 0x90 && event.data[2] === 0;
 	if (isProperNoteUp || isNoteDownWithVelocity0) {
-		return { tag: 'note-up', pitch: decodeMIDIPitch(event.data[1]) };
+		return { tag: 'note-up', pitch: decodeMIDIPitch(event.data[1]), velocity: event.data[2] / 127 };
 	}
 
 	if ((event.data[0] & 0xf0) === 0x90) {
-		return { tag: 'note-down', pitch: decodeMIDIPitch(event.data[1]) };
+		return {
+			tag: 'note-down',
+			pitch: decodeMIDIPitch(event.data[1]),
+			velocity: event.data[2] / 127,
+		};
 	}
 
 	return { tag: 'unknown' };
