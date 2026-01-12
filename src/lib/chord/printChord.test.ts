@@ -144,6 +144,10 @@ describe(printChord, () => {
 		t(['Eb', 'Gb', 'B'], 'B / D#');
 	});
 
+	it('should handle 1, b3, 3 weirdness', () => {
+		t(['C', 'Eb', 'E'], 'C add#9');
+	});
+
 	it('should handle all chord printing options', () => {
 		// flats
 		t(['C', 'E', 'G', 'Ab'], 'A♭augMaj7 / C', { flats: '♭' });
