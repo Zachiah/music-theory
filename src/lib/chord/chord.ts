@@ -33,16 +33,13 @@ export class Chord {
 			this.guessFromPitchesWithRoot(PitchClass.fromCanonicalPitchClass(p), pitches),
 		);
 
-		console.group('Chord');
 		const res = possible.reduce((a, b) => {
-			console.log(a.scaleDegrees, b.scaleDegrees, a.getComplexity(), b.getComplexity());
-			if (b.getComplexity() < a.getComplexity()) {
+			if (b.getComplexity(b === possible[0]) < a.getComplexity(a === possible[0])) {
 				return b;
 			}
 
 			return a;
 		});
-		console.groupEnd();
 
 		return res;
 	}
@@ -92,11 +89,22 @@ export class Chord {
 		throw new Error('Should never hit this');
 	}
 
-	private getComplexity(): number {
-		const s = [...new Set(this.scaleDegrees)];
+	private getComplexity(root: boolean): number {
+		const s = ScaleDegree.sort([...new Set(this.scaleDegrees)]);
 
 		if (s.length <= 2) {
 			return 0;
+		}
+
+		if (
+			root &&
+			s.every(
+				(sd, i, arr) =>
+					i === 0 ||
+					ScaleDegree.toInterval(arr[i - 1]).semitones + 1 === ScaleDegree.toInterval(sd).semitones,
+			)
+		) {
+			return -30000;
 		}
 
 		return (

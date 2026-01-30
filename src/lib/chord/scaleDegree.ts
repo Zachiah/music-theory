@@ -79,4 +79,13 @@ export namespace ScaleDegree {
 
 		return Interval.getPitchOffset(interval, root);
 	};
+
+	export const sort = (sds: ScaleDegree[]) => {
+		return sds.toSorted((a, b) => {
+			const intervalA = toInterval(a);
+			const intervalB = toInterval(b);
+
+			return intervalA.semitones - intervalB.semitones;
+		});
+	};
 }

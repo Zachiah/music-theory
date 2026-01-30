@@ -16,6 +16,7 @@ export const printChord = (chord: Chord, o: MusicDisplayOptions): string => {
 	const halfDiminished = baseDiminished && y('flat7') && o.halfDiminished === 'ø';
 	const major = y('7') && n('flat7');
 	const minor = y('flat3') && !diminished && !halfDiminished;
+	const flatNineNineCluster = l === 3 && y('flat2') && y('2');
 
 	const normal3: ScaleDegree = minor || diminished || halfDiminished ? 'flat3' : '3';
 	const normal7: ScaleDegree = major ? '7' : diminished ? 'flatflat7' : 'flat7';
@@ -92,21 +93,26 @@ export const printChord = (chord: Chord, o: MusicDisplayOptions): string => {
 			[`${highestNormal || ''}`, !(highestNormal === 7 && halfDiminished)],
 			['6', y('6') && n(normal7)],
 			['/9', y('2') && y('6') && n(normal7)],
-			[' sus2', y('2') && n(normal3)],
+			[' sus2', y('2') && n(normal3) && n('flat2')],
 			[' sus4', y('4') && n(normal3)],
 			[` ${M.lowerFlat(o)}5`, y('flat5') && !diminished && !halfDiminished],
 			[` ${M.aug(o)}`, y('sharp5') && o.augmented === '#5'],
 			[' maj7', y('flat7') && y('7')],
 			[` 7`, y('flat7') && y('7')],
-			[` ${M.lowerFlat(o)}9`, y('flat2')],
+			[
+				` ${highestAllPresent < 7 ? 'add' : ''}${M.lowerFlat(o)}9`,
+				y('flat2') && !flatNineNineCluster,
+			],
 			[
 				` ${highestAllPresent < 7 ? 'add' : ''}9`,
-				y('2') && (y('flat2') || y('sharp2') || (highestAllPresent < 7 && y(normal3) && n('6'))),
+				y('2') &&
+					(y('flat2') || y('sharp2') || (highestAllPresent < 7 && y(normal3) && n('6'))) &&
+					!flatNineNineCluster,
 			],
 			[` ${highestAllPresent < 7 ? 'add' : ''}${M.sharp(o)}9`, y('sharp2')],
 			[
 				` ${highestAllPresent < 9 ? 'add' : ''}11`,
-				y('4') && (y('sharp4') || (highestAllPresent < 9 && y(normal3))),
+				y('4') && y(normal3) && (y('sharp4') || highestAllPresent < 9),
 			],
 			[` ${highestAllPresent < 9 ? 'add' : ''}${M.sharp(o)}11`, y('sharp4')],
 			[
@@ -117,6 +123,7 @@ export const printChord = (chord: Chord, o: MusicDisplayOptions): string => {
 				` ${highestAllPresent < 11 ? 'add' : ''}13`,
 				y(normal7) && y('6') && (y('flat6') || highestNormal < 13),
 			],
+			[` [${M.lowerFlat(o)}9, 9] cluster`, flatNineNineCluster],
 		];
 	})();
 

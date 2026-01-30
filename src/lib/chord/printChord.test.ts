@@ -115,6 +115,8 @@ describe(printChord, () => {
 		t(['C', 'D', 'E', 'Gb', 'Ab', 'Bb'], 'Caug9 #11');
 		t(['C', 'E', 'G', 'Bb', 'Eb', 'A'], 'C7 #9 add13');
 		t(['C', 'E', 'G', 'Bb', 'F'], 'C7 add11');
+		t(['C', 'Db', 'D'], 'C [b9, 9] cluster');
+		t(['C', 'Db', 'D', 'Gb', 'G'], 'Gmaj7 sus4 add#11 / C');
 	});
 
 	it('should support inversions', () => {
