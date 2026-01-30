@@ -104,10 +104,6 @@ describe(printChord, () => {
 		t(['C', 'E', 'G', 'A', 'Bb'], 'C7 add13');
 		t(['C', 'E', 'G', 'Bb', 'D', 'F', 'Ab'], 'C11 b13');
 		t(['C', 'E', 'G', 'Bb', 'D', 'F', 'Ab', 'A'], 'C11 b13 13');
-		t(
-			['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'],
-			'C maj7 7 b9 9 #9 11 #11 b13 13',
-		);
 		t(['C', 'Db', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'], 'F7 b9 9 #9 11 #11 b13 13 / C');
 		t(['C', 'E', 'G', 'Bb', 'B'], 'C maj7 7');
 		t(['C', 'E', 'G', 'Bb', 'B', 'D'], 'Em7 add#11 addB13 / C');
@@ -115,8 +111,15 @@ describe(printChord, () => {
 		t(['C', 'D', 'E', 'Gb', 'Ab', 'Bb'], 'Caug9 #11');
 		t(['C', 'E', 'G', 'Bb', 'Eb', 'A'], 'C7 #9 add13');
 		t(['C', 'E', 'G', 'Bb', 'F'], 'C7 add11');
-		t(['C', 'Db', 'D'], 'C [b9, 9] cluster');
 		t(['C', 'Db', 'D', 'Gb', 'G'], 'Gmaj7 sus4 add#11 / C');
+	});
+
+	it('should support chromatic clusters', () => {
+		t(['C', 'Db', 'D'], 'C-D chromatic');
+		t(['C', 'Db', 'D', 'Eb'], 'C-Eb chromatic');
+		t(['C', 'Db', 'D', 'Eb', 'E'], 'C-E chromatic');
+		t(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'], 'C-Ab chromatic');
+		t(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'], 'C-B chromatic');
 	});
 
 	it('should support inversions', () => {
