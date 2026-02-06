@@ -2,6 +2,7 @@
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import CircleOfFifths from '$lib/CircleOfFifths.svelte';
 	import Container from '$lib/Container.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
@@ -70,6 +71,8 @@
 		});
 	});
 </script>
+
+<SEO title="Chord Identifier" />
 
 <svelte:window
 	onkeydown={(e) => {

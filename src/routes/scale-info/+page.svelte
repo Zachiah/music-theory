@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
 	import { PitchClass } from '$lib/PitchClass';
+	import SEO from '$lib/SEO.svelte';
 	import { ScaleDescription, ScaleName } from '$lib/scale';
 	import { Intervals } from '$lib/Intervals';
 	import Button from '$lib/Button.svelte';
@@ -30,6 +31,8 @@
 		'13ths': [0, 2, 4, 6, 8, 10, 12],
 	};
 </script>
+
+<SEO title="Scale Info" />
 
 <Container maxW>
 	<h1 class="pb-4 text-4xl">Scale Info</h1>

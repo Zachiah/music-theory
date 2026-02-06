@@ -2,6 +2,7 @@
 	import Container from '$lib/Container.svelte';
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import FretboardDisplay from '$lib/FretboardDisplay.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import type { Fretboard } from '$lib/Fretboard';
 	import { createLocalStorageState } from '$lib/localStorageState.svelte';
@@ -91,6 +92,8 @@
 
 	let vertical = $state(false);
 </script>
+
+<SEO title="Fretboard Chord Identifier" />
 
 <Container>
 	<ChordIdentifierHeader showFretboard={true} />

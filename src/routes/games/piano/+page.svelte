@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import {
@@ -35,6 +36,8 @@
 		});
 	});
 </script>
+
+<SEO title="Play Piano" />
 
 <svelte:window
 	onkeydown={(e) => {

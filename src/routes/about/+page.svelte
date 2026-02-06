@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
+	import SEO from '$lib/SEO.svelte';
 </script>
+
+<SEO title="About music-theory.zachiah.com" />
 
 <Container>
 	<h1 class="text-4xl">Music Theory</h1>

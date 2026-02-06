@@ -3,6 +3,7 @@
 	import ChordIdentifierHeader from '../ChordIdentifierHeader.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
 	import Button from '$lib/Button.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { onMount } from 'svelte';
 	import { decodeMIDIMessage } from '$lib/midi';
 	import GrandStaff from '$lib/staff/GrandStaff.svelte';
@@ -56,6 +57,8 @@
 		!guessedChord ? [] : guessedChord.getNormalizedPitchesWithOctaves(cpaState.selected),
 	);
 </script>
+
+<SEO title="Keyboard Chord Identifier" />
 
 <Container>
 	<ChordIdentifierHeader showFretboard={false} />

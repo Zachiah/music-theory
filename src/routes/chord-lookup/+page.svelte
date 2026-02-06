@@ -2,6 +2,7 @@
 	import { CanonicalPitch } from '$lib/CanonicalPitch';
 	import Button from '$lib/Button.svelte';
 	import { getChordFromName } from '$lib/chord/getChordFromName';
+	import SEO from '$lib/SEO.svelte';
 	import { printChord } from '$lib/chord/printChord';
 	import { ScaleDegree } from '$lib/chord/scaleDegree';
 	import Container from '$lib/Container.svelte';
@@ -19,6 +20,8 @@
 	const pitches = $derived(chord?.getPitchesFromOctave(3) ?? []);
 	const canonicalPitches = $derived(pitches.map((pitch) => Pitch.toCanonical(pitch)));
 </script>
+
+<SEO title="Chord Lookup" />
 
 <Container>
 	<h1 class="text-2xl">Chord Lookup</h1>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
 	import { resolve } from '$app/paths';
+	import SEO from '$lib/SEO.svelte';
 	import SubContainer from '$lib/SubContainer.svelte';
 
 	type Game = { href: string; title: string; description: string };
@@ -17,6 +18,8 @@
 		},
 	] as const satisfies Game[];
 </script>
+
+<SEO title="Games" />
 
 <Container>
 	<h1 class="text-4xl">Music Theory Games</h1>

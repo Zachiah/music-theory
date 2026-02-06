@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Container from '$lib/Container.svelte';
 	import FullScreenable from '$lib/FullScreenable.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { createCpaHistoryState } from '$lib/cpaHistoryState.svelte';
 	import { createCpaPlayState } from '$lib/cpaPlayState.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
@@ -55,6 +56,8 @@
 
 	const whiteKeyWidth = $derived(Math.max(wrapperWidth / numWhiteNotes, 25));
 </script>
+
+<SEO title="Piano Visualizer" />
 
 <svelte:window
 	onkeydown={(e) => {

@@ -2,6 +2,7 @@
 	import Button from '$lib/Button.svelte';
 	import { CanonicalPitch, CanonicalPitchArray } from '$lib/CanonicalPitch';
 	import Container from '$lib/Container.svelte';
+	import SEO from '$lib/SEO.svelte';
 	import { createCpaState } from '$lib/cpaState.svelte';
 	import FancyInput from '$lib/FancyInput.svelte';
 	import Keyboard from '$lib/Keyboard.svelte';
@@ -115,6 +116,8 @@
 		cpaState.clear();
 	};
 </script>
+
+<SEO title="Sight Reading Practice" />
 
 <Container>
 	<div class="flex">
